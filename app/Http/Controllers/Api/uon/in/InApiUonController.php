@@ -178,66 +178,11 @@ class InApiUonController extends Controller {
         if ($result_query) {
             return 'Обновлён статус заявки: ' . $r_id . ' на ' . $get_text . '(' . $r_new_status . ')';
         } else {
-            $_requests = new \UON\Requests();
-            $responce = \GuzzleHttp\json_encode($_requests->get($r_id));
-            $responce = \GuzzleHttp\json_decode($responce);
-            if (is_object($responce)) {
-                $zayavka_array = $responce->message->request[0];
-                $result_query = DB::table($table_name)->insert(
-                        [
-                            'r_id' => $zayavka_array->id,
-                            'r_id_system' => isset($zayavka_array->id_system) ? $zayavka_array->id_system : 0,
-                            'r_id_internal' => isset($zayavka_array->id_internal) ? $zayavka_array->id_internal : '',
-                            'r_reservation_number' => isset($zayavka_array->reservation_number) ? $zayavka_array->reservation_number : '',
-                            'r_supplier_id' => isset($zayavka_array->supplier_id) ? $zayavka_array->supplier_id : 0,
-                            'r_supplier_name' => isset($zayavka_array->supplier_name) ? $zayavka_array->supplier_name : '',
-                            'r_supplier_inn' => isset($zayavka_array->supplier_inn) ? $zayavka_array->supplier_inn : '',
-                            'r_dat' => isset($zayavka_array->dat) ? $zayavka_array->dat : NULL,
-                            'r_dat_lead' => isset($zayavka_array->dat_lead) ? $zayavka_array->dat_lead : NULL,
-                            'r_manager_id' => isset($zayavka_array->manager_id) ? $zayavka_array->manager_id : 0,
-                            'r_manager_surname' => isset($zayavka_array->manager_surname) ? $zayavka_array->manager_surname : '',
-                            'r_manager_sname' => isset($zayavka_array->manager_sname) ? $zayavka_array->manager_sname : '',
-                            'r_manager_name' => isset($zayavka_array->manager_name) ? $zayavka_array->manager_name : '',
-                            'r_client_id' => isset($zayavka_array->client_id) ? $zayavka_array->client_id : 0,
-                            'r_client_surname' => isset($zayavka_array->client_surname) ? $zayavka_array->client_surname : '',
-                            'r_client_name' => isset($zayavka_array->client_name) ? $zayavka_array->client_name : '',
-                            'r_client_sname' => isset($zayavka_array->client_sname) ? $zayavka_array->client_sname : '',
-                            'r_client_phone' => isset($zayavka_array->client_phone) ? $zayavka_array->client_phone : '',
-                            'r_client_phone_mobile' => isset($zayavka_array->client_phone_mobile) ? $zayavka_array->client_phone_mobile : '',
-                            'r_client_email' => isset($zayavka_array->client_email) ? $zayavka_array->client_email : '',
-                            'r_client_company' => isset($zayavka_array->client_company) ? $zayavka_array->client_company : '',
-                            'r_client_inn' => isset($zayavka_array->client_inn) ? $zayavka_array->client_inn : '',
-                            'r_date_begin' => isset($zayavka_array->date_begin) ? $zayavka_array->date_begin : NULL,
-                            'r_date_end' => isset($zayavka_array->date_end) ? $zayavka_array->date_end : NULL,
-                            'r_source_id' => isset($zayavka_array->source_id) ? $zayavka_array->source_id : 0,
-                            'r_status_id' => isset($zayavka_array->status_id) ? $zayavka_array->status_id : 0,
-                            'r_status' => isset($zayavka_array->status) ? $zayavka_array->status : '',
-                            'r_calc_price_netto' => isset($zayavka_array->calc_price_netto) ? $zayavka_array->calc_price_netto : 0,
-                            'r_calc_price' => isset($zayavka_array->calc_price) ? $zayavka_array->calc_price : 0,
-                            'r_calc_partner_currency_id' => isset($zayavka_array->r_calc_partner_currency_id) ? $zayavka_array->r_calc_partner_currency_id : 0,
-                            'r_calc_client_currency_id' => isset($zayavka_array->r_calc_client_currency_id) ? $zayavka_array->r_calc_client_currency_id : 0,
-                            'r_calc_increase' => isset($zayavka_array->calc_increase) ? $zayavka_array->calc_increase : 0,
-                            'r_calc_decrease' => isset($zayavka_array->calc_decrease) ? $zayavka_array->calc_decrease : 0,
-                            'r_calc_client' => isset($zayavka_array->calc_client) ? $zayavka_array->calc_client : 0,
-                            'r_calc_partner' => isset($zayavka_array->calc_partner) ? $zayavka_array->calc_partner : 0,
-                            'r_dat_updated' => isset($zayavka_array->dat_updated) ? $zayavka_array->dat_updated : NULL,
-                            'r_created_at' => isset($zayavka_array->created_at) ? $zayavka_array->created_at : NULL,
-                            'r_created_by_manager' => isset($zayavka_array->created_by_manager) ? $zayavka_array->created_by_manager : 0,
-                            'r_notes' => isset($zayavka_array->notes) ? $zayavka_array->notes : '',
-                            'r_bonus_limit' => isset($zayavka_array->bonus_limit) ? $zayavka_array->bonus_limit : 0,
-                            'r_company_name' => isset($zayavka_array->company_name) ? $zayavka_array->company_name : '',
-                            'r_company_fullname' => isset($zayavka_array->company_fullname) ? $zayavka_array->company_fullname : '',
-                            'r_company_name_rus' => isset($zayavka_array->company_name_rus) ? $zayavka_array->company_name_rus : '',
-                            'r_company_inn' => isset($zayavka_array->company_inn) ? $zayavka_array->company_inn : ''
-                        ]
-                );
-                if ($result_query) {
-                    return 'Заявки небыло в нашей базе. Добавили и обновили: ' . $r_id;
-                } else {
-                    return 'Ошибка обновления заявки: ' . $r_id;
-                }
+            $lost = new \App\Lost();
+            if ($lost->LostBid($r_id) === TRUE) {
+                return 'Заявки небыло в нашей базе. Добавлена и обновлёна. ID: ' . $r_id;
             } else {
-                return 'Ошибка получения данных по заявке из базы UON';
+                return 'Ошибка изменения данных по заявке с ID: ' . $client_id;
             }
         }
     }
