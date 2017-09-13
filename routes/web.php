@@ -23,6 +23,8 @@ Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('all_clients', 'Api\uon\out\OutApiUonController@AllClients')->name('all_clients');
     Route::get('all_requests', 'Api\uon\out\OutApiUonController@AllRequests')->name('all_requests');
     Route::get('all_leads_requests', 'Api\uon\out\OutApiUonController@AllLeadsRequests')->name('all_leads_requests');
+    Route::get('get_countries', 'Api\uon\out\OutApiUonController@GetCountries')->name('get_countries');
+    Route::get('get_hotels', 'Api\uon\out\OutApiUonController@GetHotels')->name('get_hotels');
 });
 // Роутинг для входящих хуков из базы UON
 Route::group(['prefix' => 'api/uon/in'], function () {

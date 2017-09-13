@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-
 class OutApiUonController extends Controller {
 
     public function __construct() {
@@ -18,7 +17,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllClients() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 10 years'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_users_table');
         $_users = new \UON\Users();
@@ -110,7 +109,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 10 years'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_bids');
         $_requests = new \UON\Requests();
@@ -217,7 +216,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllLeadsRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 10 years'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_leads');
         $_requests = new \UON\Leads();
@@ -323,6 +322,89 @@ class OutApiUonController extends Controller {
                         'l_company_inn' => isset($request->company_inn) ? $request->company_inn : ''
                     ]
             );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetCountries() {
+        $_requests = new \UON\Countries();
+        $response = json_encode($_requests->all());
+        $response = \GuzzleHttp\json_decode($response);
+        //var_dump($response);
+        $table_name = config('crm_tables.uon_countries');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('uon_id');
+            $table->text('uon_name');
+            $table->text('uon_name_en');
+        });
+
+        foreach ($response->message->records as $country_array) {
+            //echo $country_array->id;
+            DB::table($table_name)->insert(
+                    [
+                        'uon_id' => $country_array->id,
+                        'uon_name' => $country_array->name,
+                        'uon_name_en' => $country_array->name_en,
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetHotels() {
+        $_requests = new \UON\Hotels();
+        $table_name = config('crm_tables.uon_hotels');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('uon_id');
+            $table->string('uon_name', 255);
+            $table->string('uon_name_en', 255);
+            $table->string('uon_stars', 10);
+            $table->integer('uon_country_id');
+            $table->string('uon_country', 50);
+            $table->integer('uon_city_id');
+            $table->string('uon_city', 50);
+            $table->integer('uon_bedroom_count');
+            $table->integer('uon_guests_count');
+            $table->integer('uon_price');
+            $table->text('uon_text');
+            $table->string('uon_reserve_rules', 255);
+            $table->string('uon_exit_hour', 255);
+            $table->string('uon_contacts', 255);
+            $table->string('uon_notice', 255);
+        });
+
+        for ($page = 1; $page <= 100000; $page++) {
+            $response = json_encode($_requests->all($page));
+            if ($response) {
+                $response = \GuzzleHttp\json_decode($response);
+                //var_dump($response);
+                foreach ($response->message->records as $hotels_array) {
+                    DB::table($table_name)->insert(
+                            [
+                                'uon_id' => $hotels_array->id,
+                                'uon_name' => isset($hotels_array->name) ? $hotels_array->name : '',
+                                'uon_name_en' => isset($hotels_array->name_en) ? $hotels_array->name_en : '',
+                                'uon_stars' => isset($hotels_array->stars) ? $hotels_array->stars : '',
+                                'uon_country_id' => isset($hotels_array->country_id) ? $hotels_array->country_id : 0,
+                                'uon_country' => isset($hotels_array->country) ? $hotels_array->country : 0,
+                                'uon_city_id' => isset($hotels_array->city_id) ? $hotels_array->city_id : 0,
+                                'uon_city' => isset($hotels_array->city) ? $hotels_array->city : '',
+                                'uon_bedroom_count' => isset($hotels_array->bedroom_count) ? $hotels_array->bedroom_count : 0,
+                                'uon_guests_count' => isset($hotels_array->guests_count) ? $hotels_array->guests_count : 0,
+                                'uon_price' => isset($hotels_array->price) ? $hotels_array->price : 0,
+                                'uon_text' => isset($hotels_array->text) ? $hotels_array->text : '',
+                                'uon_reserve_rules' => isset($hotels_array->reserve_rules) ? $hotels_array->reserve_rules : '',
+                                'uon_exit_hour' => isset($hotels_array->exit_hour) ? $hotels_array->exit_hour : '',
+                                'uon_contacts' => isset($hotels_array->contacts) ? $hotels_array->contacts : '',
+                                'uon_notice' => isset($hotels_array->notice) ? $hotels_array->notice : ''
+                            ]
+                    );
+                }
+            } else {
+                break;
+            }
         }
         return redirect()->route('admin');
     }
