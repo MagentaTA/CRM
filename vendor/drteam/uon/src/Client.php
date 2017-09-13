@@ -44,7 +44,7 @@ class Client {
         if (!empty($token))
             $this->token = $token;
         else
-            $this->token = $_ENV['UON_API_TOKEN'];
+            $this->token = config('api.UON_API_TOKEN');
 
         // Store the client object
         $this->_client = new \GuzzleHttp\Client();

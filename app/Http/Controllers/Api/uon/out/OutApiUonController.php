@@ -377,7 +377,7 @@ class OutApiUonController extends Controller {
 
         for ($page = 1; $page <= 100000; $page++) {
             $response = json_encode($_requests->all($page));
-            if ($response) {
+            if (is_object($response)) {
                 $response = \GuzzleHttp\json_decode($response);
                 //var_dump($response);
                 foreach ($response->message->records as $hotels_array) {
@@ -407,6 +407,37 @@ class OutApiUonController extends Controller {
             }
         }
         return redirect()->route('admin');
+    }
+
+    public function GetCitys() {
+        $table_citys = config('crm_tables.uon_citys');
+        $table_country = config('crm_tables.uon_countries');
+        Schema::dropIfExists($table_citys);
+        Schema::create($table_citys, function($table) {
+            $table->bigIncrements('uon_id');
+            $table->string('uon_name', 255);
+            $table->string('uon_name_en', 255);
+        });
+
+        $_requests = new \UON\Cities();
+        $countrys = DB::table($table_country)->get();
+        foreach ($countrys as $country) {
+            //echo $country->uon_id.'<br />';
+            $response = json_encode($_requests->all($country->uon_id));
+            $response = \GuzzleHttp\json_decode($response);
+            if (is_object($response)) {
+                //var_dump($response->message->records);
+                foreach ($response->message->records as $citys_array) {
+                    DB::table($table_citys)->insert(
+                            [
+                                'uon_id' => $citys_array->id,
+                                'uon_name' => isset($citys_array->name) ? $citys_array->name : '',
+                                'uon_name_en' => isset($citys_array->name_en) ? $citys_array->name_en : ''
+                            ]
+                    );
+                }
+            }
+        }
     }
 
 }

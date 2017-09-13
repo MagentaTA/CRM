@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('all_requests', 'Api\uon\out\OutApiUonController@AllRequests')->name('all_requests');
     Route::get('all_leads_requests', 'Api\uon\out\OutApiUonController@AllLeadsRequests')->name('all_leads_requests');
     Route::get('get_countries', 'Api\uon\out\OutApiUonController@GetCountries')->name('get_countries');
+    Route::get('get_citys', 'Api\uon\out\OutApiUonController@GetCitys')->name('get_citys');
     Route::get('get_hotels', 'Api\uon\out\OutApiUonController@GetHotels')->name('get_hotels');
 });
 // Роутинг для входящих хуков из базы UON
@@ -37,6 +38,7 @@ Route::group(['prefix' => 'api/uon/in'], function () {
     Route::get('delete_tourist', 'Api\uon\in\InApiUonController@DeleteTourist');
     Route::get('new_service', 'Api\uon\in\InApiUonController@NewService');
     Route::get('change_service', 'Api\uon\in\InApiUonController@ChangeService');
+    Route::get('new_payment', 'Api\uon\in\InApiUonController@NewPayment');
 });
 // Роутинг для админки
 Route::group(['prefix' => 'admin'], function () {
