@@ -11,13 +11,11 @@
   |
  */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
+
 // Роутинг для исходящих запросов в базу UON
 Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('all_clients', 'Api\uon\out\OutApiUonController@AllClients')->name('all_clients');
@@ -44,5 +42,12 @@ Route::group(['prefix' => 'api/uon/in'], function () {
 // Роутинг для админки
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', 'Admin\AdminController@index')->name('admin');
+});
+// Роутинг для работы с клиентами
+Route::group(['prefix' => 'client'], function () {
+    Route::get('client_list', 'ClientController@ClientList')->name('client_list');
+    Route::get('client_add', 'ClientController@ClientAdd')->name('client_add');
+    Route::post('client_create', 'ClientController@ClientCreate')->name('client_create');
+    Route::get('client_edit/{id}', 'ClientController@ClientEdit')->name('client_edit');
 });
 

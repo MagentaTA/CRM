@@ -16,6 +16,13 @@
 
                     You are logged in!<br />
                     <a href="{{ route('client_add') }}">Добавить клиента</a>
+                    @if ($view == 'client_add')
+                        @include('layouts.forms.client_add')
+                    @endif
+                    @if ($view == 'client_create')
+                        Добавлен! Клиент {{ $name }}
+                    @endif
+                    
                 </div>
             </div>
         </div>

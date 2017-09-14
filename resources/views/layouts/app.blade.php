@@ -8,10 +8,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Административная панель CRM Makintour') }}</title>
+    <title>{{ config('app.name', 'CRM MAKiNTOUR') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/makintour.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -37,6 +38,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         &nbsp;
+                        <li><a href="{{ route('client_list') }}">Клиенты</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -1,0 +1,15 @@
+.container {
+    width: 100%;
+}
+.panel {
+    width: 100%;
+}
+.clients_table_list {
+    width: 100%;
+}
+.clients_table_list tr {
+    border-bottom:#269abc solid 1px;
+}
+.clients_table_list td {
+    padding: 5px;
+}
