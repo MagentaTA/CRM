@@ -220,7 +220,7 @@ class OutApiUonController extends Controller {
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_leads');
         $_requests = new \UON\Leads();
-        $responce = json_encode($_requests->date($date_from, $date_to));
+        $responce = \GuzzleHttp\json_encode($_requests->date($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
         //var_dump($responce);
         Schema::dropIfExists($table_name);

@@ -39,6 +39,7 @@ Route::group(['prefix' => 'api/uon/in'], function () {
     Route::get('new_service', 'Api\uon\in\InApiUonController@NewService');
     Route::get('change_service', 'Api\uon\in\InApiUonController@ChangeService');
     Route::get('new_payment', 'Api\uon\in\InApiUonController@NewPayment');
+    Route::get('new_lead', 'Api\uon\in\InApiUonController@NewLead');
 });
 // Роутинг для админки
 Route::group(['prefix' => 'admin'], function () {
