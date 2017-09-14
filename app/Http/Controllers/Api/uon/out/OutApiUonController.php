@@ -50,6 +50,9 @@ class OutApiUonController extends Controller {
             $table->text('u_social_vk');
             $table->text('u_social_fb');
             $table->text('u_social_ok');
+            $table->text('u_social_viber');
+            $table->text('u_social_watsup');
+            $table->text('u_social_telegram');
             $table->text('u_company');
             $table->text('u_inn');
             $table->text('u_kpp');
@@ -62,6 +65,7 @@ class OutApiUonController extends Controller {
             $table->text('u_finance_ks');
             $table->text('u_finance_bik');
             $table->text('u_finance_okpo');
+            $table->text('u_note');
             $table->dateTime('u_date_update')->default(NULL)->nullable();
         });
         foreach ($responce->message->users as $user) {
@@ -101,6 +105,7 @@ class OutApiUonController extends Controller {
                         'u_finance_ks' => isset($user->u_finance_ks) ? $user->u_finance_ks : '',
                         'u_finance_bik' => isset($user->u_finance_bik) ? $user->u_finance_bik : '',
                         'u_finance_okpo' => isset($user->u_finance_okpo) ? $user->u_finance_okpo : '',
+                        'u_note' => isset($user->u_note) ? $user->u_note : '',
                         'u_date_update' => $user->u_date_update
                     ]
             );
