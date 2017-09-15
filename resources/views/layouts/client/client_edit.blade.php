@@ -40,8 +40,12 @@
                                     <td>{{ Form::text('sname', $user->u_sname) }}</td>
                                 </tr>
                                 <tr>
+                                    <?php
+                                    $date_b = new App\myDate();
+                                    $b_date = $date_b->getBirthdayDate($user->u_birthday);
+                                    ?>
                                     <td>{{ Form::label('birthday','День рождения: ')}}</td>
-                                    <td>{{ Form::text('birthday', $user->u_birthday) }}</td>
+                                    <td>{{ Form::text('birthday', $b_date) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ Form::label('fax','Телефон: ')}}</td>
@@ -91,22 +95,69 @@
                         </div>
                         <div class="clients_table_list" id="tabs-2">
                             <table>
+                                <tr><td colspan="2">Заграничный пасспорт</td></tr>
                                 <tr>
-                                    <td>{{ Form::label('surname','Фамилия: ')}}</td>
-                                    <td>{{ Form::text('surname', $user->u_surname) }}</td>
+                                    <td>{{ Form::label('name_en','Имя: ')}}</td>
+                                    <td>{{ Form::text('name_en', $user->u_name_en) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>{{ Form::label('name','Имя: ')}}</td>
-                                    <td>{{ Form::text('name', $user->u_name) }}</td>
+                                    <td>{{ Form::label('surname_en','Фамилия: ')}}</td>
+                                    <td>{{ Form::text('surname_en', $user->u_surname_en) }}</td>
                                 </tr>
+                                <tr>
+                                    <td>{{ Form::label('passport_number','Серия и номер: ')}}</td>
+                                    <td>{{ Form::text('passport_number', $user->u_passport_number) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('zagran_given','Дата выдачи: ')}}</td>
+                                    <td>{{ Form::text('zagran_given', $user->u_zagran_given) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('zagran_expire','Дата действия: ')}}</td>
+                                    <td>{{ Form::text('zagran_expire', $user->u_zagran_expire) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('zagran_organization','Организация: ')}}</td>
+                                    <td>{{ Form::text('zagran_organization', $user->u_zagran_organization) }}</td>
+                                </tr>
+                                <tr><td colspan="2">Украинский пасспорт</td></tr>
+                                <tr>
+                                    <td>{{ Form::label('passport_number','Серия и номер: ')}}</td>
+                                    <td>{{ Form::text('passport_number', $user->u_passport_number) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('passport_date','Дата выдачи: ')}}</td>
+                                    <td>{{ Form::text('passport_date', $user->u_passport_date) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('passport_taken','Кем выдан: ')}}</td>
+                                    <td>{{ Form::textarea('passport_taken', $user->u_passport_taken) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('address','Адрес регистрации: ')}}</td>
+                                    <td>{{ Form::textarea('address', $user->address) }}</td>
+                                </tr>
+
                             </table>
                         </div>
+                        <div class="clients_table_list" id="tabs-7">
+                            <table>
+                                <tr><td colspan="2">История общения</td></tr>
+                                <tr><td colspan="2">Список обращений</td></tr>
+                            </table>
+                        </div>
+
                     </div>
 
                     {{ Form::close() }}
                     <script>
                         $(function () {
-                            $("#client_tabs").tabs();
+                            $('#client_tabs').tabs();
+                            $('[name="birthday"]').datepicker({
+                                changeMonth: true,
+                                changeYear: true,
+                                dateFormat: 'dd.mm.yy'
+                            });
                         });
                     </script>
                 </div>

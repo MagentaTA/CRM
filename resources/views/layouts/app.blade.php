@@ -11,10 +11,10 @@
         <title>{{ config('app.name', 'CRM MAKiNTOUR') }}</title>
 
         <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/makintour.css') }}" rel="stylesheet">
-        <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-        <script src="{{ asset('js/ui/jquery-ui.min.js') }}"></script>
+        <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
+        <!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ elixir('js/all.js') }}"></script>
     </head>
     <body>
         <div id="app">
@@ -41,6 +41,7 @@
                         <ul class="nav navbar-nav">
                             &nbsp;
                             <li><a href="{{ route('client_list') }}">Клиенты</a></li>
+                            <li><a href="{{ route('admin') }}">Админ</a></li>
                         </ul>
 
                         <!-- Right Side Of Navbar -->
@@ -74,11 +75,7 @@
                     </div>
                 </div>
             </nav>
-
             @yield('content')
         </div>
-
-        <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>

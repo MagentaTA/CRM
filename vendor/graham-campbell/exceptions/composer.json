@@ -1,0 +1,57 @@
+{
+    "name": "graham-campbell/exceptions",
+    "description": "Provides A Powerful Error Response System For Both Development And Production",
+    "keywords": ["laravel", "framework", "exceptions", "exception", "errors", "error", "whoops", "Exceptions", "Laravel Exceptions", "Laravel-Exceptions", "Graham Campbell", "GrahamCampbell"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Graham Campbell",
+            "email": "graham@alt-three.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "illuminate/contracts": "5.3.*|5.4.*|5.5.*",
+        "illuminate/support": "5.3.*|5.4.*|5.5.*",
+        "symfony/console": "^3.1",
+        "symfony/debug": "^3.1",
+        "symfony/http-foundation": "^3.1",
+        "psr/log": "^1.0"
+    },
+    "require-dev": {
+        "filp/whoops": "^1.1|^2.0",
+        "graham-campbell/analyzer": "^1.1",
+        "graham-campbell/testbench": "^4.0",
+        "mockery/mockery": "dev-master#c90a17247147543081e4d00f46911e422b49e583",
+        "phpunit/phpunit": "^6.0"
+    },
+    "suggest": {
+        "filp/whoops": "Enables use of the debug displayer."
+    },
+    "autoload": {
+        "psr-4": {
+            "GrahamCampbell\\Exceptions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": ["tests/stubs/"],
+        "psr-4": {
+            "GrahamCampbell\\Tests\\Exceptions\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "10.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "GrahamCampbell\\Exceptions\\ExceptionsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

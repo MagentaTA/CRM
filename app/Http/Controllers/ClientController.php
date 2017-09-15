@@ -31,7 +31,9 @@ class ClientController extends Controller {
 
     public function ClientEdit(Request $request) {
         $table_name = config('crm_tables.uon_users_table');
+        $table_bids = config('crm_tables.uon_bids');
         $user = DB::table($table_name)->where('u_id', $request->id)->first();
+        $bids = DB::table($table_bids)->where('r_client_id', $request->id);
         return view('layouts.client.client_edit', ['user' => $user]);
     }
 

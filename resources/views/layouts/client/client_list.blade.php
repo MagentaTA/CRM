@@ -17,7 +17,8 @@
                         <th>Имя</th>
                         <th>Отчество</th>
                         <th>Мобильный</th>
-                        <th>День розжения</th>
+                        <th>E-Mail</th>
+                        <th>День рождения</th>
                         <th>Действия</th>
                         @foreach ($users as $user)
                         <tr>
@@ -25,7 +26,13 @@
                             <td>{{ $user->u_name }}</td>
                             <td>{{ $user->u_sname }}</td>
                             <td>{{ $user->u_phone_mobile }}</td>
-                            <td>{{ $user->u_birthday }}</td>
+                            <td>{{ $user->u_email }}</td>
+                            <td><?php
+                                $date_b = new App\myDate();
+                                $b_date = $date_b->getBirthdayDate($user->u_birthday);
+                                echo $b_date;
+                                ?>
+                            </td>
                             <td><a href="{{ route('client_edit',['id' => $user->u_id]) }}">Edit</a></td>
                         </tr>
                         @endforeach
