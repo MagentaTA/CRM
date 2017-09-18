@@ -22,6 +22,8 @@
                         <a href="<?=route('get_countries')?>">Импорт Стран</a><br />
                         <a href="<?=route('get_citys')?>">Импорт Городов</a><br />
                         <a href="<?=route('get_hotels')?>">Импорт Отелей</a><br />
+                        <a href="<?=route('get_sourses')?>">Импорт Источников</a><br />
+                        <a href="<?=route('get_managers')?>">Импорт Менеджеров</a><br />
                     </div>
 
 

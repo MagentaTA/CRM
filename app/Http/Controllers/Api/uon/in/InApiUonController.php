@@ -100,8 +100,9 @@ class InApiUonController extends Controller {
                         'u_date_update' => $user->u_date_update
                     ]
             );
-            if ($result_query) {
+            if ($result_query > 0) {
                 return '<font color=' . $this->ok_color . '>Изменён клиент: ' . $client_id . '</font>';
+                //return var_dump($result_query);
             } else {
                 $lost = new \App\Lost();
                 $result = $lost->LostClient($client_id);
@@ -146,7 +147,7 @@ class InApiUonController extends Controller {
                     'r_status' => isset($get_text) ? $get_text : ''
                 ]
         );
-        if ($result_query) {
+        if ($result_query >0) {
             return '<font color=' . $this->ok_color . '>Обновлён статус заявки: ' . $r_id . ' на ' . $get_text . '(' . $r_new_status . ')</font>';
         } else {
             $lost = new \App\Lost();
@@ -191,10 +192,20 @@ class InApiUonController extends Controller {
     }
 
     public function DeleteTourist(Request $request) {
-
-
-
-        return var_dump($request->all());
+        $zayavka_id = $request->get('r_id');
+        $tourist_id = $request->get('tourist_id');
+        $table_name = config('crm_tables.crm_bid_tourist');
+        $result_query = DB::table($table_name)->where(
+                        [
+                            ['zayavka_id', '=', (int) $zayavka_id],
+                            ['tourist_id', '=', (int) $tourist_id]
+                        ]
+                )->delete();
+        if ($result_query) {
+            return 'Удалён турист (' . $tourist_id . ') из заявки (' . $zayavka_id . ')';
+        } else {
+            return 'Ошибка удаления туриста (' . $tourist_id . ') из заявки (' . $zayavka_id . ')';
+        }
     }
 
     public function NewService(Request $request) {
@@ -220,9 +231,9 @@ class InApiUonController extends Controller {
                 ]
         );
         if ($result_query) {
-            return '<font color=' . $this->ok_color . '>К заявке ' . $zayavka_id . ' прикреплена услуга ' . $service_id . '</font>';
+            return '<font color = ' . $this->ok_color . '>К заявке ' . $zayavka_id . ' прикреплена услуга ' . $service_id . '</font>';
         } else {
-            return '<font color=' . $this->error_color . '>Ошибка добавления услуги ' . $service_id . ' к заявке ' . $zayavka_id . '</font>';
+            return '<font color = ' . $this->error_color . '>Ошибка добавления услуги ' . $service_id . ' к заявке ' . $zayavka_id . '</font>';
         }
         return FALSE;
     }

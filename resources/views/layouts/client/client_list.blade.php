@@ -12,7 +12,7 @@
                         {{ session('status') }}
                     </div>
                     @endif
-                    <table class="clients_table_list">
+                    <table class="table_list">
                         <th>Фамилия</th>
                         <th>Имя</th>
                         <th>Отчество</th>

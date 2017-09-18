@@ -41,6 +41,22 @@
                         <ul class="nav navbar-nav">
                             &nbsp;
                             <li><a href="{{ route('client_list') }}">Клиенты</a></li>
+                            <li><a href="{{ route('leads_list') }}">Обращения</a></li>
+                            <li><a href="{{ route('bids_list') }}">Заявки</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Справочники <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('country_list') }}" >Страны</a></li>
+                                    <li><a href="{{ route('city_list') }}" >Города</a></li>
+                                    <li><a href="{{ route('hotel_list') }}" >Отели</a></li>
+                                    <li><a href="{{ route('sourses_list') }}" >Источники</a></li>
+                                    <li><a href="{{ route('managers_list') }}" >Сотрудники</a></li>
+                                </ul>
+                            </li>
+
                             <li><a href="{{ route('admin') }}">Админ</a></li>
                         </ul>
 
@@ -60,7 +76,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
+                                               document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
 

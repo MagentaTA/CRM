@@ -221,13 +221,13 @@ class OutApiUonController extends Controller {
     }
 
     public function AllLeadsRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 10 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_leads');
         $_requests = new \UON\Leads();
         $responce = \GuzzleHttp\json_encode($_requests->date($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
-        //var_dump($responce);
+        var_dump($responce);
         Schema::dropIfExists($table_name);
         Schema::create($table_name, function($table) {
             $table->bigIncrements('l_id');
@@ -235,8 +235,8 @@ class OutApiUonController extends Controller {
             $table->text('l_id_internal');
             $table->text('l_reservation_number');
             $table->integer('l_supplier_id')->default(0);
-            $table->dateTime('l_dat')->default(NULL)->nullable();
-            $table->dateTime('l_dat_lead')->default(NULL)->nullable();
+            $table->text('l_dat');
+            $table->text('l_dat_lead');
             $table->integer('l_manager_id')->default(0);
             $table->text('l_manager_surname');
             $table->text('l_manager_sname');
@@ -250,8 +250,8 @@ class OutApiUonController extends Controller {
             $table->text('l_client_email');
             $table->text('l_client_company');
             $table->text('l_client_inn');
-            $table->dateTime('l_date_begin')->default(NULL)->nullable();
-            $table->dateTime('l_date_end')->default(NULL)->nullable();
+            $table->text('l_date_begin');
+            $table->text('l_date_end');
             $table->integer('l_source_id')->default(0);
             $table->text('l_source');
             $table->integer('l_travel_type_id')->default(0);
@@ -285,8 +285,8 @@ class OutApiUonController extends Controller {
                         'l_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
                         'l_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
                         'l_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
-                        'l_dat' => isset($request->dat) ? $request->dat : NULL,
-                        'l_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : NULL,
+                        'l_dat' => isset($request->dat) ? $request->dat : '',
+                        'l_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : '',
                         'l_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
                         'l_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
                         'l_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
@@ -300,8 +300,8 @@ class OutApiUonController extends Controller {
                         'l_client_email' => isset($request->client_email) ? $request->client_email : '',
                         'l_client_company' => isset($request->client_company) ? $request->client_company : '',
                         'l_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
-                        'l_date_begin' => isset($request->date_begin) ? $request->date_begin : NULL,
-                        'l_date_end' => isset($request->date_end) ? $request->date_end : NULL,
+                        'l_date_begin' => isset($request->date_begin) ? $request->date_begin : '',
+                        'l_date_end' => isset($request->date_end) ? $request->date_end : '',
                         'l_source_id' => isset($request->source_id) ? $request->source_id : 0,
                         'l_source' => isset($request->source) ? $request->source : '',
                         'l_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
@@ -443,6 +443,115 @@ class OutApiUonController extends Controller {
                 }
             }
         }
+    }
+
+    public function GetSourses() {
+        $_requests = new \UON\Sources();
+        $response = \GuzzleHttp\json_encode($_requests->all());
+        $response = \GuzzleHttp\json_decode($response);
+        //var_dump($response);
+        $table_name = config('crm_tables.uon_sourses');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('uon_id');
+            $table->text('uon_name');
+        });
+
+        foreach ($response->message->items as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'uon_id' => $item_array->rs_id,
+                        'uon_name' => $item_array->rs_name,
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetManagers() {
+        $_requests = new \UON\Misc();
+        $response = \GuzzleHttp\json_encode($_requests->getManagers());
+        $response = \GuzzleHttp\json_decode($response);
+        //var_dump($response);
+        $table_name = config('crm_tables.uon_managers');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('u_id');
+            $table->text('u_surname');
+            $table->text('u_name');
+            $table->text('u_sname');
+            $table->text('u_surname_en');
+            $table->text('u_name_en');
+            $table->text('u_email');
+            $table->integer('u_sex');
+            $table->text('u_fax');
+            $table->text('u_phone');
+            $table->text('u_phone_mobile');
+            $table->text('u_passport_number');
+            $table->text('u_passport_taken');
+            $table->text('u_passport_date');
+            $table->text('u_zagran_number');
+            $table->text('u_zagran_expire');
+            $table->text('u_birthday');
+            $table->integer('manager_id');
+            $table->text('u_social_vk');
+            $table->text('u_social_fb');
+            $table->text('u_social_ok');
+            $table->text('u_company');
+            $table->text('u_inn');
+            $table->text('u_kpp');
+            $table->text('u_ogrn');
+            $table->text('u_okved');
+            $table->text('address');
+            $table->text('address_juridical');
+            $table->text('u_finance_bank');
+            $table->text('u_finance_rs');
+            $table->text('u_finance_ks');
+            $table->text('u_finance_bik');
+            $table->text('u_finance_okpo');
+            $table->text('u_date_update');
+        });
+
+        foreach ($response->message->users as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'u_id' => $item_array->u_id,
+                        'u_surname' => isset($item_array->u_surname) ? $item_array->u_surname : '',
+                        'u_name' => isset($item_array->u_name) ? $item_array->u_name : '',
+                        'u_sname' => isset($item_array->u_sname) ? $item_array->u_sname : '',
+                        'u_surname_en' => isset($item_array->u_surname_en) ? $item_array->u_surname_en : '',
+                        'u_name_en' => isset($item_array->u_name_en) ? $item_array->u_name_en : '',
+                        'u_email' => isset($item_array->u_email) ? $item_array->u_email : '',
+                        'u_sex' => isset($item_array->u_sex) ? $item_array->u_sex : 0,
+                        'u_fax' => isset($item_array->u_fax) ? $item_array->u_fax : '',
+                        'u_phone' => isset($item_array->u_phone) ? $item_array->u_phone : '',
+                        'u_phone_mobile' => isset($item_array->u_phone_mobile) ? $item_array->u_phone_mobile : '',
+                        'u_passport_number' => isset($item_array->u_passport_number) ? $item_array->u_passport_number : '',
+                        'u_passport_taken' => isset($item_array->u_passport_taken) ? $item_array->u_passport_taken : '',
+                        'u_passport_date' => isset($item_array->u_passport_date) ? $item_array->u_passport_date : '',
+                        'u_zagran_number' => isset($item_array->u_zagran_number) ? $item_array->u_zagran_number : '',
+                        'u_zagran_expire' => isset($item_array->u_zagran_expire) ? $item_array->u_zagran_expire : '',
+                        'u_birthday' => isset($item_array->u_birthday) ? $item_array->u_birthday : '',
+                        'manager_id' => isset($item_array->manager_id) ? $item_array->manager_id : 0,
+                        'u_social_vk' => isset($item_array->u_social_vk) ? $item_array->u_social_vk : '',
+                        'u_social_fb' => isset($item_array->u_social_fb) ? $item_array->u_social_fb : '',
+                        'u_social_ok' => isset($item_array->u_social_ok) ? $item_array->u_social_ok : '',
+                        'u_company' => isset($item_array->u_company) ? $item_array->u_company : '',
+                        'u_inn' => isset($item_array->u_inn) ? $item_array->u_inn : '',
+                        'u_kpp' => isset($item_array->u_kpp) ? $item_array->u_kpp : '',
+                        'u_ogrn' => isset($item_array->u_ogrn) ? $item_array->u_ogrn : '',
+                        'u_okved' => isset($item_array->u_okved) ? $item_array->u_okved : '',
+                        'address' => isset($item_array->address) ? $item_array->address : '',
+                        'address_juridical' => isset($item_array->address_juridical) ? $item_array->address_juridical : '',
+                        'u_finance_bank' => isset($item_array->u_finance_bank) ? $item_array->u_finance_bank : '',
+                        'u_finance_rs' => isset($item_array->u_finance_rs) ? $item_array->u_finance_rs : '',
+                        'u_finance_bik' => isset($item_array->u_finance_bik) ? $item_array->u_finance_bik : '',
+                        'u_finance_okpo' => isset($item_array->u_finance_okpo) ? $item_array->u_finance_okpo : '',
+                        'u_date_update' => isset($item_array->u_date_update) ? $item_array->u_date_update : '',
+                    ]
+            );
+        }
+        return redirect()->route('admin');
     }
 
 }

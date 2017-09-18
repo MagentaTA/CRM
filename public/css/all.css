@@ -9918,14 +9918,15 @@ a.ui-button:active,
   width: 100%;
 }
 
-.clients_table_list {
+.table_list {
   width: 100%;
+  font-size: 10px;
 }
 
-.clients_table_list tr {
+.table_list tr {
   border-bottom: #269abc solid 1px;
 }
 
-.clients_table_list td {
+.table_list td {
   padding: 5px;
 }

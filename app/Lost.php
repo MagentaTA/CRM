@@ -57,7 +57,7 @@ class Lost extends Model {
                         'u_date_update' => $user->u_date_update
                     ]
             );
-            if ($result_query) {
+            if ($result_query > 0) {
                 return '<font color=' . $this->ok_color . '>Клиента небыло. Добавлен ID: ' . $id . '</font>';
             } else {
                 return '<font color=' . $this->error_color . '>Клиента небыло и нет ID: ' . $id . '</font>';
@@ -140,7 +140,7 @@ class Lost extends Model {
         $responce = \GuzzleHttp\json_encode($_requests->get($id));
         $responce = \GuzzleHttp\json_decode($responce);
         if (is_object($responce)) {
-            foreach ($responce->message->leads as $request) {
+            foreach ($responce->message->lead as $request) {
                 $result_query = DB::table($table_name)->insert(
                         [
                             'l_id' => $request->id,
@@ -190,16 +190,16 @@ class Lost extends Model {
                             'l_company_inn' => isset($request->company_inn) ? $request->company_inn : ''
                         ]
                 );
-            }
-            if ($result_query) {
-                return '<font color=' . $this->ok_color . '>Обращения небыло в нашей базе. Добавили и обновили: ' . $id . '</font>';
-            } else {
-                return '<font color=' . $this->error_color . '>Ошибка добавления обращения: ' . $id . '</font>';
+                if ($result_query) {
+                    return '<font color=' . $this->ok_color . '>Обращения небыло в нашей базе. Добавили и обновили: ' . $id . '</font>';
+                } else {
+                    return '<font color=' . $this->error_color . '>Ошибка добавления обращения: ' . $id . '</font>';
+                }
             }
         } else {
             return '<font color=' . $this->error_color . '>Ошибка получения данных по обращению из базы UON</font>';
         }
-        return FALSE;
+        return var_dump($responce);
     }
 
 }
