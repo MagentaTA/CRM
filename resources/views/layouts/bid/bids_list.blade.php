@@ -20,6 +20,7 @@
                         <th>Клиент</th>
                         <th>Статус</th>
                         <th>Источник</th>
+                        <th>Действия</th>
                         @foreach ($bids as $bid)
                         <tr>
                             <td>{{ $bid->r_id }}</td>
@@ -31,6 +32,7 @@
                             </td>
                             <td>{{ $bid->r_status }}</td>
                             <td>{{ $bid->uon_name }}</td>
+                            <td><a href="{{ route('bid_edit',['r_id' => $bid->r_id]) }}">Edit</a></td>
                         </tr>
                         @endforeach
                     </table>

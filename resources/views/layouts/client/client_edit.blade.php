@@ -143,7 +143,22 @@
                         <div class="clients_table_list" id="tabs-7">
                             <table>
                                 <tr><td colspan="2">История общения</td></tr>
-                                <tr><td colspan="2">Список обращений</td></tr>
+                                <tr><td colspan="2">Список заявок</td></tr>
+                                @if($bids)
+                                @foreach ($bids as $bid)
+                                <tr>
+                                    <td>{{ $bid->r_id }}</td>
+                                    <td>{{ $bid->r_dat }}</td>
+                                    <td>{{ $bid->r_date_begin }}</td>
+                                    <td>{{ $bid->r_date_end }}</td>
+                                    <td>
+                                        {{ $bid->u_surname }} {{ $bid->u_name }} {{ $bid->u_sname }} 
+                                    </td>
+                                    <td>{{ $bid->r_status }}</td>
+                                    <td>{{ $bid->uon_name }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
                             </table>
                         </div>
 

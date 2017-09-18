@@ -57,6 +57,8 @@ Route::group(['prefix' => 'leads'], function () {
 });
 Route::group(['prefix' => 'bids'], function () {
     Route::get('bids_list', 'BidsController@BidsList')->name('bids_list');
+    Route::get('bid_edit/{id}', 'BidsController@BidEdit')->name('bid_edit');
+    Route::get('bid_change/{id}', 'BidsController@BidChange')->name('bid_change');
 });
 Route::group(['prefix' => 'catalog'], function () {
     Route::get('country_list', 'CountryController@CountryList')->name('country_list');
