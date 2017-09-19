@@ -147,7 +147,7 @@ class InApiUonController extends Controller {
                     'r_status' => isset($get_text) ? $get_text : ''
                 ]
         );
-        if ($result_query >0) {
+        if ($result_query > 0) {
             return '<font color=' . $this->ok_color . '>Обновлён статус заявки: ' . $r_id . ' на ' . $get_text . '(' . $r_new_status . ')</font>';
         } else {
             $lost = new \App\Lost();
@@ -246,12 +246,96 @@ class InApiUonController extends Controller {
     }
 
     public function NewPayment(Request $request) {
+        $table_name = config('crm_tables.uon_payments');
         $payment_id = $request->get('payment_id');
         $_requests = new \UON\Payments();
         $responce = \GuzzleHttp\json_encode($_requests->get($payment_id));
         $responce = \GuzzleHttp\json_decode($responce);
-
-        return 'ok';
+        if (is_object($responce)) {
+            if (Schema::hasTable($table_name)) {
+                //return var_dump($responce->message);
+                $payment_data = $responce->message;
+                $result_insert = DB::table($table_name)->insert(
+                        [
+                            'id' => $payment_data->id,
+                            'date_create' => isset($payment_data->date_create) ? $payment_data->date_create : '',
+                            'date_plan' => isset($payment_data->date_plan) ? $payment_data->date_plan : '',
+                            'reason' => isset($payment_data->reason) ? $payment_data->reason : '',
+                            'cash_id' => isset($payment_data->cash_id) ? $payment_data->cash_id : 0,
+                            'number' => isset($payment_data->number) ? $payment_data->number : 0,
+                            'type_id' => isset($payment_data->type_id) ? $payment_data->type_id : 0,
+                            'cio_id' => isset($payment_data->cio_id) ? $payment_data->cio_id : 0,
+                            'in_plan' => isset($payment_data->in_plan) ? $payment_data->in_plan : 0,
+                            'is_bonus_pay' => isset($payment_data->is_bonus_pay) ? $payment_data->is_bonus_pay : 0,
+                            'is_deposit' => isset($payment_data->is_deposit) ? $payment_data->is_deposit : 0,
+                            'from1c' => isset($payment_data->from1c) ? $payment_data->from1c : 0,
+                            'office_id' => isset($payment_data->office_id) ? $payment_data->office_id : 0,
+                            'client_id' => isset($payment_data->client_id) ? $payment_data->client_id : 0,
+                            'price' => isset($payment_data->price) ? $payment_data->price : 0,
+                            'rate' => isset($payment_data->rate) ? $payment_data->rate : 0,
+                            'currency_id' => isset($payment_data->currency_id) ? $payment_data->currency_id : 0,
+                            'currency' => isset($payment_data->currency) ? $payment_data->currency : '',
+                            'currency_code' => isset($payment_data->currency_code) ? $payment_data->currency_code : '',
+                            'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
+                        ]
+                );
+            } else {
+                Schema::create($table_name, function($table) {
+                    $table->bigIncrements('id');
+                    $table->text('date_create');
+                    $table->text('date_plan');
+                    $table->text('reason');
+                    $table->integer('cash_id')->default(0);
+                    $table->integer('number')->default(0);
+                    $table->integer('type_id')->default(0);
+                    $table->integer('cio_id')->default(0);
+                    $table->integer('in_plan')->default(0);
+                    $table->integer('is_bonus_pay')->default(0);
+                    $table->integer('is_deposit')->default(0);
+                    $table->integer('from1c')->default(0);
+                    $table->integer('office_id')->default(0);
+                    $table->integer('client_id')->default(0);
+                    $table->integer('price')->default(0);
+                    $table->integer('rate')->default(0);
+                    $table->integer('currency_id')->default(0);
+                    $table->text('currency');
+                    $table->text('currency_code');
+                    $table->integer('r_id')->default(0);
+                });
+                $payment_data = $responce->message;
+                $result_insert = DB::table($table_name)->insert(
+                        [
+                            'id' => $payment_data->id,
+                            'date_create' => isset($payment_data->date_create) ? $payment_data->date_create : '',
+                            'date_plan' => isset($payment_data->date_plan) ? $payment_data->date_plan : '',
+                            'reason' => isset($payment_data->reason) ? $payment_data->reason : '',
+                            'cash_id' => isset($payment_data->cash_id) ? $payment_data->cash_id : 0,
+                            'number' => isset($payment_data->number) ? $payment_data->number : 0,
+                            'type_id' => isset($payment_data->type_id) ? $payment_data->type_id : 0,
+                            'cio_id' => isset($payment_data->cio_id) ? $payment_data->cio_id : 0,
+                            'in_plan' => isset($payment_data->in_plan) ? $payment_data->in_plan : 0,
+                            'is_bonus_pay' => isset($payment_data->is_bonus_pay) ? $payment_data->is_bonus_pay : 0,
+                            'is_deposit' => isset($payment_data->is_deposit) ? $payment_data->is_deposit : 0,
+                            'from1c' => isset($payment_data->from1c) ? $payment_data->from1c : 0,
+                            'office_id' => isset($payment_data->office_id) ? $payment_data->office_id : 0,
+                            'client_id' => isset($payment_data->client_id) ? $payment_data->client_id : 0,
+                            'price' => isset($payment_data->price) ? $payment_data->price : 0,
+                            'rate' => isset($payment_data->rate) ? $payment_data->rate : 0,
+                            'currency_id' => isset($payment_data->currency_id) ? $payment_data->currency_id : 0,
+                            'currency' => isset($payment_data->currency) ? $payment_data->currency : '',
+                            'currency_code' => isset($payment_data->currency_code) ? $payment_data->currency_code : '',
+                            'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
+                        ]
+                );
+            }
+        } else {
+            return '<font color = ' . $this->error_color . '>Ошибка доступа к базе UON</font>';
+        }
+        if ($result_insert > 0) {
+            return '<font color = ' . $this->ok_color . '>Платёж был успешно добавлен в нашу базу</font>';
+        } else {
+            return '<font color = ' . $this->error_color . '>Ошибка записи в нашу базу</font>';
+        }
     }
 
 }

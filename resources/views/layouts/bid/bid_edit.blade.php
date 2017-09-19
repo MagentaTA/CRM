@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Редактирование обращения</div>
+                <div class="panel-heading">Редактирование заявки</div>
                 <div class="panel-body">
                     @if (session('status'))
                     <div class="alert alert-success">
@@ -19,6 +19,7 @@
                         <?php Form::open(array('url' => route('bid_change', ['id' => $bid->r_id]), 'method' => 'post')) ?>
                         <div class="table_list" id="tabs-1">
                             <table>
+                                <tr><td colspan="6" style="text-align: center;"><b>Основные</b></td></tr>
                                 <tr>
                                     <td>{{ Form::label('status','Статус: ')}}</td>
                                     <td>{{ Form::text('status', $bid->r_status) }}</td>
@@ -43,6 +44,26 @@
                                     <td>{{ Form::label('uon_name','Источник: ')}}</td>
                                     <td>{{ Form::text('uon_name', $bid->uon_name) }}</td>
                                 </tr>
+                                <tr><td colspan="4" style="text-align: center;"><b>Туристы</b></td></tr>
+                                @if ($tourists)
+                                @foreach ($tourists as $tourist)
+                                <tr>
+                                    <td>
+                                        {{ $tourist->u_surname }}
+                                    </td>
+                                    <td>
+                                        {{ $tourist->u_name }}
+                                    </td>
+                                    <td>
+                                        {{ $tourist->u_sname }}
+                                    </td>
+                                    <td>
+                                        {{ $tourist->u_phone_mobile }}
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                                @endif
                             </table>
                         </div>
                     </div>

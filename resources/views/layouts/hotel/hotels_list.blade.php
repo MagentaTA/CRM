@@ -5,7 +5,15 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Список Отелей</div>
+                <div class="panel-heading">Список Отелей
+                    <span class="seacrh_panel">
+                        {{ Form::open(array('url' => route('hotel_list'), 'method' => 'post')) }}
+                        {{ Form::label('search','Поиск: ')}}
+                        {{ Form::text('search', 'Строка поиска...') }}
+                        {{ Form::submit('Поиск') }}
+                        {{ Form::close() }}
+                    </span>
+                </div>
                 <div class="panel-body">
                     @if (session('status'))
                     <div class="alert alert-success">

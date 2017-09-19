@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin'], function () {
 // Роутинг для работы с клиентами
 Route::group(['prefix' => 'client'], function () {
     Route::get('client_list', 'ClientController@ClientList')->name('client_list');
+    Route::post('client_list', 'ClientController@ClientList')->name('client_list');
     Route::get('client_add', 'ClientController@ClientAdd')->name('client_add');
     Route::post('client_create', 'ClientController@ClientCreate')->name('client_create');
     Route::get('client_edit/{id}', 'ClientController@ClientEdit')->name('client_edit');
@@ -64,6 +65,7 @@ Route::group(['prefix' => 'catalog'], function () {
     Route::get('country_list', 'CountryController@CountryList')->name('country_list');
     Route::get('city_list', 'CityController@CityList')->name('city_list');
     Route::get('hotel_list', 'HotelController@HotelList')->name('hotel_list');
+    Route::post('hotel_list', 'HotelController@HotelList')->name('hotel_list');
     Route::get('sourses_list', 'SourseController@SoursesList')->name('sourses_list');
     Route::get('managers_list', 'ManagersController@ManagersList')->name('managers_list');
 });

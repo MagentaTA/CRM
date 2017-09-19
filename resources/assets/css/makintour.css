@@ -14,3 +14,7 @@
 .table_list td {
     padding: 5px;
 }
+.seacrh_panel {
+    display: block;
+    float: right;
+}

@@ -17,7 +17,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllClients() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_users_table');
         $_users = new \UON\Users();
@@ -114,7 +114,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_bids');
         $_requests = new \UON\Requests();
@@ -221,13 +221,13 @@ class OutApiUonController extends Controller {
     }
 
     public function AllLeadsRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 10 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_leads');
         $_requests = new \UON\Leads();
         $responce = \GuzzleHttp\json_encode($_requests->date($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
-        var_dump($responce);
+        //var_dump($responce);
         Schema::dropIfExists($table_name);
         Schema::create($table_name, function($table) {
             $table->bigIncrements('l_id');

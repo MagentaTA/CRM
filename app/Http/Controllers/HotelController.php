@@ -23,10 +23,18 @@ class HotelController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function HotelList() {
+    public function HotelList(Request $request) {
         $table_name = config('crm_tables.uon_hotels');
-        $hotels = DB::table($table_name)->orderBy('uon_id', 'desc')->paginate(50);
-        return view('layouts.hotel.hotels_list', ['hotels' => $hotels]);
+        if ($request->get('search')) {
+            $hotels = DB::table($table_name)
+                    ->where('uon_name', 'like', '%' . $request->get('search') . '%')
+                    ->orderBy('uon_id', 'desc')
+                    ->paginate(100000);
+            return view('layouts.hotel.hotels_list', ['hotels' => $hotels]);
+        } else {
+            $hotels = DB::table($table_name)->orderBy('uon_id', 'desc')->paginate(50);
+            return view('layouts.hotel.hotels_list', ['hotels' => $hotels]);
+        }
     }
 
 }

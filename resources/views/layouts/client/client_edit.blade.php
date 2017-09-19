@@ -23,9 +23,8 @@
                             <li><a href="#tabs-7">История общения</a></li>
                             <li><a href="#tabs-8">История Звонков</a></li>
                         </ul>                        
-
                         {{ Form::open(array('url' => route('client_create'), 'method' => 'post')) }}
-                        <div class="clients_table_list" id="tabs-1">
+                        <div class="table_list" id="tabs-1">
                             <table>
                                 <tr>
                                     <td>{{ Form::label('surname','Фамилия: ')}}</td>
@@ -93,7 +92,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="clients_table_list" id="tabs-2">
+                        <div class="table_list" id="tabs-2">
                             <table>
                                 <tr><td colspan="2">Заграничный пасспорт</td></tr>
                                 <tr>
@@ -140,10 +139,21 @@
 
                             </table>
                         </div>
-                        <div class="clients_table_list" id="tabs-7">
+                        <div class="table_list" id="tabs-7">
                             <table>
-                                <tr><td colspan="2">История общения</td></tr>
-                                <tr><td colspan="2">Список заявок</td></tr>
+                                <tr><td colspan="5">История общения</td></tr>
+                                @if($leads)
+                                @foreach ($leads as $lead)
+                                <tr>
+                                    <td>{{ $lead->l_id }}</td>
+                                    <td>{{ $lead->l_dat }}</td>
+                                    <td>{{ $lead->l_date_begin }}</td>
+                                    <td>{{ $lead->l_date_end }}</td>
+                                    <td>{{ $lead->l_status }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                                <tr><td colspan="5">Список заявок</td></tr>
                                 @if($bids)
                                 @foreach ($bids as $bid)
                                 <tr>
@@ -151,11 +161,7 @@
                                     <td>{{ $bid->r_dat }}</td>
                                     <td>{{ $bid->r_date_begin }}</td>
                                     <td>{{ $bid->r_date_end }}</td>
-                                    <td>
-                                        {{ $bid->u_surname }} {{ $bid->u_name }} {{ $bid->u_sname }} 
-                                    </td>
                                     <td>{{ $bid->r_status }}</td>
-                                    <td>{{ $bid->uon_name }}</td>
                                 </tr>
                                 @endforeach
                                 @endif

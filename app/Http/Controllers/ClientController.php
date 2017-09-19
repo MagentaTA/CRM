@@ -23,21 +23,35 @@ class ClientController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function ClientList() {
+    public function ClientList(Request $request) {
         $table_name = config('crm_tables.uon_users_table');
-        $users = DB::table($table_name)->orderBy('u_id', 'desc')->paginate(50);
+        if ($request->get('search')) {
+            $users = DB::table($table_name)
+                    ->where('u_surname', 'like', '%' . $request->get('search') . '%')
+                    ->orWhere('u_name', 'like', '%' . $request->get('search') . '%')
+                    ->orWhere('u_sname', 'like', '%' . $request->get('search') . '%')
+                    ->orWhere('u_phone', 'like', '%' . $request->get('search') . '%')
+                    ->orWhere('u_phone_mobile', 'like', '%' . $request->get('search') . '%')
+                    ->orderBy('u_id', 'desc')
+                    ->paginate(100000);
+        } else {
+            $users = DB::table($table_name)->orderBy('u_id', 'desc')->paginate(50);
+        }
         return view('layouts.client.client_list', ['users' => $users]);
     }
 
     public function ClientEdit(Request $request) {
         $table_name = config('crm_tables.uon_users_table');
         $table_bids = config('crm_tables.uon_bids');
-        $user = DB::table($table_name)->where('u_id', $request->id)->first();
-        $bids = DB::table($table_bids)->where('r_client_id', $request->id)->get();
-        return view('layouts.client.client_edit', 
-            ['user' => $user],
-            ['bids' => $bids]
-        );
+        $table_leads = config('crm_tables.uon_leads');
+        $user = DB::table($table_name)->where('u_id', '=', $request->id)->first();
+        $bids = DB::table($table_bids)->where('r_client_id', '=', $request->id)->get();
+        $leads = DB::table($table_leads)->where('l_client_id', '=', $request->id)->get();
+        return view('layouts.client.client_edit', array(
+            'user' => $user,
+            'bids' => $bids,
+            'leads' => $leads
+        ));
     }
 
     public function ClientAdd() {
