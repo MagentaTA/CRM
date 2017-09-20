@@ -47,9 +47,15 @@ class BidsController extends Controller {
         $tourists = DB::table($table_tourist)
                         ->leftJoin($table_users, $table_tourist . '.tourist_id', '=', $table_users . '.u_id')
                         ->where('zayavka_id', '=', $request->id)->get();
+        $catalog_model = new \App\Catalog();
+        $companies = $catalog_model->getCompanies();
+        $operators = $catalog_model->getOperators();
+        
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
-            'tourists' => $tourists
+            'tourists' => $tourists,
+            'companies' => $companies,
+            'operators' => $operators
         ));
     }
 

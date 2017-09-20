@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<?php var_dump($bid); ?>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -15,11 +16,40 @@
                     <div id="bid_tabs">
                         <ul>
                             <li><a href="#tabs-1">Основные</a></li>
-                        </ul>                        
+                        </ul>
                         <?php Form::open(array('url' => route('bid_change', ['id' => $bid->r_id]), 'method' => 'post')) ?>
                         <div class="table_list" id="tabs-1">
                             <table>
                                 <tr><td colspan="6" style="text-align: center;"><b>Основные</b></td></tr>
+                                <tr>
+                                    <td>{{ Form::label('company_fullname','Оформляющая компанія: ') }}</td>
+                                    <?php
+                                    $companies = GuzzleHttp\json_decode($companies, TRUE);
+                                    foreach ($companies as $com_id => $company)
+                                    {
+                                        if (htmlspecialchars($company) == htmlspecialchars($bid->r_company_fullname))
+                                        {
+                                            $company_id = $com_id;
+                                        }
+                                    }
+                                    ?>
+                                    <td>{{ Form::select('company_fullname', $companies, $company_id) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ Form::label('supplier_name','Туроператор: ') }}</td>
+                                    <?php
+                                    $operators = GuzzleHttp\json_decode($operators, TRUE);
+                                    foreach ($operators as $oper_id => $operator)
+                                    {
+                                        if (htmlspecialchars($operator) == htmlspecialchars($bid->r_supplier_name))
+                                        {
+                                            $operator_id = $oper_id;
+                                        }
+                                    }
+                                    ?>
+                                    <td>{{ Form::select('supplier_name', $operators, $operator_id) }}</td>
+                                </tr>
+
                                 <tr>
                                     <td>{{ Form::label('status','Статус: ')}}</td>
                                     <td>{{ Form::text('status', $bid->r_status) }}</td>

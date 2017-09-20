@@ -11,5 +11,7 @@ return [
     'uon_sourses' => 'uon_sourses', //Справочник источников UON
     'uon_managers' => 'uon_managers', //Справочник менеджеров UON
     'crm_bid_tourist' => 'crm_bid2tourist', //таблица взаимосвязей заявок и туристов
-    'crm_bid_service' => 'crm_bid2service' //таблица взаимосвязей заявок и услуг
+    'crm_bid_service' => 'crm_bid2service', //таблица взаимосвязей заявок и услуг
+    'crm_companies' => 'crm_companies', //таблица оформляющих компаний
+    'crm_operators' => 'crm_operators' //таблица туроператоров
 ];

@@ -15,7 +15,9 @@
         "laravelcollective/html": "5.5.*",
         "mpociot/captainhook": "~2.0",
         "symfony/psr-http-message-bridge": "^1.0",
-        "zendframework/zend-diactoros": "^1.5"
+        "zendframework/zend-diactoros": "^1.5",
+        "zizaco/entrust": "5.2.x-dev",
+        "santigarcor/laratrust": "4.0.*"
     },
     "require-dev": {
         "filp/whoops": "^2.1",

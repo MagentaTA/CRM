@@ -24,6 +24,9 @@
                         <a href="<?=route('get_hotels')?>">Импорт Отелей</a><br />
                         <a href="<?=route('get_sourses')?>">Импорт Источников</a><br />
                         <a href="<?=route('get_managers')?>">Импорт Менеджеров</a><br />
+                        <a href="<?=route('get_companies')?>">Импорт Компаний</a><br />
+                        <a href="<?=route('get_operators')?>">Импорт Туроператоров</a><br />
+                        <a href="<?=route('add_role')?>">Добавить роль пользователя</a><br />
                     </div>
 
 
