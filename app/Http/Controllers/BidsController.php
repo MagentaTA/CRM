@@ -50,12 +50,22 @@ class BidsController extends Controller {
         $catalog_model = new \App\Catalog();
         $companies = $catalog_model->getCompanies();
         $operators = $catalog_model->getOperators();
-        
+        $services = $catalog_model->getServices();
+        $types = $catalog_model->getTourType();
+        $managers = $catalog_model->getManagers();
+        $sourses = $catalog_model->getSourses();
+        $statuses = $catalog_model->getStatuses();
+
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
             'tourists' => $tourists,
             'companies' => $companies,
-            'operators' => $operators
+            'operators' => $operators,
+            'services' => $services,
+            'types' => $types,
+            'managers' => $managers,
+            'sourses' => $sourses,
+            'statuses' => $statuses
         ));
     }
 

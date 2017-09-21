@@ -56,8 +56,10 @@
                                     <li><a href="{{ route('managers_list') }}" >Сотрудники</a></li>
                                 </ul>
                             </li>
-
+                            @role('developer')
                             <li><a href="{{ route('admin') }}">Админ</a></li>
+                            @endrole
+
                         </ul>
 
                         <!-- Right Side Of Navbar -->

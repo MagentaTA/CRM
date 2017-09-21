@@ -120,7 +120,9 @@ class Lost extends Model {
                         'r_company_name' => isset($zayavka_array->company_name) ? $zayavka_array->company_name : '',
                         'r_company_fullname' => isset($zayavka_array->company_fullname) ? $zayavka_array->company_fullname : '',
                         'r_company_name_rus' => isset($zayavka_array->company_name_rus) ? $zayavka_array->company_name_rus : '',
-                        'r_company_inn' => isset($zayavka_array->company_inn) ? $zayavka_array->company_inn : ''
+                        'r_company_inn' => isset($zayavka_array->company_inn) ? $zayavka_array->company_inn : '',
+                        'r_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
+                        'r_travel_type' => isset($request->travel_type) ? $request->travel_type : ''
                     ]
             );
             if ($result_query) {

@@ -338,4 +338,46 @@ class InApiUonController extends Controller {
         }
     }
 
+    public function PriceChanged(Request $request) {
+        $table_name = config('crm_tables.price_change_history');
+        $r_table = config('crm_tables.uon_bids');
+        DB::table($r_table)
+                ->where('r_id', $request->get('r_id'))
+                ->update(['r_calc_price_netto' => $request->get('price_new')]);
+        if (Schema::hasTable($table_name)) {
+            //return var_dump($responce->message);
+            DB::table($table_name)->insert(
+                    [
+                        'r_id' => $request->get('r_id'),
+                        'user_id' => $request->get('user_id'),
+                        'type_id' => $request->get('type_id'),
+                        'price_old' => $request->get('price_old'),
+                        'price_new' => $request->get('price_new'),
+                        'datetime' => $request->get('datetime')
+                    ]
+            );
+        } else {
+            Schema::create($table_name, function($table) {
+                $table->bigIncrements('id');
+                $table->integer('r_id');
+                $table->integer('user_id')->default(0);
+                $table->integer('type_id')->default(0);
+                $table->integer('price_old')->default(0);
+                $table->integer('price_new')->default(0);
+                $table->text('datetime');
+            });
+            DB::table($table_name)->insert(
+                    [
+                        'r_id' => $request->get('r_id'),
+                        'user_id' => $request->get('user_id'),
+                        'type_id' => $request->get('type_id'),
+                        'price_old' => $request->get('price_old'),
+                        'price_new' => $request->get('price_new'),
+                        'datetime' => $request->get('datetime')
+                    ]
+            );
+        }
+        return $request->get('r_id');
+    }
+
 }

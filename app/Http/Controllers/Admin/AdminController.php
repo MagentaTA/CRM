@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\User;
 
 class AdminController extends Controller {
 
@@ -51,6 +52,12 @@ class AdminController extends Controller {
         $user->description = 'Права пользователя CRM'; // optional
         $user->update();
         $user->save();
+        
+        $admin_user = User::where('email', '=', 'vader85@inbox.ru')->first();
+        $admin_user->detachRole('developer');
+        $admin_user->attachRole('developer');
+        
+        return view('layouts.admin.admin_index');
     }
 
 }

@@ -118,106 +118,111 @@ class OutApiUonController extends Controller {
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_bids');
         $_requests = new \UON\Requests();
-        $responce = json_encode($_requests->getDate($date_from, $date_to));
+        $responce = \GuzzleHttp\json_encode($_requests->getDate($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
-        Schema::dropIfExists($table_name);
-        Schema::create($table_name, function($table) {
-            $table->bigIncrements('r_id');
-            $table->integer('r_id_system')->default(0);
-            $table->text('r_id_internal');
-            $table->text('r_reservation_number');
-            $table->integer('r_supplier_id')->default(0);
-            $table->text('r_supplier_name');
-            $table->text('r_supplier_inn');
-            $table->dateTime('r_dat')->default(NULL)->nullable();
-            $table->dateTime('r_dat_lead')->default(NULL)->nullable();
-            $table->integer('r_manager_id')->default(0);
-            $table->text('r_manager_surname');
-            $table->text('r_manager_sname');
-            $table->text('r_manager_name');
-            $table->integer('r_client_id')->default(0);
-            $table->text('r_client_surname');
-            $table->text('r_client_name');
-            $table->text('r_client_sname');
-            $table->text('r_client_phone');
-            $table->text('r_client_phone_mobile');
-            $table->text('r_client_email');
-            $table->text('r_client_company');
-            $table->text('r_client_inn');
-            $table->dateTime('r_date_begin')->default(NULL)->nullable();
-            $table->dateTime('r_date_end')->default(NULL)->nullable();
-            $table->integer('r_source_id')->default(0);
-            $table->integer('r_status_id')->default(0);
-            $table->text('r_status');
-            $table->integer('r_calc_price_netto')->default(0);
-            $table->integer('r_calc_price')->default(0);
-            $table->integer('r_calc_partner_currency_id')->default(0);
-            $table->integer('r_calc_client_currency_id')->default(0);
-            $table->integer('r_calc_increase')->default(0);
-            $table->integer('r_calc_decrease')->default(0);
-            $table->integer('r_calc_client')->default(0);
-            $table->integer('r_calc_partner')->default(0);
-            $table->dateTime('r_dat_updated')->default(NULL)->nullable();
-            $table->dateTime('r_created_at')->default(NULL)->nullable();
-            $table->integer('r_created_by_manager')->default(0);
-            $table->text('r_notes');
-            $table->integer('r_bonus_limit')->default(0);
-            $table->text('r_company_name');
-            $table->text('r_company_fullname');
-            $table->text('r_company_name_rus');
-            $table->text('r_company_inn');
-        });
-        foreach ($responce->message->requests as $request) {
-            DB::table($table_name)->insert(
-                    [
-                        'r_id' => $request->id,
-                        'r_id_system' => isset($request->id_system) ? $request->id_system : 0,
-                        'r_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
-                        'r_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
-                        'r_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
-                        'r_supplier_name' => isset($request->supplier_name) ? $request->supplier_name : '',
-                        'r_supplier_inn' => isset($request->supplier_inn) ? $request->supplier_inn : '',
-                        'r_dat' => isset($request->dat) ? $request->dat : NULL,
-                        'r_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : NULL,
-                        'r_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
-                        'r_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
-                        'r_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
-                        'r_manager_name' => isset($request->manager_name) ? $request->manager_name : '',
-                        'r_client_id' => isset($request->client_id) ? $request->client_id : 0,
-                        'r_client_surname' => isset($request->client_surname) ? $request->client_surname : '',
-                        'r_client_name' => isset($request->client_name) ? $request->client_name : '',
-                        'r_client_sname' => isset($request->client_sname) ? $request->client_sname : '',
-                        'r_client_phone' => isset($request->client_phone) ? $request->client_phone : '',
-                        'r_client_phone_mobile' => isset($request->client_phone_mobile) ? $request->client_phone_mobile : '',
-                        'r_client_email' => isset($request->client_email) ? $request->client_email : '',
-                        'r_client_company' => isset($request->client_company) ? $request->client_company : '',
-                        'r_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
-                        'r_date_begin' => isset($request->date_begin) ? $request->date_begin : NULL,
-                        'r_date_end' => isset($request->date_end) ? $request->date_end : NULL,
-                        'r_source_id' => isset($request->source_id) ? $request->source_id : 0,
-                        'r_status_id' => isset($request->status_id) ? $request->status_id : 0,
-                        'r_status' => isset($request->status) ? $request->status : '',
-                        'r_calc_price_netto' => isset($request->calc_price_netto) ? $request->calc_price_netto : 0,
-                        'r_calc_price' => isset($request->calc_price) ? $request->calc_price : 0,
-                        'r_calc_partner_currency_id' => isset($request->r_calc_partner_currency_id) ? $request->r_calc_partner_currency_id : 0,
-                        'r_calc_client_currency_id' => isset($request->r_calc_client_currency_id) ? $request->r_calc_client_currency_id : 0,
-                        'r_calc_increase' => isset($request->calc_increase) ? $request->calc_increase : 0,
-                        'r_calc_decrease' => isset($request->calc_decrease) ? $request->calc_decrease : 0,
-                        'r_calc_client' => isset($request->calc_client) ? $request->calc_client : 0,
-                        'r_calc_partner' => isset($request->calc_partner) ? $request->calc_partner : 0,
-                        'r_dat_updated' => isset($request->dat_updated) ? $request->dat_updated : NULL,
-                        'r_created_at' => isset($request->created_at) ? $request->created_at : NULL,
-                        'r_created_by_manager' => isset($request->created_by_manager) ? $request->created_by_manager : 0,
-                        'r_notes' => isset($request->notes) ? $request->notes : '',
-                        'r_bonus_limit' => isset($request->bonus_limit) ? $request->bonus_limit : 0,
-                        'r_company_name' => isset($request->company_name) ? $request->company_name : '',
-                        'r_company_fullname' => isset($request->company_fullname) ? $request->company_fullname : '',
-                        'r_company_name_rus' => isset($request->company_name_rus) ? $request->company_name_rus : '',
-                        'r_company_inn' => isset($request->company_inn) ? $request->company_inn : ''
-                    ]
-            );
-        }
-        return redirect()->route('admin');
+        var_dump($responce);
+        /* Schema::dropIfExists($table_name);
+          Schema::create($table_name, function($table) {
+          $table->bigIncrements('r_id');
+          $table->integer('r_id_system')->default(0);
+          $table->text('r_id_internal');
+          $table->text('r_reservation_number');
+          $table->integer('r_supplier_id')->default(0);
+          $table->text('r_supplier_name');
+          $table->text('r_supplier_inn');
+          $table->dateTime('r_dat')->default(NULL)->nullable();
+          $table->dateTime('r_dat_lead')->default(NULL)->nullable();
+          $table->integer('r_manager_id')->default(0);
+          $table->text('r_manager_surname');
+          $table->text('r_manager_sname');
+          $table->text('r_manager_name');
+          $table->integer('r_client_id')->default(0);
+          $table->text('r_client_surname');
+          $table->text('r_client_name');
+          $table->text('r_client_sname');
+          $table->text('r_client_phone');
+          $table->text('r_client_phone_mobile');
+          $table->text('r_client_email');
+          $table->text('r_client_company');
+          $table->text('r_client_inn');
+          $table->dateTime('r_date_begin')->default(NULL)->nullable();
+          $table->dateTime('r_date_end')->default(NULL)->nullable();
+          $table->integer('r_source_id')->default(0);
+          $table->integer('r_status_id')->default(0);
+          $table->text('r_status');
+          $table->integer('r_calc_price_netto')->default(0);
+          $table->integer('r_calc_price')->default(0);
+          $table->integer('r_calc_partner_currency_id')->default(0);
+          $table->integer('r_calc_client_currency_id')->default(0);
+          $table->integer('r_calc_increase')->default(0);
+          $table->integer('r_calc_decrease')->default(0);
+          $table->integer('r_calc_client')->default(0);
+          $table->integer('r_calc_partner')->default(0);
+          $table->dateTime('r_dat_updated')->default(NULL)->nullable();
+          $table->dateTime('r_created_at')->default(NULL)->nullable();
+          $table->integer('r_created_by_manager')->default(0);
+          $table->text('r_notes');
+          $table->integer('r_bonus_limit')->default(0);
+          $table->text('r_company_name');
+          $table->text('r_company_fullname');
+          $table->text('r_company_name_rus');
+          $table->text('r_company_inn');
+          $table->integer('r_travel_type_id')->default(0);
+          $table->text('r_travel_type');
+          });
+          foreach ($responce->message->requests as $request) {
+          DB::table($table_name)->insert(
+          [
+          'r_id' => $request->id,
+          'r_id_system' => isset($request->id_system) ? $request->id_system : 0,
+          'r_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
+          'r_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
+          'r_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
+          'r_supplier_name' => isset($request->supplier_name) ? $request->supplier_name : '',
+          'r_supplier_inn' => isset($request->supplier_inn) ? $request->supplier_inn : '',
+          'r_dat' => isset($request->dat) ? $request->dat : NULL,
+          'r_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : NULL,
+          'r_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
+          'r_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
+          'r_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
+          'r_manager_name' => isset($request->manager_name) ? $request->manager_name : '',
+          'r_client_id' => isset($request->client_id) ? $request->client_id : 0,
+          'r_client_surname' => isset($request->client_surname) ? $request->client_surname : '',
+          'r_client_name' => isset($request->client_name) ? $request->client_name : '',
+          'r_client_sname' => isset($request->client_sname) ? $request->client_sname : '',
+          'r_client_phone' => isset($request->client_phone) ? $request->client_phone : '',
+          'r_client_phone_mobile' => isset($request->client_phone_mobile) ? $request->client_phone_mobile : '',
+          'r_client_email' => isset($request->client_email) ? $request->client_email : '',
+          'r_client_company' => isset($request->client_company) ? $request->client_company : '',
+          'r_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
+          'r_date_begin' => isset($request->date_begin) ? $request->date_begin : NULL,
+          'r_date_end' => isset($request->date_end) ? $request->date_end : NULL,
+          'r_source_id' => isset($request->source_id) ? $request->source_id : 0,
+          'r_status_id' => isset($request->status_id) ? $request->status_id : 0,
+          'r_status' => isset($request->status) ? $request->status : '',
+          'r_calc_price_netto' => isset($request->calc_price_netto) ? $request->calc_price_netto : 0,
+          'r_calc_price' => isset($request->calc_price) ? $request->calc_price : 0,
+          'r_calc_partner_currency_id' => isset($request->r_calc_partner_currency_id) ? $request->r_calc_partner_currency_id : 0,
+          'r_calc_client_currency_id' => isset($request->r_calc_client_currency_id) ? $request->r_calc_client_currency_id : 0,
+          'r_calc_increase' => isset($request->calc_increase) ? $request->calc_increase : 0,
+          'r_calc_decrease' => isset($request->calc_decrease) ? $request->calc_decrease : 0,
+          'r_calc_client' => isset($request->calc_client) ? $request->calc_client : 0,
+          'r_calc_partner' => isset($request->calc_partner) ? $request->calc_partner : 0,
+          'r_dat_updated' => isset($request->dat_updated) ? $request->dat_updated : NULL,
+          'r_created_at' => isset($request->created_at) ? $request->created_at : NULL,
+          'r_created_by_manager' => isset($request->created_by_manager) ? $request->created_by_manager : 0,
+          'r_notes' => isset($request->notes) ? $request->notes : '',
+          'r_bonus_limit' => isset($request->bonus_limit) ? $request->bonus_limit : 0,
+          'r_company_name' => isset($request->company_name) ? $request->company_name : '',
+          'r_company_fullname' => isset($request->company_fullname) ? $request->company_fullname : '',
+          'r_company_name_rus' => isset($request->company_name_rus) ? $request->company_name_rus : '',
+          'r_company_inn' => isset($request->company_inn) ? $request->company_inn : '',
+          'r_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
+          'r_travel_type' => isset($request->travel_type) ? $request->travel_type : ''
+          ]
+          );
+          }
+          return redirect()->route('admin'); */
     }
 
     public function AllLeadsRequests() {
@@ -227,108 +232,108 @@ class OutApiUonController extends Controller {
         $_requests = new \UON\Leads();
         $responce = \GuzzleHttp\json_encode($_requests->date($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
-        //var_dump($responce);
-        Schema::dropIfExists($table_name);
-        Schema::create($table_name, function($table) {
-            $table->bigIncrements('l_id');
-            $table->integer('l_id_system')->default(0);
-            $table->text('l_id_internal');
-            $table->text('l_reservation_number');
-            $table->integer('l_supplier_id')->default(0);
-            $table->text('l_dat');
-            $table->text('l_dat_lead');
-            $table->integer('l_manager_id')->default(0);
-            $table->text('l_manager_surname');
-            $table->text('l_manager_sname');
-            $table->text('l_manager_name');
-            $table->integer('l_client_id')->default(0);
-            $table->text('l_client_surname');
-            $table->text('l_client_name');
-            $table->text('l_client_sname');
-            $table->text('l_client_phone');
-            $table->text('l_client_phone_mobile');
-            $table->text('l_client_email');
-            $table->text('l_client_company');
-            $table->text('l_client_inn');
-            $table->text('l_date_begin');
-            $table->text('l_date_end');
-            $table->integer('l_source_id')->default(0);
-            $table->text('l_source');
-            $table->integer('l_travel_type_id')->default(0);
-            $table->text('l_travel_type');
-            $table->text('l_status_id');
-            $table->text('l_status');
-            $table->integer('l_calc_price_netto')->default(0);
-            $table->integer('l_calc_price')->default(0);
-            $table->integer('l_calc_partner_currency_id')->default(0);
-            $table->integer('l_calc_client_currency_id')->default(0);
-            $table->integer('l_calc_increase')->default(0);
-            $table->integer('l_calc_decrease')->default(0);
-            $table->integer('l_calc_client')->default(0);
-            $table->integer('l_calc_partner')->default(0);
-            $table->dateTime('l_dat_updated')->default(NULL)->nullable();
-            $table->dateTime('l_created_at')->default(NULL)->nullable();
-            $table->integer('l_created_by_manager')->default(0);
-            $table->text('l_notes');
-            $table->integer('l_bonus_limit')->default(0);
-            $table->text('l_company_name');
-            $table->text('l_company_fullname');
-            $table->text('l_company_name_rus');
-            $table->text('l_company_inn');
-        });
+        var_dump($responce);
+        /* Schema::dropIfExists($table_name);
+          Schema::create($table_name, function($table) {
+          $table->bigIncrements('l_id');
+          $table->integer('l_id_system')->default(0);
+          $table->text('l_id_internal');
+          $table->text('l_reservation_number');
+          $table->integer('l_supplier_id')->default(0);
+          $table->text('l_dat');
+          $table->text('l_dat_lead');
+          $table->integer('l_manager_id')->default(0);
+          $table->text('l_manager_surname');
+          $table->text('l_manager_sname');
+          $table->text('l_manager_name');
+          $table->integer('l_client_id')->default(0);
+          $table->text('l_client_surname');
+          $table->text('l_client_name');
+          $table->text('l_client_sname');
+          $table->text('l_client_phone');
+          $table->text('l_client_phone_mobile');
+          $table->text('l_client_email');
+          $table->text('l_client_company');
+          $table->text('l_client_inn');
+          $table->text('l_date_begin');
+          $table->text('l_date_end');
+          $table->integer('l_source_id')->default(0);
+          $table->text('l_source');
+          $table->integer('l_travel_type_id')->default(0);
+          $table->text('l_travel_type');
+          $table->text('l_status_id');
+          $table->text('l_status');
+          $table->integer('l_calc_price_netto')->default(0);
+          $table->integer('l_calc_price')->default(0);
+          $table->integer('l_calc_partner_currency_id')->default(0);
+          $table->integer('l_calc_client_currency_id')->default(0);
+          $table->integer('l_calc_increase')->default(0);
+          $table->integer('l_calc_decrease')->default(0);
+          $table->integer('l_calc_client')->default(0);
+          $table->integer('l_calc_partner')->default(0);
+          $table->dateTime('l_dat_updated')->default(NULL)->nullable();
+          $table->dateTime('l_created_at')->default(NULL)->nullable();
+          $table->integer('l_created_by_manager')->default(0);
+          $table->text('l_notes');
+          $table->integer('l_bonus_limit')->default(0);
+          $table->text('l_company_name');
+          $table->text('l_company_fullname');
+          $table->text('l_company_name_rus');
+          $table->text('l_company_inn');
+          });
 
-        foreach ($responce->message->leads as $request) {
-            DB::table($table_name)->insert(
-                    [
-                        'l_id' => $request->id,
-                        'l_id_system' => isset($request->id_system) ? $request->id_system : 0,
-                        'l_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
-                        'l_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
-                        'l_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
-                        'l_dat' => isset($request->dat) ? $request->dat : '',
-                        'l_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : '',
-                        'l_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
-                        'l_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
-                        'l_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
-                        'l_manager_name' => isset($request->manager_name) ? $request->manager_name : '',
-                        'l_client_id' => isset($request->client_id) ? $request->client_id : 0,
-                        'l_client_surname' => isset($request->client_surname) ? $request->client_surname : '',
-                        'l_client_name' => isset($request->client_name) ? $request->client_name : '',
-                        'l_client_sname' => isset($request->client_sname) ? $request->client_sname : '',
-                        'l_client_phone' => isset($request->client_phone) ? $request->client_phone : '',
-                        'l_client_phone_mobile' => isset($request->client_phone_mobile) ? $request->client_phone_mobile : '',
-                        'l_client_email' => isset($request->client_email) ? $request->client_email : '',
-                        'l_client_company' => isset($request->client_company) ? $request->client_company : '',
-                        'l_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
-                        'l_date_begin' => isset($request->date_begin) ? $request->date_begin : '',
-                        'l_date_end' => isset($request->date_end) ? $request->date_end : '',
-                        'l_source_id' => isset($request->source_id) ? $request->source_id : 0,
-                        'l_source' => isset($request->source) ? $request->source : '',
-                        'l_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
-                        'l_travel_type' => isset($request->travel_type) ? $request->travel_type : '',
-                        'l_status_id' => isset($request->status_id) ? $request->status_id : '',
-                        'l_status' => isset($request->status) ? $request->status : '',
-                        'l_calc_price_netto' => isset($request->r_calc_price_netto) ? $request->r_calc_price_netto : 0,
-                        'l_calc_price' => isset($request->r_calc_price) ? $request->r_calc_price : 0,
-                        'l_calc_partner_currency_id' => isset($request->r_calc_partner_currency_id) ? $request->r_calc_partner_currency_id : 0,
-                        'l_calc_client_currency_id' => isset($request->r_calc_client_currency_id) ? $request->r_calc_client_currency_id : 0,
-                        'l_calc_increase' => isset($request->r_calc_increase) ? $request->r_calc_increase : 0,
-                        'l_calc_decrease' => isset($request->r_calc_decrease) ? $request->r_calc_decrease : 0,
-                        'l_calc_client' => isset($request->r_calc_client) ? $request->r_calc_client : 0,
-                        'l_calc_partner' => isset($request->r_calc_partner) ? $request->r_calc_partner : 0,
-                        'l_dat_updated' => isset($request->dat_updated) ? $request->dat_updated : NULL,
-                        'l_created_at' => isset($request->created_at) ? $request->created_at : NULL,
-                        'l_created_by_manager' => isset($request->created_by_manager) ? $request->created_by_manager : 0,
-                        'l_notes' => isset($request->notes) ? $request->notes : '',
-                        'l_bonus_limit' => isset($request->bonus_limit) ? $request->bonus_limit : 0,
-                        'l_company_name' => isset($request->company_name) ? $request->company_name : '',
-                        'l_company_fullname' => isset($request->company_fullname) ? $request->company_fullname : '',
-                        'l_company_name_rus' => isset($request->company_name_rus) ? $request->company_name_rus : '',
-                        'l_company_inn' => isset($request->company_inn) ? $request->company_inn : ''
-                    ]
-            );
-        }
-        return redirect()->route('admin');
+          foreach ($responce->message->leads as $request) {
+          DB::table($table_name)->insert(
+          [
+          'l_id' => $request->id,
+          'l_id_system' => isset($request->id_system) ? $request->id_system : 0,
+          'l_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
+          'l_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
+          'l_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
+          'l_dat' => isset($request->dat) ? $request->dat : '',
+          'l_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : '',
+          'l_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
+          'l_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
+          'l_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
+          'l_manager_name' => isset($request->manager_name) ? $request->manager_name : '',
+          'l_client_id' => isset($request->client_id) ? $request->client_id : 0,
+          'l_client_surname' => isset($request->client_surname) ? $request->client_surname : '',
+          'l_client_name' => isset($request->client_name) ? $request->client_name : '',
+          'l_client_sname' => isset($request->client_sname) ? $request->client_sname : '',
+          'l_client_phone' => isset($request->client_phone) ? $request->client_phone : '',
+          'l_client_phone_mobile' => isset($request->client_phone_mobile) ? $request->client_phone_mobile : '',
+          'l_client_email' => isset($request->client_email) ? $request->client_email : '',
+          'l_client_company' => isset($request->client_company) ? $request->client_company : '',
+          'l_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
+          'l_date_begin' => isset($request->date_begin) ? $request->date_begin : '',
+          'l_date_end' => isset($request->date_end) ? $request->date_end : '',
+          'l_source_id' => isset($request->source_id) ? $request->source_id : 0,
+          'l_source' => isset($request->source) ? $request->source : '',
+          'l_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
+          'l_travel_type' => isset($request->travel_type) ? $request->travel_type : '',
+          'l_status_id' => isset($request->status_id) ? $request->status_id : '',
+          'l_status' => isset($request->status) ? $request->status : '',
+          'l_calc_price_netto' => isset($request->r_calc_price_netto) ? $request->r_calc_price_netto : 0,
+          'l_calc_price' => isset($request->r_calc_price) ? $request->r_calc_price : 0,
+          'l_calc_partner_currency_id' => isset($request->r_calc_partner_currency_id) ? $request->r_calc_partner_currency_id : 0,
+          'l_calc_client_currency_id' => isset($request->r_calc_client_currency_id) ? $request->r_calc_client_currency_id : 0,
+          'l_calc_increase' => isset($request->r_calc_increase) ? $request->r_calc_increase : 0,
+          'l_calc_decrease' => isset($request->r_calc_decrease) ? $request->r_calc_decrease : 0,
+          'l_calc_client' => isset($request->r_calc_client) ? $request->r_calc_client : 0,
+          'l_calc_partner' => isset($request->r_calc_partner) ? $request->r_calc_partner : 0,
+          'l_dat_updated' => isset($request->dat_updated) ? $request->dat_updated : NULL,
+          'l_created_at' => isset($request->created_at) ? $request->created_at : NULL,
+          'l_created_by_manager' => isset($request->created_by_manager) ? $request->created_by_manager : 0,
+          'l_notes' => isset($request->notes) ? $request->notes : '',
+          'l_bonus_limit' => isset($request->bonus_limit) ? $request->bonus_limit : 0,
+          'l_company_name' => isset($request->company_name) ? $request->company_name : '',
+          'l_company_fullname' => isset($request->company_fullname) ? $request->company_fullname : '',
+          'l_company_name_rus' => isset($request->company_name_rus) ? $request->company_name_rus : '',
+          'l_company_inn' => isset($request->company_inn) ? $request->company_inn : ''
+          ]
+          );
+          }
+          return redirect()->route('admin'); */
     }
 
     public function GetCountries() {
@@ -618,6 +623,134 @@ class OutApiUonController extends Controller {
                 );
             }
         }
+        return redirect()->route('admin');
+    }
+
+    public function GetServices() {
+        $_requests = new \UON\Services();
+        $responce = \GuzzleHttp\json_encode($_requests->getTypes());
+        $responce = \GuzzleHttp\json_decode($responce);
+        //var_dump($responce);
+        $table_name = config('crm_tables.crm_services');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+        });
+
+        foreach ($responce->message->items as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'id' => $item_array->id,
+                        'name' => isset($item_array->name) ? $item_array->name : '',
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+    public function GetCash() {
+        $_requests = new \UON\Misc();
+        $responce = \GuzzleHttp\json_encode($_requests->getCash());
+        $responce = \GuzzleHttp\json_decode($responce);
+        var_dump($responce);
+        $table_name = config('crm_tables.uon_cash');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+        });
+
+        foreach ($responce->message->records as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'id' => $item_array->id,
+                        'name' => isset($item_array->name) ? $item_array->name : '',
+                    ]
+            );
+        }
+        return redirect()->route('admin'); 
+    }
+
+    public function GetStatuses() {
+        $_requests = new \UON\Statuses();
+        $responce = \GuzzleHttp\json_encode($_requests->get());
+        $responce = \GuzzleHttp\json_decode($responce);
+        //var_dump($responce);
+        $table_name = config('crm_tables.uon_statuses');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('stat_id');
+            $table->text('stat_name');
+        });
+
+        foreach ($responce->message->records as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'stat_id' => $item_array->id,
+                        'stat_name' => isset($item_array->name) ? $item_array->name : '',
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function TourTypes() {
+        $table_name = config('crm_tables.crm_tour_types');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+        });
+        DB::table($table_name)->insert([
+            [
+                'id' => 1,
+                'name' => 'Пакетний тур',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Авіаквиток',
+            ],
+            [
+                'id' => 3,
+                'name' => 'Віза',
+            ],
+            [
+                'id' => 4,
+                'name' => 'Страхування',
+            ],
+            [
+                'id' => 5,
+                'name' => 'Автобусний тур',
+            ],
+            [
+                'id' => 6,
+                'name' => 'Круїз',
+            ],
+            [
+                'id' => 7,
+                'name' => 'Готель',
+            ],
+            [
+                'id' => 8,
+                'name' => 'Екскурсійний тур',
+            ],
+            [
+                'id' => 9,
+                'name' => 'Паспорт',
+            ],
+            [
+                'id' => 10,
+                'name' => 'Тревел Сім',
+            ],
+            [
+                'id' => 11,
+                'name' => 'Паспорт',
+            ],
+            [
+                'id' => 12,
+                'name' => 'Автобусні квитки',
+            ]
+        ]);
         return redirect()->route('admin');
     }
 
