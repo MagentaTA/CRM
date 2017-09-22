@@ -252,34 +252,7 @@ class InApiUonController extends Controller {
         $responce = \GuzzleHttp\json_encode($_requests->get($payment_id));
         $responce = \GuzzleHttp\json_decode($responce);
         if (is_object($responce)) {
-            if (Schema::hasTable($table_name)) {
-                //return var_dump($responce->message);
-                $payment_data = $responce->message;
-                $result_insert = DB::table($table_name)->insert(
-                        [
-                            'id' => $payment_data->id,
-                            'date_create' => isset($payment_data->date_create) ? $payment_data->date_create : '',
-                            'date_plan' => isset($payment_data->date_plan) ? $payment_data->date_plan : '',
-                            'reason' => isset($payment_data->reason) ? $payment_data->reason : '',
-                            'cash_id' => isset($payment_data->cash_id) ? $payment_data->cash_id : 0,
-                            'number' => isset($payment_data->number) ? $payment_data->number : 0,
-                            'type_id' => isset($payment_data->type_id) ? $payment_data->type_id : 0,
-                            'cio_id' => isset($payment_data->cio_id) ? $payment_data->cio_id : 0,
-                            'in_plan' => isset($payment_data->in_plan) ? $payment_data->in_plan : 0,
-                            'is_bonus_pay' => isset($payment_data->is_bonus_pay) ? $payment_data->is_bonus_pay : 0,
-                            'is_deposit' => isset($payment_data->is_deposit) ? $payment_data->is_deposit : 0,
-                            'from1c' => isset($payment_data->from1c) ? $payment_data->from1c : 0,
-                            'office_id' => isset($payment_data->office_id) ? $payment_data->office_id : 0,
-                            'client_id' => isset($payment_data->client_id) ? $payment_data->client_id : 0,
-                            'price' => isset($payment_data->price) ? $payment_data->price : 0,
-                            'rate' => isset($payment_data->rate) ? $payment_data->rate : 0,
-                            'currency_id' => isset($payment_data->currency_id) ? $payment_data->currency_id : 0,
-                            'currency' => isset($payment_data->currency) ? $payment_data->currency : '',
-                            'currency_code' => isset($payment_data->currency_code) ? $payment_data->currency_code : '',
-                            'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
-                        ]
-                );
-            } else {
+            if (Schema::hasTable($table_name) === FALSE) {
                 Schema::create($table_name, function($table) {
                     $table->bigIncrements('id');
                     $table->text('date_create');
@@ -302,6 +275,7 @@ class InApiUonController extends Controller {
                     $table->text('currency_code');
                     $table->integer('r_id')->default(0);
                 });
+            }
                 $payment_data = $responce->message;
                 $result_insert = DB::table($table_name)->insert(
                         [
@@ -327,7 +301,6 @@ class InApiUonController extends Controller {
                             'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
                         ]
                 );
-            }
         } else {
             return '<font color = ' . $this->error_color . '>Ошибка доступа к базе UON</font>';
         }
@@ -344,28 +317,17 @@ class InApiUonController extends Controller {
         DB::table($r_table)
                 ->where('r_id', $request->get('r_id'))
                 ->update(['r_calc_price_netto' => $request->get('price_new')]);
-        if (Schema::hasTable($table_name)) {
-            //return var_dump($responce->message);
-            DB::table($table_name)->insert(
-                    [
-                        'r_id' => $request->get('r_id'),
-                        'user_id' => $request->get('user_id'),
-                        'type_id' => $request->get('type_id'),
-                        'price_old' => $request->get('price_old'),
-                        'price_new' => $request->get('price_new'),
-                        'datetime' => $request->get('datetime')
-                    ]
-            );
-        } else {
+        if (Schema::hasTable($table_name) === FALSE) {
             Schema::create($table_name, function($table) {
                 $table->bigIncrements('id');
                 $table->integer('r_id');
                 $table->integer('user_id')->default(0);
                 $table->integer('type_id')->default(0);
-                $table->integer('price_old')->default(0);
-                $table->integer('price_new')->default(0);
+                $table->float('price_old',8,2)->default(0.00);
+                $table->float('price_new',8,2)->default(0.00);
                 $table->text('datetime');
             });
+        }
             DB::table($table_name)->insert(
                     [
                         'r_id' => $request->get('r_id'),
@@ -376,7 +338,6 @@ class InApiUonController extends Controller {
                         'datetime' => $request->get('datetime')
                     ]
             );
-        }
         return $request->get('r_id');
     }
 

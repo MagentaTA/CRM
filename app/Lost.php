@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Lost extends Model {
 
@@ -202,6 +203,152 @@ class Lost extends Model {
             return '<font color=' . $this->error_color . '>Ошибка получения данных по обращению из базы UON</font>';
         }
         return var_dump($responce);
+    }
+
+    public function insertService($services_array, $bid_id) {
+        $table_name = config('crm_tables.uon_bid_services');
+        if (Schema::hasTable($table_name) === FALSE) {
+            Schema::create($table_name, function($table) {
+                $table->bigIncrements('crm_id');
+                $table->integer('r_id')->default(0);
+                $table->text('date_begin');
+                $table->text('date_end');
+                $table->text('description');
+                $table->integer('in_package')->default(0);
+                $table->integer('service_type_id')->default(0);
+                $table->text('duration');
+                $table->integer('price_netto')->default(0);
+                $table->float('rate_netto', 12, 10)->default(0);
+                $table->integer('currency_id_netto')->default(0);
+                $table->integer('price')->default(0);
+                $table->float('rate', 12, 10)->default(0);
+                $table->integer('currency_id')->default(0);
+                $table->integer('tourists_count')->default(0);
+                $table->integer('tourists_child_count')->default(0);
+                $table->integer('tourists_baby_count')->default(0);
+                $table->text('service_type');
+                $table->integer('partner_id')->default(0);
+                $table->text('partner_name');
+                $table->text('partner_name_en');
+                $table->text('partner_inn');
+                $table->integer('country_id')->default(0);
+                $table->text('country');
+                $table->text('country_en');
+                $table->integer('city_id')->default(0);
+                $table->text('city');
+                $table->text('city_en');
+                $table->integer('hotel_id')->default(0);
+                $table->text('hotel');
+                $table->text('hotel_en');
+                $table->integer('hotel_type_id')->default(0);
+                $table->text('hotel_type');
+                $table->text('hotel_type_en');
+                $table->integer('nutrition_id')->default(0);
+                $table->text('nutrition');
+                $table->text('nutrition_en');
+                $table->text('currency_netto');
+                $table->text('currency_code_netto');
+                $table->text('currency');
+                $table->text('currency_code');
+            });
+        }
+        foreach ($services_array as $service) {
+            $result_query = DB::table($table_name)->insert(
+                    [
+                        'r_id' => isset($bid_id) ? $bid_id : 0,
+                        'date_begin' => isset($service->date_begin) ? $service->date_begin : '',
+                        'date_end' => isset($service->date_end) ? $service->date_end : '',
+                        'description' => isset($service->description) ? $service->description : '',
+                        'in_package' => isset($service->in_package) ? $service->in_package : 0,
+                        'service_type_id' => isset($service->service_type_id) ? $service->service_type_id : 0,
+                        'duration' => isset($service->duration) ? $service->duration : 0,
+                        'price_netto' => isset($service->price_netto) ? $service->price_netto : 0,
+                        'rate_netto' => isset($service->rate_netto) ? $service->rate_netto : 0,
+                        'currency_id_netto' => isset($service->currency_id_netto) ? $service->currency_id_netto : 0,
+                        'price' => isset($service->price) ? $service->price : 0,
+                        'rate' => isset($service->rate) ? $service->rate : 0,
+                        'currency_id' => isset($service->currency_id) ? $service->currency_id : 0,
+                        'tourists_count' => isset($service->tourists_count) ? $service->tourists_count : 0,
+                        'tourists_child_count' => isset($service->tourists_child_count) ? $service->tourists_child_count : 0,
+                        'tourists_baby_count' => isset($service->tourists_baby_count) ? $service->tourists_baby_count : 0,
+                        'service_type' => isset($service->service_type) ? $service->service_type : '',
+                        'partner_id' => isset($service->partner_id) ? $service->partner_id : 0,
+                        'partner_name' => isset($service->partner_name) ? $service->partner_name : '',
+                        'partner_name_en' => isset($service->partner_name_en) ? $service->partner_name_en : '',
+                        'partner_inn' => isset($service->partner_inn) ? $service->partner_inn : '',
+                        'country_id' => isset($service->country_id) ? $service->country_id : 0,
+                        'country' => isset($service->country) ? $service->country : '',
+                        'country_en' => isset($service->country_en) ? $service->country_en : '',
+                        'city_id' => isset($service->city_id) ? $service->city_id : 0,
+                        'city' => isset($service->city) ? $service->city : '',
+                        'city_en' => isset($service->city_en) ? $service->city_en : '',
+                        'hotel_id' => isset($service->hotel_id) ? $service->hotel_id : 0,
+                        'hotel' => isset($service->hotel) ? $service->hotel : '',
+                        'hotel_en' => isset($service->hotel_en) ? $service->hotel_en : '',
+                        'hotel_type_id' => isset($service->hotel_type_id) ? $service->hotel_type_id : 0,
+                        'hotel_type' => isset($service->hotel_type) ? $service->hotel_type : '',
+                        'hotel_type_en' => isset($service->hotel_type_en) ? $service->hotel_type_en : '',
+                        'nutrition_id' => isset($service->nutrition_id) ? $service->nutrition_id : 0,
+                        'nutrition' => isset($service->nutrition) ? $service->nutrition : '',
+                        'nutrition_en' => isset($service->nutrition_en) ? $service->nutrition_en : '',
+                        'currency_netto' => isset($service->currency_netto) ? $service->currency_netto : '',
+                        'currency_code_netto' => isset($service->currency_code_netto) ? $service->currency_code_netto : '',
+                        'currency' => isset($service->currency) ? $service->currency : '',
+                        'currency_code' => isset($service->currency_code) ? $service->currency_code : ''
+            ]);
+        }
+
+        return $result_query;
+    }
+
+    public function insertFlights($flights_array, $bid_id) {
+        $table_name = config('crm_tables.uon_bid_flights');
+        if (Schema::hasTable($table_name) === FALSE) {
+            Schema::create($table_name, function($table) {
+                $table->bigIncrements('crm_id');
+                $table->integer('r_id')->default(0);
+                $table->text('date_begin');
+                $table->text('time_begin');
+                $table->text('date_end');
+                $table->text('time_end');
+                $table->text('flight_number');
+                $table->text('course_begin');
+                $table->text('course_end');
+                $table->text('terminal_begin');
+                $table->text('terminal_end');
+                $table->text('code_begin');
+                $table->text('code_end');
+                $table->text('seats');
+                $table->text('tickets');
+                $table->text('type');
+                $table->text('class');
+                $table->text('duration');
+                $table->text('supplier_id');
+            });
+        }
+        foreach ($flights_array as $flight) {
+            $result_query = DB::table($table_name)->insert(
+                    [
+                        'r_id' => isset($bid_id) ? $bid_id : 0,
+                        'date_begin' => isset($flight->date_begin) ? $flight->date_begin : '',
+                        'time_begin' => isset($flight->time_begin) ? $flight->time_begin : '',
+                        'date_end' => isset($flight->date_end) ? $flight->date_end : '',
+                        'time_end' => isset($flight->time_end) ? $flight->time_end : '',
+                        'flight_number' => isset($flight->flight_number) ? $flight->flight_number : '',
+                        'course_begin' => isset($flight->course_begin) ? $flight->course_begin : '',
+                        'course_end' => isset($flight->course_end) ? $flight->course_end : '',
+                        'terminal_begin' => isset($flight->terminal_begin) ? $flight->terminal_begin : '',
+                        'terminal_end' => isset($flight->terminal_end) ? $flight->terminal_end : '',
+                        'code_end' => isset($flight->code_end) ? $flight->code_end : '',
+                        'seats' => isset($flight->date_begin) ? $flight->date_begin : '',
+                        'tickets' => isset($flight->tickets) ? $flight->tickets : '',
+                        'type' => isset($flight->type) ? $flight->type : '',
+                        'class' => isset($flight->class) ? $flight->class : '',
+                        'duration' => isset($flight->duration) ? $flight->duration : '',
+                        'supplier_id' => isset($flight->supplier_id) ? $flight->supplier_id : ''
+            ]);
+        }
+        return $result_query;
     }
 
 }

@@ -21,7 +21,7 @@ class Catalog extends Model {
         return $operators;
     }
 
-    public function getServices() {
+    public function getServicesList() {
         $table = config('crm_tables.crm_services');
         $services = DB::table($table)
                 ->pluck('name', 'id');

@@ -39,6 +39,8 @@ class BidsController extends Controller {
         $table_users = config('crm_tables.uon_users_table');
         $table_sourses = config('crm_tables.uon_sourses');
         $table_tourist = config('crm_tables.crm_bid_tourist');
+        $catalog_model = new \App\Catalog();
+        $helper = new \App\Helper;
         $bid = DB::table($table_name)
                 ->leftJoin($table_users, $table_users . '.u_id', '=', $table_name . '.r_client_id')
                 ->leftJoin($table_sourses, $table_name . '.r_source_id', '=', $table_sourses . '.uon_id')
@@ -47,25 +49,27 @@ class BidsController extends Controller {
         $tourists = DB::table($table_tourist)
                         ->leftJoin($table_users, $table_tourist . '.tourist_id', '=', $table_users . '.u_id')
                         ->where('zayavka_id', '=', $request->id)->get();
-        $catalog_model = new \App\Catalog();
+        
         $companies = $catalog_model->getCompanies();
         $operators = $catalog_model->getOperators();
-        $services = $catalog_model->getServices();
         $types = $catalog_model->getTourType();
         $managers = $catalog_model->getManagers();
         $sourses = $catalog_model->getSourses();
         $statuses = $catalog_model->getStatuses();
+        $services = $helper->getBidServices($request->id);
+        $flights = $helper->getBidFlights($request->id);
 
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
             'tourists' => $tourists,
             'companies' => $companies,
             'operators' => $operators,
-            'services' => $services,
             'types' => $types,
             'managers' => $managers,
             'sourses' => $sourses,
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'services' => $services,
+            'flights' => $flights
         ));
     }
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<?php var_dump($bid); ?>
+<?php //var_dump($bid); ?>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -126,6 +126,66 @@
                                 </tr>
                                 @endforeach
                                 @endif
+                                <tr><td colspan="2" style="text-align: center;"><b>Услуги в заявке</b></td></tr>
+                                @if ($services)
+                                <tr style="text-decoration: underline;">
+                                    <td>
+                                        Даты:
+                                    </td>
+                                    <td>
+                                        Описание:
+                                    </td>
+                                    <td>
+                                        Партнёр:
+                                    </td>
+                                    <td>
+                                        Курс и расчёт:
+                                    </td>
+                                    <td>
+                                        Цена:
+                                    </td>
+                                    <td>
+                                        Действия:
+                                    </td>
+                                </tr>
+                                @foreach ($services as $service)
+                                @if ($service->service_type_id <> 6)
+                                <tr>
+                                    <?php
+                                    //var_dump($services);
+                                    $date_norm = new App\myDate();
+                                    $date_begin = $date_norm->getNormalDate($service->date_begin);
+                                    $date_end = $date_norm->getNormalDate($service->date_end);
+                                    ?>
+                                    <td>{{$date_begin}} - {{$date_end}}</td>
+                                    <td><b>{{$service->service_type}}</b><br />{{$service->description}}</td>
+                                    <td>{{$service->partner_name}}</td>
+                                    <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
+                                    <td>{{round($service->price*$service->rate,0)}}</td>
+                                </tr>
+                                @endif
+                                @if ($service->service_type_id == 6)
+                                @foreach ($flights as $flight)
+                                <tr>
+                                    <?php
+                                    //var_dump($services);
+                                    $date_norm = new App\myDate();
+                                    $date_begin = $date_norm->getNormalDate($flight->date_begin);
+                                    $date_end = $date_norm->getNormalDate($flight->date_end);
+                                    ?>
+                                    <td>{{$date_begin}} <b>({{$flight->time_begin}})</b> - {{$date_end}} <b>({{$flight->time_end}})</b></td>
+                                    <td><b>{{$service->service_type}}</b><br />{{$service->description}}<br />
+                                    Вылет: {{$flight->course_begin}}</td>
+                                    <td>{{$service->partner_name}}</td>
+                                    <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
+                                    <td>{{round($service->price*$service->rate,0)}}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                                @endforeach
+                                @endif
+
+
                             </table>
                         </div>
                     </div>

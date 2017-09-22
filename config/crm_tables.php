@@ -12,6 +12,8 @@ return [
     'uon_statuses' => 'uon_statuses', //Справочник статусов заявок
     'uon_cash' => 'uon_cash', //Справочник касс
     'uon_managers' => 'uon_managers', //Справочник менеджеров UON
+    'uon_bid_services' => 'uon_bid_services', //Услуги заявки
+    'uon_bid_flights' => 'uon_bid_flights', //Авиаперелёты заявки
     'price_change_history' => 'price_change_history', //История изменения цены заявки
     'crm_bid_tourist' => 'crm_bid2tourist', //таблица взаимосвязей заявок и туристов
     'crm_bid_service' => 'crm_bid2service', //таблица взаимосвязей заявок и услуг
