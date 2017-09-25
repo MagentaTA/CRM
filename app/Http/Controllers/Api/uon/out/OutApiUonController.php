@@ -179,9 +179,13 @@ class OutApiUonController extends Controller {
                 $insert_services = new \App\Lost();
                 $result_insert = $insert_services->insertService($request->services, $request->id);
             }
-            
             $all_request_data = $request_data->get($request->id);
             foreach ($all_request_data['message']->request as $this_request) {
+                if (count($this_request->payments) > 0) {
+                    $insert_payments = new \App\Lost();
+                    $result_insert = $insert_payments->insertPayments($this_request->payments, $request->id);
+                }
+
                 foreach ($this_request->services as $this_service) {
                     if (isset($this_service->flights) && count($this_service->flights) > 0) {
                         //var_dump($this_service->flights);
@@ -245,14 +249,14 @@ class OutApiUonController extends Controller {
     }
 
     public function AllLeadsRequests() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 5 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_leads');
         $_requests = new \UON\Leads();
         $responce = \GuzzleHttp\json_encode($_requests->date($date_from, $date_to));
         $responce = \GuzzleHttp\json_decode($responce);
-        var_dump($responce);
-        /* Schema::dropIfExists($table_name);
+        //var_dump($responce);
+         Schema::dropIfExists($table_name);
           Schema::create($table_name, function($table) {
           $table->bigIncrements('l_id');
           $table->integer('l_id_system')->default(0);
@@ -352,7 +356,7 @@ class OutApiUonController extends Controller {
           ]
           );
           }
-          return redirect()->route('admin'); */
+          return redirect()->route('admin'); 
     }
 
     public function GetCountries() {
@@ -688,7 +692,6 @@ class OutApiUonController extends Controller {
                     ]
             );
         }
-        return redirect()->route('admin');
     }
 
     public function GetStatuses() {

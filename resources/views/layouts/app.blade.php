@@ -12,6 +12,7 @@
 
         <!-- Styles -->
         <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/open-iconic-master/font/css/open-iconic-bootstrap.css') }}" rel="stylesheet">
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ elixir('js/all.js') }}"></script>
@@ -93,7 +94,12 @@
                     </div>
                 </div>
             </nav>
-            @yield('content')
-        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
     </body>
 </html>

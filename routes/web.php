@@ -63,6 +63,7 @@ Route::group(['prefix' => 'client'], function () {
 });
 Route::group(['prefix' => 'leads'], function () {
     Route::get('leads_list', 'LeadsController@LeadsList')->name('leads_list');
+    Route::get('lead_edit/{id}', 'LeadsController@LeadEdit')->name('lead_edit');
 });
 Route::group(['prefix' => 'bids'], function () {
     Route::get('bids_list', 'BidsController@BidsList')->name('bids_list');

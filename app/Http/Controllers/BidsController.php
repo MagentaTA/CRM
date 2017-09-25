@@ -58,6 +58,7 @@ class BidsController extends Controller {
         $statuses = $catalog_model->getStatuses();
         $services = $helper->getBidServices($request->id);
         $flights = $helper->getBidFlights($request->id);
+        $payments = $helper->getBidPayments($request->id);
 
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
@@ -69,7 +70,8 @@ class BidsController extends Controller {
             'sourses' => $sourses,
             'statuses' => $statuses,
             'services' => $services,
-            'flights' => $flights
+            'flights' => $flights,
+            'payments' => $payments
         ));
     }
 

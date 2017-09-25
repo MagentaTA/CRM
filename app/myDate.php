@@ -13,10 +13,25 @@ class myDate extends Model {
         }
     }
     public function getNormalDate($date) {
+        if ($date == '0000-00-00 00:00:00')
+        {
+            return '';
+        }
         $carbon = new Carbon();
         $carbon->setToStringFormat('d.m.Y');
         $return_date = $carbon->parse($date,'Europe/London');
         $return_date = $return_date->format('d.m.Y');
+        return $return_date;
+    }
+    public function getNormalDateTime($date) {
+        if ($date == '0000-00-00 00:00:00')
+        {
+            return '';
+        }
+        $carbon = new Carbon();
+        $carbon->setToStringFormat('d.m.Y H:i:s');
+        $return_date = $carbon->parse($date,'Europe/London');
+        $return_date = $return_date->format('d.m.Y H:i:s');
         return $return_date;
     }
 

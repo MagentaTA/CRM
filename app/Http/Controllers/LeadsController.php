@@ -33,5 +33,13 @@ class LeadsController extends Controller {
                         ->orderBy('l_id', 'desc')->paginate(50);
         return view('layouts.lead.leads_list', ['leads' => $leads]);
     }
+    public function LeadEdit(Request $request) {
+        $table_name = config('crm_tables.uon_bids');
+        $catalog_model = new \App\Catalog();
+        $helper = new \App\Helper;
+        
 
+        return view('layouts.lead.leads_edit', array(
+        ));
+    }
 }

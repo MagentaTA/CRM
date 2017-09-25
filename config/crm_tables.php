@@ -14,6 +14,7 @@ return [
     'uon_managers' => 'uon_managers', //Справочник менеджеров UON
     'uon_bid_services' => 'uon_bid_services', //Услуги заявки
     'uon_bid_flights' => 'uon_bid_flights', //Авиаперелёты заявки
+    'uon_bid_payments' => 'uon_bid_payments', //Платежи заявки
     'price_change_history' => 'price_change_history', //История изменения цены заявки
     'crm_bid_tourist' => 'crm_bid2tourist', //таблица взаимосвязей заявок и туристов
     'crm_bid_service' => 'crm_bid2service', //таблица взаимосвязей заявок и услуг

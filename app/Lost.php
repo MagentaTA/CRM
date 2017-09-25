@@ -351,4 +351,59 @@ class Lost extends Model {
         return $result_query;
     }
 
+    public function insertPayments($payments_array, $bid_id) {
+        $table_name = config('crm_tables.uon_bid_payments');
+        if (Schema::hasTable($table_name) === FALSE) {
+            Schema::create($table_name, function($table) {
+                $table->bigIncrements('crm_id');
+                $table->integer('id')->default(0);
+                $table->text('date_create');
+                $table->text('date_plan');
+                $table->text('reason');
+                $table->integer('cash_id')->default(0);
+                $table->integer('number')->default(0);
+                $table->integer('type_id')->default(0);
+                $table->integer('cio_id')->default(0);
+                $table->integer('in_plan')->default(0);
+                $table->integer('is_bonus_pay')->default(0);
+                $table->integer('is_deposit')->default(0);
+                $table->integer('from1c')->default(0);
+                $table->integer('office_id')->default(0);
+                $table->integer('client_id')->default(0);
+                $table->float('price',8,2)->default(0);
+                $table->integer('rate')->default(0);
+                $table->integer('currency_id')->default(0);
+                $table->text('currency');
+                $table->text('currency_code');
+                $table->integer('r_id');
+            });
+        }
+        foreach ($payments_array as $payment) {
+            $result_query = DB::table($table_name)->insert(
+                    [
+                        'id' => isset($payment->id) ? $payment->id : 0,
+                        'date_create' => isset($payment->date_create) ? $payment->date_create : '',
+                        'date_plan' => isset($payment->date_plan) ? $payment->date_plan : '',
+                        'reason' => isset($payment->reason) ? $payment->reason : '',
+                        'cash_id' => isset($payment->cash_id) ? $payment->cash_id : 0,
+                        'number' => isset($payment->number) ? $payment->number : 0,
+                        'type_id' => isset($payment->type_id) ? $payment->type_id : 0,
+                        'cio_id' => isset($payment->cio_id) ? $payment->cio_id : 0,
+                        'in_plan' => isset($payment->in_plan) ? $payment->in_plan : 0,
+                        'is_bonus_pay' => isset($payment->is_bonus_pay) ? $payment->is_bonus_pay : 0,
+                        'is_deposit' => isset($payment->is_deposit) ? $payment->is_deposit : 0,
+                        'from1c' => isset($payment->from1c) ? $payment->from1c : 0,
+                        'office_id' => isset($payment->office_id) ? $payment->office_id : 0,
+                        'client_id' => isset($payment->client_id) ? $payment->client_id : 0,
+                        'price' => isset($payment->price) ? $payment->price : 0,
+                        'rate' => isset($payment->rate) ? $payment->rate : 0,
+                        'currency_id' => isset($payment->currency_id) ? $payment->currency_id : 0,
+                        'currency' => isset($payment->currency) ? $payment->currency : '',
+                        'currency_code' => isset($payment->currency_code) ? $payment->currency_code : '',
+                        'r_id' => isset($payment->r_id) ? $payment->r_id : ''
+            ]);
+        }
+        return $result_query;
+    }
+
 }
