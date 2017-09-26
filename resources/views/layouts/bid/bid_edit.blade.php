@@ -15,6 +15,7 @@
         <div id="bid_tabs">
             <ul>
                 <li><a href="#tabs-1">Основные</a></li>
+                <li><a href="#tabs-2">История общения</a></li>
             </ul>
             <?php Form::open(array('url' => route('bid_change', ['id' => $bid->r_id]), 'method' => 'post')) ?>
             <div id="tabs-1">
@@ -177,6 +178,7 @@
                                     <td>{{$service->partner_name}}</td>
                                     <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
                                     <td>{{round($service->price*$service->rate,2)}} грн.</td>
+                                    <td><a href="{{ route('service_edit',['id' => $service->crm_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a></td>
                                     </tr>
                                     @endif
                                     @if ($service->service_type_id == 6)
@@ -194,12 +196,13 @@
                                                 @endif
                                                 <b>{{$service->service_type}}</b><br />{{$service->description}}<br />
                                                 Вылет: {{$flight->course_begin}}<br />
-                                                <b>Туристы: </b>{{$service->tourists_count}} <span class="oi oi-person" title="Редактировать" aria-hidden="true">
+                                                <b>Туристы: </b>{{$service->tourists_count}} <span class="oi oi-person" title="Турист" aria-hidden="true">
 
                                                     </td>
                                                     <td>{{$service->partner_name}}</td>
                                                     <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
                                                     <td>{{round($service->price*$service->rate,2)}} грн.</td>
+                                                    <td><a href="{{ route('service_edit',['id' => $service->crm_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a></td>
                                                     </tr>
                                                     @endforeach
                                                     @endif
@@ -207,33 +210,99 @@
                                                     @endif
                                                     </table>
                                                     <table class="table table-bordered">
-                                                        <tr><td colspan="6" style="text-align: center;"><b>Платежи по заявке</b></td></tr>
+                                                        <tr><td colspan="6" style="text-align: center;"><b>Расчёты с заказчиком</b></td></tr>
                                                         <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
                                                         @if($payments)
                                                         @foreach($payments as $payment)
                                                         <?php
-                                                        //  var_dump($payment);
+                                                        //var_dump($payment);
+                                                        //echo '---------------------------------------<br />';
                                                         ?>
-                                                        <tr>
-                                                            <td>
-                                                                <?php
-                                                                $cash_data = new App\Helper();
-                                                                $cash_name = $cash_data->getCashData($payment->cash_id);
-                                                                ?>
-                                                                {{$cash_name->name}}
-                                                            </td>
+                                                        @if($payment->type_id == 1)
+                                                        <?php
+                                                        if ($payment->cio_id == 2) {
+                                                            echo '<tr class="payment_minus">';
+                                                        } else {
+                                                            echo '<tr class="payment_plus">';
+                                                        }
+                                                        ?>
+
+                                                        <td>
                                                             <?php
-                                                            $date_norm = new App\myDate();
-                                                            $cash_date = $date_norm->getNormalDateTime($payment->date_create);
+                                                            $cash_data = new App\Helper();
+                                                            $cash_name = $cash_data->getCashData($payment->cash_id);
                                                             ?>
-                                                            <td>{{$cash_date}}</td>
-                                                            <td>{{$payment->rate}} {{$payment->currency}}</td>
-                                                            <td>{{$payment->price}} {{$payment->currency}}</td>
+                                                            {{$cash_name->name}}
+                                                        </td>
+                                                        <?php
+                                                        $date_norm = new App\myDate();
+                                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
+                                                        ?>
+                                                        <td>{{$cash_date}}</td>
+                                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
+                                                        <?php
+                                                        $cur_price = $payment->rate * $payment->price;
+                                                        ?>
+                                                        <td>{{$cur_price}} грн.</td>
                                                         </tr>
+                                                        @endif
+
                                                         @endforeach
+                                                    </table>
+                                                    <table class="table table-bordered">
+                                                        <tr><td colspan="6" style="text-align: center;"><b>Расчеты с партнёрами</b></td></tr>
+                                                        <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
+                
+                                                        @foreach($payments as $payment)
+                                                        <?php
+                                                        //var_dump($payment);
+                                                        //echo '---------------------------------------<br />';
+                                                        ?>
+                                                        @if($payment->type_id == 2)
+                                                        <?php
+                                                        if ($payment->cio_id == 2) {
+                                                            echo '<tr class="payment_minus">';
+                                                        } else {
+                                                            echo '<tr class="payment_plus">';
+                                                        }
+                                                        ?>
+
+                                                        <td>
+                                                            <?php
+                                                            $cash_data = new App\Helper();
+                                                            $cash_name = $cash_data->getCashData($payment->cash_id);
+                                                            ?>
+                                                            {{$cash_name->name}}
+                                                        </td>
+                                                        <?php
+                                                        $date_norm = new App\myDate();
+                                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
+                                                        ?>
+                                                        <td>{{$cash_date}}</td>
+                                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
+                                                        <?php
+                                                        $cur_price = $payment->rate * $payment->price;
+                                                        ?>
+                                                        <td>{{$cur_price}} грн.</td>
+                                                        </tr>
+                                                        @endif
+
+                                                        @endforeach
+                                                        
                                                         @endif
 
                                                     </table>
+                                                    </div>
+                                                    <div id="tabs-2">
+                                                        <ul class="list-group-item-info">
+                                                            @foreach ($reminders as $reminder)
+                                                            <li class="list-group-item">
+                                                                {{$reminder->text}}
+                                                                <br />
+                                                                {{$reminder->datetime}}
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
                                                     </div>
                                                     </div>
 

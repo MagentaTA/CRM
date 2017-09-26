@@ -37,5 +37,12 @@ class Helper extends Model {
                 ->first();
         return $cash;
     }
+    public function getRemindersData($id) {
+        $table = config('crm_tables.uon_bid_reminders');
+        $reminders = DB::table($table)
+                ->where('r_id', '=', $id)
+                ->get();
+        return $reminders;
+    }
 
 }

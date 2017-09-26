@@ -1,0 +1,13 @@
+.payment_plus {
+    background-color: #5CB85C;
+}
+.payment_plus td {
+    color: #FFFFFF;
+}
+.payment_minus {
+    background: #F2DEDE;
+}
+.payment_minus td {
+    color: #B94A5A;
+    font-weight: bold;
+}

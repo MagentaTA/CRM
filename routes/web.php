@@ -53,6 +53,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:developer']], function
     Route::get('/', 'Admin\AdminController@index')->name('admin');
     Route::get('/add_role', 'Admin\AdminController@add_role')->name('add_role');
 });
+// Роутинг для Тестовых
+Route::group(['prefix' => 'test', 'middleware' => ['role:developer']], function () {
+    Route::get('test', 'TestController@index')->name('test');
+});
+
 // Роутинг для работы с клиентами
 Route::group(['prefix' => 'client'], function () {
     Route::get('client_list', 'ClientController@ClientList')->name('client_list');
@@ -78,4 +83,8 @@ Route::group(['prefix' => 'catalog'], function () {
     Route::get('sourses_list', 'SourseController@SoursesList')->name('sourses_list');
     Route::get('managers_list', 'ManagersController@ManagersList')->name('managers_list');
 });
+Route::group(['prefix' => 'services'], function () {
+    Route::get('service_edit/{id}', 'ServicesController@ServiceEdit')->name('service_edit');
+});
+
 

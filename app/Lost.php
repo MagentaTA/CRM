@@ -370,7 +370,7 @@ class Lost extends Model {
                 $table->integer('from1c')->default(0);
                 $table->integer('office_id')->default(0);
                 $table->integer('client_id')->default(0);
-                $table->float('price',8,2)->default(0);
+                $table->float('price', 8, 2)->default(0);
                 $table->integer('rate')->default(0);
                 $table->integer('currency_id')->default(0);
                 $table->text('currency');
@@ -404,6 +404,85 @@ class Lost extends Model {
             ]);
         }
         return $result_query;
+    }
+
+    public function insertReminders($bid_id) {
+        $table_name = config('crm_tables.uon_bid_reminders');
+        $reminder_class = new \UON\Reminders();
+        $reminds = $reminder_class->get($bid_id);
+        if (Schema::hasTable($table_name) === FALSE) {
+            Schema::create($table_name, function($table) {
+                $table->bigIncrements('crm_id');
+                $table->integer('id')->default(0);
+                $table->integer('r_id')->default(0);
+                $table->integer('type_id')->default(0);
+                $table->text('text');
+                $table->text('datetime');
+                $table->integer('created_u_id')->default(0);
+                $table->integer('is_done')->default(0);
+                $table->text('done_at');
+                $table->integer('done_u_id')->default(0);
+            });
+        }
+        foreach ($reminds['message']->reminder as $remind) {
+            $result_query = DB::table($table_name)->insert(
+                    [
+                        'id' => isset($remind->id) ? $remind->id : 0,
+                        'r_id' => isset($remind->r_id) ? $remind->r_id : 0,
+                        'type_id' => isset($remind->type_id) ? $remind->type_id : 0,
+                        'text' => isset($remind->text) ? $remind->text : '',
+                        'created_u_id' => isset($remind->created_u_id) ? $remind->created_u_id : 0,
+                        'is_done' => isset($remind->is_done) ? $remind->is_done : 0,
+                        'done_at' => isset($remind->done_at) ? $remind->done_at : '',
+                        'datetime' => isset($remind->datetime) ? $remind->datetime : '',
+                        'done_u_id' => isset($remind->done_u_id) ? $remind->done_u_id : 0
+            ]);
+        }
+        return TRUE;
+    }
+
+    public function insertTourist($tourist, $bid_id) {
+        $table_name = config('crm_tables.crm_bid_tourist');
+        if (!Schema::hasTable($table_name)) {
+            Schema::create($table_name, function($table) {
+                $table->integer('zayavka_id');
+                $table->integer('tourist_id')->default(0);
+                $table->integer('user_id');
+                $table->dateTime('u_date_update')->default(NULL)->nullable();
+            });
+        }
+        $result_query = DB::table($table_name)->insert(
+                [
+                    'zayavka_id' => $bid_id,
+                    'tourist_id' => 0,
+                    'user_id' => isset($tourist->u_id) ? $tourist->u_id : 0,
+                    'u_date_update' => $tourist->u_date_update
+                ]
+        );
+        return TRUE;
+    }
+
+    public function addServiceforBid($services, $bid_id,$user_id,$u_date_update) {
+        $table_name = config('crm_tables.crm_bid_service');
+        if (!Schema::hasTable($table_name)) {
+            Schema::create($table_name, function($table) {
+                $table->integer('zayavka_id');
+                $table->integer('service_id')->default(0);
+                $table->integer('user_id');
+                $table->dateTime('u_date_update')->default(NULL)->nullable();
+            });
+        }
+        foreach ($services as $service) {
+            $result_query = DB::table($table_name)->insert(
+                    [
+                        'zayavka_id' => $bid_id,
+                        'service_id' => 0,
+                        'user_id' => $user_id,
+                        'u_date_update' => $u_date_update
+                    ]
+            );
+        }
+        return TRUE;
     }
 
 }

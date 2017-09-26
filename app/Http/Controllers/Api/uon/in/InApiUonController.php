@@ -171,7 +171,7 @@ class InApiUonController extends Controller {
             Schema::create($table_name, function($table) {
                 $table->integer('zayavka_id');
                 $table->integer('tourist_id');
-                $table->integer('user_id')->default(NULL)->nullable();
+                $table->integer('user_id');
                 $table->dateTime('u_date_update')->default(NULL)->nullable();
             });
         }
@@ -193,12 +193,12 @@ class InApiUonController extends Controller {
 
     public function DeleteTourist(Request $request) {
         $zayavka_id = $request->get('r_id');
-        $tourist_id = $request->get('tourist_id');
+        $user_id = $request->get('user_id');
         $table_name = config('crm_tables.crm_bid_tourist');
         $result_query = DB::table($table_name)->where(
                         [
                             ['zayavka_id', '=', (int) $zayavka_id],
-                            ['tourist_id', '=', (int) $tourist_id]
+                            ['user_id', '=', (int) $user_id]
                         ]
                 )->delete();
         if ($result_query) {

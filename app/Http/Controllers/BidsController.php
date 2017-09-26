@@ -47,7 +47,7 @@ class BidsController extends Controller {
                 ->where('r_id', '=', $request->id)
                 ->first();
         $tourists = DB::table($table_tourist)
-                        ->leftJoin($table_users, $table_tourist . '.tourist_id', '=', $table_users . '.u_id')
+                        ->leftJoin($table_users, $table_tourist . '.user_id', '=', $table_users . '.u_id')
                         ->where('zayavka_id', '=', $request->id)->get();
         
         $companies = $catalog_model->getCompanies();
@@ -59,6 +59,7 @@ class BidsController extends Controller {
         $services = $helper->getBidServices($request->id);
         $flights = $helper->getBidFlights($request->id);
         $payments = $helper->getBidPayments($request->id);
+        $reminders = $helper->getRemindersData($request->id);
 
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
@@ -71,7 +72,8 @@ class BidsController extends Controller {
             'statuses' => $statuses,
             'services' => $services,
             'flights' => $flights,
-            'payments' => $payments
+            'payments' => $payments,
+            'reminders' => $reminders
         ));
     }
 
