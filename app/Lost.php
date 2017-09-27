@@ -126,6 +126,24 @@ class Lost extends Model {
                         'r_travel_type' => isset($request->travel_type) ? $request->travel_type : ''
                     ]
             );
+            $result_insert = $this->insertReminders($id);
+            $all_request_data = $_requests->get($id);
+            foreach ($all_request_data['message']->request as $this_request) {
+                if (count($this_request->payments) > 0) {
+                    $result_insert = $this->insertPayments($this_request->payments, $id);
+                }
+
+                foreach ($this_request->services as $this_service) {
+                    if (isset($this_service->flights) && count($this_service->flights) > 0) {
+                        //var_dump($this_service->flights);
+                        $result_insert = $this->insertFlights($this_service->flights, $id);
+                    }
+                }
+                $result_insert = $this->addServiceforBid($this_request->services, $id, $this_request->client_id, $this_request->dat_updated);
+            }
+            foreach ($all_request_data['message']->request[0]->tourists as $tourist) {
+                $result_insert = $this->insertTourist($tourist, $id);
+            }
             if ($result_query) {
                 return '<font color=' . $this->ok_color . '>Заявки небыло в нашей базе. Добавили и обновили: ' . $id . '</font>';
             } else {
@@ -462,7 +480,7 @@ class Lost extends Model {
         return TRUE;
     }
 
-    public function addServiceforBid($services, $bid_id,$user_id,$u_date_update) {
+    public function addServiceforBid($services, $bid_id, $user_id, $u_date_update) {
         $table_name = config('crm_tables.crm_bid_service');
         if (!Schema::hasTable($table_name)) {
             Schema::create($table_name, function($table) {

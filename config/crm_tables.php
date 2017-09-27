@@ -12,6 +12,7 @@ return [
     'uon_statuses' => 'uon_statuses', //Справочник статусов заявок
     'uon_cash' => 'uon_cash', //Справочник касс
     'uon_managers' => 'uon_managers', //Справочник менеджеров UON
+    'uon_nutritions' => 'uon_nutritions', //Справочник типов питания
     'uon_bid_services' => 'uon_bid_services', //Услуги заявки
     'uon_bid_flights' => 'uon_bid_flights', //Авиаперелёты заявки
     'uon_bid_payments' => 'uon_bid_payments', //Платежи заявки

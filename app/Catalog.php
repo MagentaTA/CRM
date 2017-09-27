@@ -54,5 +54,11 @@ class Catalog extends Model {
                 ->pluck('stat_name', 'stat_id');
         return $statuses;
     }
+    public function getNutritions() {
+        $table = config('crm_tables.uon_nutritions');
+        $statuses = DB::table($table)
+                ->pluck('name', 'uon_id');
+        return $statuses;
+    }
 
 }

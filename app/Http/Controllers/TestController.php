@@ -19,13 +19,8 @@ class TestController extends Controller {
     }
 
     public function index() {
-        $request_data = new \UON\Requests();
-        $user_data = new \UON\Users();
-        $responce = $request_data->get(19641);
-        //$request = $request_data->getActions(19750);
-        //$leads_data = new \UON\Leads();
-        //$request = $leads_data->get(19770);
-        var_dump($responce['message']->request[0]->dat_updated);
+        $_requests = new \App\Lost();
+        var_dump($_requests->LostBid(13011));
     }
 
 }

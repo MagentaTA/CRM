@@ -30,6 +30,7 @@
                         <a href="<?=route('add_tour_type')?>">Добавить типы услуг</a><br />
                         <a href="<?=route('get_statuses')?>">Импорт статусов заявок</a><br />
                         <a href="<?=route('get_cash')?>">Импорт касс</a><br />
+                        <a href="<?=route('get_nutritions')?>">Импорт типов питания</a><br />
                         <a href="<?=route('add_role')?>">Добавить роль пользователя</a><br />
                     </div>
 

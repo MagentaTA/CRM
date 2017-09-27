@@ -32,6 +32,7 @@ Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('add_tour_type', 'Api\uon\out\OutApiUonController@TourTypes')->name('add_tour_type');
     Route::get('get_statuses', 'Api\uon\out\OutApiUonController@GetStatuses')->name('get_statuses');
     Route::get('get_cash', 'Api\uon\out\OutApiUonController@GetCash')->name('get_cash');
+    Route::get('get_nutritions', 'Api\uon\out\OutApiUonController@GetNutritions')->name('get_nutritions');
 });
 // Роутинг для входящих хуков из базы UON
 Route::group(['prefix' => 'api/uon/in'], function () {

@@ -12,6 +12,14 @@ class myDate extends Model {
             return date('d.m.Y', strtotime($date));
         }
     }
+    public function getDateFromDatetime ($string)
+    {
+        $carbon = new Carbon();
+        $date = $carbon->parse($string);
+        $date = $date->format('d.m.Y');
+        return $date;
+    }
+
     public function getNormalDate($date) {
         if ($date == '0000-00-00 00:00:00')
         {

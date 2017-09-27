@@ -214,17 +214,16 @@ class OutApiUonController extends Controller {
                     }
                 }
                 $insert_service = new \App\Lost();
-                $result_insert = $insert_service->addServiceforBid($this_request->services, $request->id,$this_request->client_id,$this_request->dat_updated);
-                
+                $result_insert = $insert_service->addServiceforBid($this_request->services, $request->id, $this_request->client_id, $this_request->dat_updated);
             }
             foreach ($all_request_data['message']->request[0]->tourists as $tourist) {
                 $insert_tourist = new \App\Lost();
                 $result_insert = $insert_tourist->insertTourist($tourist, $request->id);
             }
-            /*foreach ($all_request_data['message']->request[0]->services as $service) {
-                $insert_service = new \App\Lost();
-                $result_insert = $insert_service->addServiceforBid($service, $request->id);
-            }*/
+            /* foreach ($all_request_data['message']->request[0]->services as $service) {
+              $insert_service = new \App\Lost();
+              $result_insert = $insert_service->addServiceforBid($service, $request->id);
+              } */
 
             DB::table($table_name)->insert(
                     [
@@ -646,7 +645,7 @@ class OutApiUonController extends Controller {
         $_requests = new \UON\Suppliers();
         $response = \GuzzleHttp\json_encode($_requests->all());
         $response = \GuzzleHttp\json_decode($response);
-        var_dump($response);
+        //var_dump($response);
         $table_name = config('crm_tables.crm_operators');
         Schema::dropIfExists($table_name);
         Schema::create($table_name, function($table) {
@@ -743,6 +742,32 @@ class OutApiUonController extends Controller {
                     [
                         'stat_id' => $item_array->id,
                         'stat_name' => isset($item_array->name) ? $item_array->name : '',
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetNutritions() {
+        $_requests = new \UON\Nutrition();
+        $responce = \GuzzleHttp\json_encode($_requests->all());
+        $responce = \GuzzleHttp\json_decode($responce);
+        //var_dump($responce);
+        $table_name = config('crm_tables.uon_nutritions');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('crm_id');
+            $table->integer('uon_id');
+            $table->text('name');
+            $table->text('name_en');
+        });
+
+        foreach ($responce->message->records as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'uon_id' => $item_array->id,
+                        'name' => isset($item_array->name) ? $item_array->name : '',
+                        'name_en' => isset($item_array->name_en) ? $item_array->name_en : ''
                     ]
             );
         }

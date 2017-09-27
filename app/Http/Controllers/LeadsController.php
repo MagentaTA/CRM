@@ -33,13 +33,27 @@ class LeadsController extends Controller {
                         ->orderBy('l_id', 'desc')->paginate(50);
         return view('layouts.lead.leads_list', ['leads' => $leads]);
     }
-    public function LeadEdit(Request $request) {
-        $table_name = config('crm_tables.uon_bids');
-        $catalog_model = new \App\Catalog();
-        $helper = new \App\Helper;
-        
 
-        return view('layouts.lead.leads_edit', array(
+    public function LeadEdit(Request $request) {
+        $table_name = config('crm_tables.uon_leads');
+        $catalog_model = new \App\Catalog();
+        $lead = DB::table($table_name)
+                ->where('l_id', '=', $request->id)
+                ->first();
+
+        $managers = $catalog_model->getManagers();
+        $companies = $catalog_model->getCompanies();
+        $sourses = $catalog_model->getSourses();
+        $tour_types = $catalog_model->getTourType();
+        $statuses = $catalog_model->getStatuses();
+        return view('layouts.lead.lead_edit', array(
+            'lead' => $lead,
+            'managers' => $managers,
+            'companies' => $companies,
+            'sourses' => $sourses,
+            'tour_types' => $tour_types,
+            'statuses' => $statuses
         ));
     }
+
 }
