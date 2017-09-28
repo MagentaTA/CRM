@@ -26,19 +26,25 @@ class ServicesController extends Controller {
     public function ServiceEdit(Request $request) {
         $service_table = config('crm_tables.uon_bid_services');
         $catalog_class = new \App\Catalog();
+        $helper_class = new \App\Helper();
         
         
         
         $services_types = $catalog_class->getServicesList();
         $nutritions = $catalog_class->getNutritions();
+        $avia = $catalog_class->getAvia();
+        
         
         $service_data = DB::table($service_table)
                 ->where('crm_id', '=', $request->id)
                 ->first();
+        $flys = $helper_class->getFlys($service_data->r_id);
         return view('layouts.service.service_edit', array(
             'service_data' => $service_data,
             'services_types' => $services_types,
-            'nutritions' => $nutritions
+            'nutritions' => $nutritions,
+            'flys' => $flys,
+            'avia' => $avia
         ));
     }
 

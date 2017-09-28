@@ -44,5 +44,12 @@ class Helper extends Model {
                 ->get();
         return $reminders;
     }
+    public function getFlys($r_id) {
+        $table = config('crm_tables.uon_bid_flights');
+        $flys = DB::table($table)
+                ->where('r_id','=',$r_id)
+                ->get();
+        return $flys;
+    }
 
 }

@@ -28,6 +28,7 @@ Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('get_managers', 'Api\uon\out\OutApiUonController@GetManagers')->name('get_managers');
     Route::get('get_companies', 'Api\uon\out\OutApiUonController@GetCompanies')->name('get_companies');
     Route::get('get_operators', 'Api\uon\out\OutApiUonController@GetOperators')->name('get_operators');
+    Route::get('get_avia', 'Api\uon\out\OutApiUonController@GetAvia')->name('get_avia');
     Route::get('get_services', 'Api\uon\out\OutApiUonController@GetServices')->name('get_services');
     Route::get('add_tour_type', 'Api\uon\out\OutApiUonController@TourTypes')->name('add_tour_type');
     Route::get('get_statuses', 'Api\uon\out\OutApiUonController@GetStatuses')->name('get_statuses');

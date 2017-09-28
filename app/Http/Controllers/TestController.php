@@ -19,8 +19,7 @@ class TestController extends Controller {
     }
 
     public function index() {
-        $_requests = new \App\Lost();
-        var_dump($_requests->LostBid(13011));
+
     }
 
 }

@@ -22,6 +22,7 @@ return [
     'crm_bid_service' => 'crm_bid2service', //таблица взаимосвязей заявок и услуг
     'crm_companies' => 'crm_companies', //таблица оформляющих компаний
     'crm_operators' => 'crm_operators', //таблица туроператоров
+    'crm_avia' => 'crm_avia', //таблица авиакомпаний
     'crm_services' => 'crm_services', //таблица услуг
     'crm_tour_types' => 'crm_tour_types' //таблица типов услуг
 ];

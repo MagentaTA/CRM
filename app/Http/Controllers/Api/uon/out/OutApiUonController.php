@@ -679,6 +679,44 @@ class OutApiUonController extends Controller {
         }
         return redirect()->route('admin');
     }
+    public function GetAvia() {
+        $_requests = new \UON\Suppliers();
+        $response = \GuzzleHttp\json_encode($_requests->all());
+        $response = \GuzzleHttp\json_decode($response);
+        //var_dump($response);
+        $table_name = config('crm_tables.crm_avia');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+            $table->integer('type_id')->default(0);
+            $table->text('type');
+            $table->text('address');
+            $table->text('phones');
+            $table->text('email');
+            $table->text('contacts');
+            $table->text('note');
+        });
+
+        foreach ($response->message->records as $item_array) {
+            if ($item_array->type == 'Авиакомпании') {
+                DB::table($table_name)->insert(
+                        [
+                            'id' => $item_array->id,
+                            'name' => isset($item_array->name) ? $item_array->name : '',
+                            'type_id' => isset($item_array->type_id) ? $item_array->type_id : 0,
+                            'type' => isset($item_array->type) ? $item_array->type : '',
+                            'address' => isset($item_array->address) ? $item_array->address : '',
+                            'phones' => isset($item_array->phones) ? $item_array->phones : '',
+                            'email' => isset($item_array->email) ? $item_array->email : '',
+                            'contacts' => isset($item_array->contacts) ? $item_array->contacts : '',
+                            'note' => isset($item_array->note) ? $item_array->note : '',
+                        ]
+                );
+            }
+        }
+        return redirect()->route('admin');
+    }
 
     public function GetServices() {
         $_requests = new \UON\Services();

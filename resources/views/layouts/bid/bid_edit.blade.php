@@ -3,8 +3,7 @@
 @section('content')
 <?php //var_dump($bid); ?>
 <?php $date_norm = new App\myDate(); ?>
-
-<div class="panel panel-default">
+<div class="panel panel-default row">
     <div class="panel-heading">Редактирование заявки</div>
     <div class="panel-body">
         @if (session('status'))
@@ -12,311 +11,328 @@
             {{ session('status') }}
         </div>
         @endif
-        <div id="bid_tabs">
-            <ul>
-                <li><a href="#tabs-1">Основные</a></li>
-                <li><a href="#tabs-2">История общения</a></li>
-            </ul>
-            <?php Form::open(array('url' => route('bid_change', ['id' => $bid->r_id]), 'method' => 'post')) ?>
-            <div id="tabs-1">
-                <table class="table table-bordered">
-                    <tr><td colspan="6" style="text-align: center;"><b>Основные</b></td></tr>
-                    <tr>
-                        <td>{{ Form::label('status','Статус: ') }}</td>
-                        <?php
-                        $statuses = GuzzleHttp\json_decode($statuses, TRUE);
-                        ?>
-                        <td>{{ Form::select('status', $statuses, $bid->r_status_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('notes','Примечания: ')}}</td>
-                        <td>{{ Form::textarea('notes', $bid->r_notes) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('company_fullname','Оформляющая компанія: ') }}</td>
-                        <?php
-                        $companies = GuzzleHttp\json_decode($companies, TRUE);
-                        foreach ($companies as $com_id => $company) {
-                            if (htmlspecialchars($company) == htmlspecialchars($bid->r_company_fullname)) {
-                                $company_id = $com_id;
-                            }
-                        }
-                        ?>
-                        <td>{{ Form::select('company_fullname', $companies, $company_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('supplier_name','Туроператор: ') }}</td>
-                        <?php
-                        $operators = GuzzleHttp\json_decode($operators, TRUE);
-                        ?>
-                        <td>{{ Form::select('supplier_name', $operators, $bid->r_supplier_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('type_tours','Тип тура: ') }}</td>
-                        <?php
-                        $types = GuzzleHttp\json_decode($types, TRUE);
-                        ?>
-                        <td>{{ Form::select('type_tours', $types, $bid->r_travel_type_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('manager','Менеджер: ') }}</td>
-                        <?php
-                        $managers = GuzzleHttp\json_decode($managers, TRUE);
-                        ?>
-                        <td>{{ Form::select('manager', $managers, $bid->r_manager_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('source','Источник: ') }}</td>
-                        <?php
-                        $sources = GuzzleHttp\json_decode($sourses, TRUE);
-                        ?>
-                        <td>{{ Form::select('source', $sources, $bid->uon_id) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('bron','Номер брони: ')}}</td>
-                        <td>{{ Form::text('bron', $bid->r_reservation_number) }}</td>
-                    </tr>
-                    <tr>
-                        <?php
-                        $r_date = $date_norm->getNormalDate($bid->r_dat);
-                        ?>
-                        <td>{{ Form::label('dat','Дата: ')}}</td>
-                        <td>{{ Form::text('dat', $r_date) }}</td>
-                    </tr>
-                </table>
-                <table class="table table-bordered">
-                    <tr><td colspan="6" style="text-align: center;"><b>Заказчик</b></td></tr>
-                    <tr>
-                        <td>{{ Form::label('surname','Фамилия: ')}}</td>
-                        <td>{{ Form::text('surname', $bid->u_surname) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('name','Имя: ')}}</td>
-                        <td>{{ Form::text('name', $bid->u_name) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('sname','Отчество: ')}}</td>
-                        <td>{{ Form::text('sname', $bid->u_sname) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('email','E-mail: ')}}</td>
-                        <td>{{ Form::text('email', $bid->r_client_email) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('tel_no','Телефон: ')}}</td>
-                        <td>{{ Form::text('tel_no', $bid->r_client_phone_mobile) }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ Form::label('calc_price','Цена клиента: ')}}</td>
-                        <td>{{ Form::text('calc_price', $bid->r_calc_price) }}</td>
-                    </tr>
-                </table>
-                <table class="table table-bordered">
-                    <tr><td colspan="6" style="text-align: center;"><b>Туристы</b></td></tr>
-                    @if ($tourists)
-                    @foreach ($tourists as $tourist)
-                    <tr>
-                        <td>
-                            {{ $tourist->u_surname }}
-                        </td>
-                        <td>
-                            {{ $tourist->u_name }}
-                        </td>
-                        <td>
-                            {{ $tourist->u_sname }}
-                        </td>
-                        <td>
-                            {{ $tourist->u_phone_mobile }}
-                        </td>
-
-                    </tr>
-                    @endforeach
-                    @endif
-                </table>
-                <table class="table table-bordered">
-                    <tr><td colspan="6" style="text-align: center;"><b>Услуги в заявке</b></td></tr>
-                    @if ($services)
-                    <tr style="text-decoration: underline;">
-                        <td>
-                            Даты:
-                        </td>
-                        <td>
-                            Описание:
-                        </td>
-                        <td>
-                            Партнёр:
-                        </td>
-                        <td>
-                            Курс и расчёт:
-                        </td>
-                        <td>
-                            Цена:
-                        </td>
-                        <td>
-                            Действия:
-                        </td>
-                    </tr>
-                    @foreach ($services as $service)
-                    @if ($service->service_type_id <> 6)
-                    <tr>
-                        <?php
-                        //var_dump($service);
-                        $date_norm = new App\myDate();
-                        $date_begin = $date_norm->getNormalDate($service->date_begin);
-                        $date_end = $date_norm->getNormalDate($service->date_end);
-                        ?>
-                        <td>{{$date_begin}} - {{$date_end}}</td>
-                        <td>
+        <?php Form::open(array('url' => route('bid_change', ['id' => $bid->r_id]), 'method' => 'post')) ?>
+            <div class="col-md-12 bg-success" style="height: 3rem; font-size: 2rem;">
+                Основные
+            </div>
+            <div class="col-md-5">
+                {{ Form::label('status','Статус: ') }}</td>
+                <?php
+                $statuses = GuzzleHttp\json_decode($statuses, TRUE);
+                ?>
+            </div>
+            <div class="col-md-5">
+                {{ Form::select('status', $statuses, $bid->r_status_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-5">
+                {{ Form::label('notes','Примечания: ')}}        
+            </div>
+            <div class="col-md-5">
+                {{ Form::textarea('notes', $bid->r_notes, ['class' => 'form-control']) }}        
+            </div>
+            <div class="col-md-5">
+                {{ Form::label('company_fullname','Оформляющая компанія: ') }}        
+            </div>
+            <div class="col-md-5">
+                <?php
+                $companies = GuzzleHttp\json_decode($companies, TRUE);
+                foreach ($companies as $com_id => $company) {
+                    if (htmlspecialchars($company) == htmlspecialchars($bid->r_company_fullname)) {
+                        $company_id = $com_id;
+                    }
+                }
+                ?>
+                {{ Form::select('company_fullname', $companies, $company_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-5">
+                {{ Form::label('supplier_name','Туроператор: ') }}                        
+            </div>
+            <div class="col-md-5">
+                <?php
+                $operators = GuzzleHttp\json_decode($operators, TRUE);
+                ?>
+                {{ Form::select('supplier_name', $operators, $bid->r_supplier_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('type_tours','Тип тура: ') }}
+                <?php
+                $types = GuzzleHttp\json_decode($types, TRUE);
+                ?>
+                {{ Form::select('type_tours', $types, $bid->r_travel_type_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('manager','Менеджер: ') }}
+                <?php
+                $managers = GuzzleHttp\json_decode($managers, TRUE);
+                ?>
+                {{ Form::select('manager', $managers, $bid->r_manager_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('source','Источник: ') }}
+                <?php
+                $sources = GuzzleHttp\json_decode($sourses, TRUE);
+                ?>
+                {{ Form::select('source', $sources, $bid->uon_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            </div>
+            <div class="col-md-6">
+                {{ Form::label('bron','Номер брони: ')}}
+                {{ Form::text('bron', $bid->r_reservation_number, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-6">
+                <?php
+                $r_date = $date_norm->getNormalDate($bid->r_dat);
+                ?>
+                {{ Form::label('dat','Дата: ')}}
+                {{ Form::text('dat', $r_date, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-12 bg-primary" style="height: 3rem; font-size: 2rem;">
+                Заказчик
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('surname','Фамилия: ')}}
+                {{ Form::text('surname', $bid->u_surname, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('name','Имя: ')}}
+                {{ Form::text('name', $bid->u_name, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-4">
+                {{ Form::label('sname','Отчество: ')}}
+                {{ Form::text('sname', $bid->u_sname, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-6">
+                {{ Form::label('email','E-mail: ')}}
+                {{ Form::text('email', $bid->r_client_email, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-6">
+                {{ Form::label('tel_no','Телефон: ')}}
+                {{ Form::text('tel_no', $bid->r_client_phone_mobile, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-6">
+                {{ Form::label('calc_price','Цена для клиента: ')}}
+                {{ Form::text('calc_price', $bid->r_calc_price, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-6">
+                {{ Form::label('calc_price','Цена для нас: ')}}
+                {{ Form::text('calc_price', $bid->r_calc_price_netto, ['class' => 'form-control']) }}
+            </div>
+            <div class="col-md-12 bg-primary" style="height: 3rem; font-size: 2rem;">
+                Туристы                        
+            </div>
+            @if ($tourists)
+            @foreach ($tourists as $tourist)
+            <div class="col-md-3">
+                {{ $tourist->u_surname }}
+            </div>
+            <div class="col-md-3">
+                {{ $tourist->u_name }}
+            </div>
+            <div class="col-md-3">
+                {{ $tourist->u_sname }}
+            </div>
+            <div class="col-md-3">
+                {{ $tourist->u_phone_mobile }}
+            </div>
+            @endforeach
+            @endif
+            <div class="col-md-12 bg-warning" style="height: 3rem; font-size: 2rem;">
+                Услуги в заявке                        
+            </div>
+            @if ($services)
+            <div class="col-md-2">
+                Даты:
+            </div>
+            <div class="col-md-3">
+                Описание:
+            </div>
+            <div class="col-md-2">
+                Партнёр:
+            </div>
+            <div class="col-md-2">
+                Курс и расчёт:
+            </div>
+            <div class="col-md-2">
+                Цена:
+            </div>
+            <div class="col-md-1">
+                Действия:
+            </div>
+            @foreach ($services as $service)
+            @if ($service->service_type_id <> 6)
+            <?php
+            //var_dump($service);
+            $date_norm = new App\myDate();
+            $date_begin = $date_norm->getNormalDate($service->date_begin);
+            $date_end = $date_norm->getNormalDate($service->date_end);
+            ?>
+            <div class="col-md-2"> {{$date_begin}} - {{$date_end}}</div>
+            <div class="col-md-3">
+            @if ($service->in_package == 1)
+                <span class="oi oi-layers" title="Входит в пакетный тур" aria-hidden="true">
+            @endif
+                    <b>{{$service->service_type}}</b><br />{{$service->description}}<br />
+                    {{$service->country}}, {{$service->city}}, {{$service->hotel}}, {{$service->nutrition}}<br />
+                    <b>Туристы: </b>{{$service->tourists_count}} <span class="oi oi-person" title="Редактировать" aria-hidden="true">
+            </div>
+                        <div class="col-md-2">
+                            {{$service->partner_name}}
+                        </div>
+                        <div class="col-md-2">
+                            {{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=)    
+                        </div>
+                        <div class="col-md-2">
+                            {{round($service->price*$service->rate,2)}} грн.<br />
+                            <div class="bg-info">
+                                {{round($service->price_netto*$service->rate_netto,2)}} грн.<br />
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{{ route('service_edit',['id' => $service->crm_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a>
+                        </div>
+            <div class="clearfix"></div>
+            @endif
+            @if ($service->service_type_id == 6)
+                        @foreach ($flights as $flight)
+                        <div class="col-md-2">
+                            <?php
+                            $date_begin = $date_norm->getNormalDate($flight->date_begin);
+                            $date_end = $date_norm->getNormalDate($flight->date_end);
+                            ?>
+                            {{$date_begin}} <b>({{$flight->time_begin}})</b> - {{$date_end}} <b>({{$flight->time_end}})</b>
+                        </div>
+                        <div class="col-md-3">
                             @if ($service->in_package == 1)
-                            <span class="oi oi-layers" title="Входит в пакетный тур" aria-hidden="true">
-                                @endif
+                            <span class = "oi oi-layers" title = "Входит в пакетный тур" aria-hidden = "true">
+                            @endif
                                 <b>{{$service->service_type}}</b><br />{{$service->description}}<br />
-                                {{$service->country}}, {{$service->city}}, {{$service->hotel}}, {{$service->nutrition}}<br />
-                                <b>Туристы: </b>{{$service->tourists_count}} <span class="oi oi-person" title="Редактировать" aria-hidden="true">
-                                    </td>
-
-                                    <td>{{$service->partner_name}}</td>
-                                    <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
-                                    <td>{{round($service->price*$service->rate,2)}} грн.</td>
-                                    <td><a href="{{ route('service_edit',['id' => $service->crm_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a></td>
-                                    </tr>
+                                Вылет: {{$flight->course_begin}}<br />
+                                <b>Туристы: </b>{{$service->tourists_count}} <span class = "oi oi-person" title = "Турист" aria-hidden = "true">
+                        </div>
+                                    <div class="col-md-2">
+                                        {{$service->partner_name}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{$service->price}} {{$service->currency_netto}} * {{$service->rate}} ( = )                                    
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{round($service->price*$service->rate, 2)}} грн.
+                                        <div class="bg-info">
+                                            {{round($service->price_netto*$service->rate_netto,2)}} грн.<br />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a href = "{{ route('service_edit',['id' => $service->crm_id]) }}"><span class = "oi oi-pencil" title = "Редактировать" aria-hidden = "true"></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    @endforeach
                                     @endif
-                                    @if ($service->service_type_id == 6)
-                                    @foreach ($flights as $flight)
-                                    <tr>
+                                    @endforeach
+                                    @endif
+                                    <table class = "table table-bordered">
+                                        <tr><td colspan = "6" style = "text-align: center;"><b>Расчёты с заказчиком</b></td></tr>
+                                        <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
+                                        @if($payments)
+                                        @foreach($payments as $payment)
                                         <?php
-                                        //var_dump($services);
-                                        $date_begin = $date_norm->getNormalDate($flight->date_begin);
-                                        $date_end = $date_norm->getNormalDate($flight->date_end);
+                                        //var_dump($payment);
+                                        //echo '---------------------------------------<br />';
                                         ?>
-                                        <td>{{$date_begin}} <b>({{$flight->time_begin}})</b> - {{$date_end}} <b>({{$flight->time_end}})</b></td>
+                                        @if($payment->type_id == 1)
+                                        <?php
+                                        if ($payment->cio_id == 2) {
+                                            echo '<tr class="payment_minus">';
+                                        } else {
+                                            echo '<tr class="payment_plus">';
+                                        }
+                                        ?>
+
                                         <td>
-                                            @if ($service->in_package == 1)
-                                            <span class="oi oi-layers" title="Входит в пакетный тур" aria-hidden="true">
-                                                @endif
-                                                <b>{{$service->service_type}}</b><br />{{$service->description}}<br />
-                                                Вылет: {{$flight->course_begin}}<br />
-                                                <b>Туристы: </b>{{$service->tourists_count}} <span class="oi oi-person" title="Турист" aria-hidden="true">
+                                            <?php
+                                            $cash_data = new App\Helper();
+                                            $cash_name = $cash_data->getCashData($payment->cash_id);
+                                            ?>
+                                            {{$cash_name->name}}
+                                        </td>
+                                        <?php
+                                        $date_norm = new App\myDate();
+                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
+                                        ?>
+                                        <td>{{$cash_date}}</td>
+                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
+                                        <?php
+                                        $cur_price = $payment->rate * $payment->price;
+                                        ?>
+                                        <td>{{$cur_price}} грн.</td>
+                                        </tr>
+                                        @endif
 
-                                                    </td>
-                                                    <td>{{$service->partner_name}}</td>
-                                                    <td>{{$service->price}} {{$service->currency_netto}} * {{$service->rate}} (=) <br /></td>
-                                                    <td>{{round($service->price*$service->rate,2)}} грн.</td>
-                                                    <td><a href="{{ route('service_edit',['id' => $service->crm_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a></td>
-                                                    </tr>
-                                                    @endforeach
-                                                    @endif
-                                                    @endforeach
-                                                    @endif
-                                                    </table>
-                                                    <table class="table table-bordered">
-                                                        <tr><td colspan="6" style="text-align: center;"><b>Расчёты с заказчиком</b></td></tr>
-                                                        <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
-                                                        @if($payments)
-                                                        @foreach($payments as $payment)
-                                                        <?php
-                                                        //var_dump($payment);
-                                                        //echo '---------------------------------------<br />';
-                                                        ?>
-                                                        @if($payment->type_id == 1)
-                                                        <?php
-                                                        if ($payment->cio_id == 2) {
-                                                            echo '<tr class="payment_minus">';
-                                                        } else {
-                                                            echo '<tr class="payment_plus">';
-                                                        }
-                                                        ?>
+                                        @endforeach
+                                    </table>
+                                    <table class="table table-bordered">
+                                        <tr><td colspan="6" style="text-align: center;"><b>Расчеты с партнёрами</b></td></tr>
+                                        <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
 
-                                                        <td>
-                                                            <?php
-                                                            $cash_data = new App\Helper();
-                                                            $cash_name = $cash_data->getCashData($payment->cash_id);
-                                                            ?>
-                                                            {{$cash_name->name}}
-                                                        </td>
-                                                        <?php
-                                                        $date_norm = new App\myDate();
-                                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
-                                                        ?>
-                                                        <td>{{$cash_date}}</td>
-                                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
-                                                        <?php
-                                                        $cur_price = $payment->rate * $payment->price;
-                                                        ?>
-                                                        <td>{{$cur_price}} грн.</td>
-                                                        </tr>
-                                                        @endif
+                                        @foreach($payments as $payment)
+                                        <?php
+                                        //var_dump($payment);
+                                        //echo '---------------------------------------<br />';
+                                        ?>
+                                        @if($payment->type_id == 2)
+                                        <?php
+                                        if ($payment->cio_id == 2) {
+                                            echo '<tr class="payment_minus">';
+                                        } else {
+                                            echo '<tr class="payment_plus">';
+                                        }
+                                        ?>
 
-                                                        @endforeach
-                                                    </table>
-                                                    <table class="table table-bordered">
-                                                        <tr><td colspan="6" style="text-align: center;"><b>Расчеты с партнёрами</b></td></tr>
-                                                        <th>Каса</th><th>Тип и дата</th><th>Курс</th><th>Сумма</th>
-                
-                                                        @foreach($payments as $payment)
-                                                        <?php
-                                                        //var_dump($payment);
-                                                        //echo '---------------------------------------<br />';
-                                                        ?>
-                                                        @if($payment->type_id == 2)
-                                                        <?php
-                                                        if ($payment->cio_id == 2) {
-                                                            echo '<tr class="payment_minus">';
-                                                        } else {
-                                                            echo '<tr class="payment_plus">';
-                                                        }
-                                                        ?>
+                                        <td>
+                                            <?php
+                                            $cash_data = new App\Helper();
+                                            $cash_name = $cash_data->getCashData($payment->cash_id);
+                                            ?>
+                                            {{$cash_name->name}}
+                                        </td>
+                                        <?php
+                                        $date_norm = new App\myDate();
+                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
+                                        ?>
+                                        <td>{{$cash_date}}</td>
+                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
+                                        <?php
+                                        $cur_price = $payment->rate * $payment->price;
+                                        ?>
+                                        <td>{{$cur_price}} грн.</td>
+                                        </tr>
+                                        @endif
 
-                                                        <td>
-                                                            <?php
-                                                            $cash_data = new App\Helper();
-                                                            $cash_name = $cash_data->getCashData($payment->cash_id);
-                                                            ?>
-                                                            {{$cash_name->name}}
-                                                        </td>
-                                                        <?php
-                                                        $date_norm = new App\myDate();
-                                                        $cash_date = $date_norm->getNormalDateTime($payment->date_create);
-                                                        ?>
-                                                        <td>{{$cash_date}}</td>
-                                                        <td>{{$payment->rate}} * {{$payment->price}} {{$payment->currency}}</td>
-                                                        <?php
-                                                        $cur_price = $payment->rate * $payment->price;
-                                                        ?>
-                                                        <td>{{$cur_price}} грн.</td>
-                                                        </tr>
-                                                        @endif
+                                        @endforeach
 
-                                                        @endforeach
-                                                        
-                                                        @endif
+                                        @endif
 
-                                                    </table>
-                                                    </div>
-                                                    <div id="tabs-2">
-                                                        <ul class="list-group-item-info">
-                                                            @foreach ($reminders as $reminder)
-                                                            <li class="list-group-item">
-                                                                {{$reminder->text}}
-                                                                <br />
-                                                                {{$reminder->datetime}}
-                                                            </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                    </div>
+                                    </table>
+                                    <div id="tabs-2">
+                                        <ul class="list-group-item-info">
+                                            @foreach ($reminders as $reminder)
+                                            <li class="list-group-item">
+                                                {{$reminder->text}}
+                                                <br />
+                                                {{$reminder->datetime}}
+                                            </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
 
-                                                    {{ Form::close() }}
-                                                    <script>
-                                                        $(function () {
-                                                            $('#bid_tabs').tabs();
-                                                            $('[name="birthday"]').datepicker({
-                                                                changeMonth: true,
-                                                                changeYear: true,
-                                                                dateFormat: 'dd.mm.yy'
-                                                            });
-                                                        });
-                                                    </script>
-                                                    </div>
-                                                    </div>
-                                                    @endsection
+                                    {{ Form::close() }}
+                                    <script>
+                                        $(function () {
+                                            $('#bid_tabs').tabs();
+                                            $('[name="birthday"]').datepicker({
+                                                changeMonth: true,
+                                                changeYear: true,
+                                                dateFormat: 'dd.mm.yy'
+                                            });
+                                        });
+                                    </script>
+                                    </div>
+                                    @endsection

@@ -56,9 +56,15 @@ class Catalog extends Model {
     }
     public function getNutritions() {
         $table = config('crm_tables.uon_nutritions');
-        $statuses = DB::table($table)
+        $nutririon = DB::table($table)
                 ->pluck('name', 'uon_id');
-        return $statuses;
+        return $nutririon;
+    }
+    public function getAvia() {
+        $table = config('crm_tables.crm_avia');
+        $avia = DB::table($table)
+                ->pluck('name', 'id');
+        return $avia;
     }
 
 }

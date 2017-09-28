@@ -11,7 +11,7 @@
                     <?php
                     $statuses = GuzzleHttp\json_decode($statuses, TRUE);
                     ?>
-                    {{ Form::select('statuse', $statuses, $lead->l_status_id, ['class' => 'form-control']) }}
+                    {{ Form::select('statuse', $statuses, $lead->l_status_id, ['class' => 'form-control selectpicker']) }}
                 </div>
                 <div class="panel-body">
                     @if (session('status'))
@@ -52,12 +52,12 @@
                             <?php
                             $sources = GuzzleHttp\json_decode($sourses, TRUE);
                             ?>
-                            {{ Form::select('source', $sources, $lead->l_source_id, ['class' => 'form-control']) }}
+                            {{ Form::select('source', $sources, $lead->l_source_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
                             <?php
                             $tour_types = GuzzleHttp\json_decode($tour_types, TRUE);
                             ?>
                             {{ Form::label('tour_type','Тип тура: ') }}
-                            {{ Form::select('tour_type', $tour_types, $lead->l_travel_type_id, ['class' => 'form-control']) }}
+                            {{ Form::select('tour_type', $tour_types, $lead->l_travel_type_id, ['class' => 'form-control selectpicker']) }}
 
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             <?php
                             $managers = GuzzleHttp\json_decode($managers, TRUE);
                             ?>
-                            {{ Form::select('manager', $managers, $lead->l_manager_id, ['class' => 'form-control']) }}
+                            {{ Form::select('manager', $managers, $lead->l_manager_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
 
                             {{ Form::label('company_fullname','Оформляющая компанія: ') }}
                             <?php
@@ -79,7 +79,7 @@
                                 }
                             }
                             ?>
-                            {{ Form::select('company_fullname', $companies, $company_id, ['class' => 'form-control']) }}
+                            {{ Form::select('company_fullname', $companies, $company_id, ['class' => 'form-control selectpicker']) }}
 
                         </div>
                     </div>
