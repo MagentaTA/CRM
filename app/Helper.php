@@ -51,5 +51,17 @@ class Helper extends Model {
                 ->get();
         return $flys;
     }
+    public function getBidUserData($r_id) {
+        $table_users = config('crm_tables.uon_users_table');
+        $table_bid = config('crm_tables.uon_bids');
+        $user_id = DB::table($table_bid)
+                ->select('r_client_id')
+                ->where('r_id','=',$r_id)
+                ->get();
+        $user = DB::table($table_users)
+                ->where('u_id','=',$user_id[0]->r_client_id)
+                ->first();
+        return $user;
+    }
 
 }

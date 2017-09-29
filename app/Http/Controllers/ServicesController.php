@@ -33,6 +33,7 @@ class ServicesController extends Controller {
         $services_types = $catalog_class->getServicesList();
         $nutritions = $catalog_class->getNutritions();
         $avia = $catalog_class->getAvia();
+        $partners = $catalog_class->getPartners();
         
         
         $service_data = DB::table($service_table)
@@ -44,7 +45,8 @@ class ServicesController extends Controller {
             'services_types' => $services_types,
             'nutritions' => $nutritions,
             'flys' => $flys,
-            'avia' => $avia
+            'avia' => $avia,
+            'partners' => $partners
         ));
     }
 

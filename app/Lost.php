@@ -13,6 +13,7 @@ class Lost extends Model {
 
     public function LostClient($id) {
         $table_name = config('crm_tables.uon_users_table');
+        $result_query = DB::table(config('crm_tables.uon_users_table'))->where('u_id', '=', $id)->delete();
         $_users = new \UON\Users();
         $client_id = $id;
         $change_data = \GuzzleHttp\json_encode($_users->get($client_id));
@@ -74,6 +75,12 @@ class Lost extends Model {
         $_requests = new \UON\Requests();
         $responce = \GuzzleHttp\json_encode($_requests->get($id));
         $responce = \GuzzleHttp\json_decode($responce);
+        
+        $result_query = DB::table(config('crm_tables.uon_bid_payments'))->where('r_id', '=', $id)->delete();
+        $result_query = DB::table(config('crm_tables.uon_bid_services'))->where('r_id', '=', $id)->delete();
+        $result_query = DB::table(config('crm_tables.uon_bid_reminders'))->where('r_id', '=', $id)->delete();
+        $result_query = DB::table(config('crm_tables.uon_bid_flights'))->where('r_id', '=', $id)->delete();
+        
         if (is_object($responce)) {
             $zayavka_array = $responce->message->request[0];
             $result_query = DB::table($table_name)->insert(
@@ -127,6 +134,7 @@ class Lost extends Model {
                     ]
             );
             $result_insert = $this->insertReminders($id);
+            $result_insert = $this->LostClient($zayavka_array->client_id);
             $all_request_data = $_requests->get($id);
             foreach ($all_request_data['message']->request as $this_request) {
                 if (count($this_request->payments) > 0) {

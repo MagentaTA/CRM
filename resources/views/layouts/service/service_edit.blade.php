@@ -2,7 +2,6 @@
 
 @section('content')
 <?php $date_norm = new App\myDate(); ?>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
@@ -10,7 +9,7 @@
                 <a role="button" class="btn btn-primary" href="{{ URL::previous() }}">НАЗАД</a>
             </div>
             <div class="col-md-6">
-                Редактирование Услуги по заявке                
+                Редактирование Услуги по заявке             
             </div>
         </div>
     </div>
@@ -36,8 +35,13 @@
             </div>
             <div class="row">
                 <div class="col-md-5">
+                    <?php
+                    $date_norm = new App\myDate();
+                    $date_begin = $date_norm->getDateFromDatetime($fly->date_begin);
+                    $date_end = $date_norm->getNormalDate($fly->date_end);
+                    ?>
                     {{ Form::label('date_begin','Дата отправления: ') }}
-                    {{ Form::text('date_begin', $fly->date_begin, ['class' => 'form-control']) }}
+                    {{ Form::text('date_begin', $date_begin, ['class' => 'form-control']) }}
                 </div>
                 <div class="col-md-5">
                     {{ Form::label('time_begin','Время отправления: ') }}
@@ -68,6 +72,20 @@
                 <div class="col-md-4">
                     {{ Form::label('terminal_begin','Терминал: ') }}
                     {{ Form::text('terminal_begin', $fly->terminal_begin, ['class' => 'form-control']) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    {{ Form::label('course_end','Прибытие: ') }}
+                    {{ Form::text('course_end', $fly->course_end, ['class' => 'form-control']) }}
+                </div>
+                <div class="col-md-4">
+                    {{ Form::label('code_end','Код аэропорта: ') }}
+                    {{ Form::text('code_end', $fly->code_end, ['class' => 'form-control']) }}
+                </div>
+                <div class="col-md-4">
+                    {{ Form::label('terminal_end','Терминал: ') }}
+                    {{ Form::text('terminal_end', $fly->terminal_end, ['class' => 'form-control']) }}
                 </div>
             </div>
             <div class="row">
@@ -106,8 +124,13 @@
             @endforeach
             @endif
         <?php } else { ?>
+
             {{ Form::label('services_types','Услуга: ') }}
             {{ Form::select('services_types', $services_types, $service_data->service_type_id, ['class' => 'form-control selectpicker']) }}
+
+            {{ Form::label('partner','Партнёры: ') }}
+            {{ Form::select('partner', $partners, $service_data->partner_name, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+
             {{ Form::label('service_note','Описание услуги: ') }}
             {{ Form::textarea('service_note', $service_data->description, ['class' => 'form-control']) }}
             {{ Form::label('service_note_en','Описание услуги EN: ') }}

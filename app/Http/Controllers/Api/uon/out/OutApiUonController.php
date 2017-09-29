@@ -17,15 +17,16 @@ class OutApiUonController extends Controller {
     }
 
     public function AllClients() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_users_table');
         $_users = new \UON\Users();
-        $responce = json_encode($_users->updated($date_from, $date_to));
+        $responce = json_encode($_users->getUpdated($date_from, $date_to));
         //$responce = json_encode($_users->all());
         $responce = \GuzzleHttp\json_decode($responce);
+        var_dump($responce);
         // Удаляем таблицу и создаём новую с индексами
-        Schema::dropIfExists($table_name);
+        /*Schema::dropIfExists($table_name);
         Schema::create($table_name, function($table) {
             $table->bigIncrements('u_id');
             $table->text('u_surname');
@@ -110,7 +111,7 @@ class OutApiUonController extends Controller {
                     ]
             );
         }
-        return redirect()->route('admin');
+        //return redirect()->route('admin');*/
     }
 
     public function AllRequests() {
@@ -197,7 +198,9 @@ class OutApiUonController extends Controller {
                 $insert_services = new \App\Lost();
                 $result_insert = $insert_services->insertService($request->services, $request->id);
             }
+            
             $insert_reminders = new \App\Lost();
+            $result_insert = $insert_reminders->LostClient($request->client_id);
             $result_insert = $insert_reminders->insertReminders($request->id);
 
             $all_request_data = $request_data->get($request->id);
@@ -679,6 +682,7 @@ class OutApiUonController extends Controller {
         }
         return redirect()->route('admin');
     }
+
     public function GetAvia() {
         $_requests = new \UON\Suppliers();
         $response = \GuzzleHttp\json_encode($_requests->all());
@@ -714,6 +718,42 @@ class OutApiUonController extends Controller {
                         ]
                 );
             }
+        }
+        return redirect()->route('admin');
+    }
+    public function GetPartners() {
+        $_requests = new \UON\Suppliers();
+        $response = \GuzzleHttp\json_encode($_requests->all());
+        $response = \GuzzleHttp\json_decode($response);
+        //var_dump($response);
+        $table_name = config('crm_tables.crm_partners');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+            $table->integer('type_id')->default(0);
+            $table->text('type');
+            $table->text('address');
+            $table->text('phones');
+            $table->text('email');
+            $table->text('contacts');
+            $table->text('note');
+        });
+
+        foreach ($response->message->records as $item_array) {
+                DB::table($table_name)->insert(
+                        [
+                            'id' => $item_array->id,
+                            'name' => isset($item_array->name) ? $item_array->name : '',
+                            'type_id' => isset($item_array->type_id) ? $item_array->type_id : 0,
+                            'type' => isset($item_array->type) ? $item_array->type : '',
+                            'address' => isset($item_array->address) ? $item_array->address : '',
+                            'phones' => isset($item_array->phones) ? $item_array->phones : '',
+                            'email' => isset($item_array->email) ? $item_array->email : '',
+                            'contacts' => isset($item_array->contacts) ? $item_array->contacts : '',
+                            'note' => isset($item_array->note) ? $item_array->note : '',
+                        ]
+                );
         }
         return redirect()->route('admin');
     }
@@ -806,6 +846,62 @@ class OutApiUonController extends Controller {
                         'uon_id' => $item_array->id,
                         'name' => isset($item_array->name) ? $item_array->name : '',
                         'name_en' => isset($item_array->name_en) ? $item_array->name_en : ''
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetOffices() {
+        $_requests = new \UON\Misc();
+        $responce = \GuzzleHttp\json_encode($_requests->getOffices());
+        $responce = \GuzzleHttp\json_decode($responce);
+        //var_dump($responce);
+        $table_name = config('crm_tables.crm_offices');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('crm_id');
+            $table->integer('uon_id');
+            $table->text('name');
+            $table->text('city');
+            $table->text('address');
+            $table->text('phones');
+        });
+
+        foreach ($responce->message->records as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'uon_id' => $item_array->id,
+                        'name' => isset($item_array->name) ? $item_array->name : '',
+                        'city' => isset($item_array->city) ? $item_array->city : '',
+                        'address' => isset($item_array->address) ? $item_array->address : '',
+                        'phones' => isset($item_array->phones) ? $item_array->phones : ''
+                    ]
+            );
+        }
+        return redirect()->route('admin');
+    }
+
+    public function GetLabels() {
+        $_requests = new \UON\Misc();
+        $responce = \GuzzleHttp\json_encode($_requests->getLabels());
+        $responce = \GuzzleHttp\json_decode($responce);
+        //var_dump($responce);
+        $table_name = config('crm_tables.crm_labels');
+        Schema::dropIfExists($table_name);
+        Schema::create($table_name, function($table) {
+            $table->bigIncrements('crm_id');
+            $table->integer('uon_id');
+            $table->text('name');
+            $table->text('color');
+        });
+
+        foreach ($responce->message->records as $item_array) {
+            DB::table($table_name)->insert(
+                    [
+                        'uon_id' => $item_array->id,
+                        'name' => isset($item_array->name) ? $item_array->name : '',
+                        'color' => isset($item_array->color) ? $item_array->color : '',
                     ]
             );
         }

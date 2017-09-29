@@ -29,11 +29,14 @@ Route::group(['prefix' => 'api/uon/out'], function () {
     Route::get('get_companies', 'Api\uon\out\OutApiUonController@GetCompanies')->name('get_companies');
     Route::get('get_operators', 'Api\uon\out\OutApiUonController@GetOperators')->name('get_operators');
     Route::get('get_avia', 'Api\uon\out\OutApiUonController@GetAvia')->name('get_avia');
+    Route::get('get_partners', 'Api\uon\out\OutApiUonController@GetPartners')->name('get_partners');
     Route::get('get_services', 'Api\uon\out\OutApiUonController@GetServices')->name('get_services');
     Route::get('add_tour_type', 'Api\uon\out\OutApiUonController@TourTypes')->name('add_tour_type');
     Route::get('get_statuses', 'Api\uon\out\OutApiUonController@GetStatuses')->name('get_statuses');
     Route::get('get_cash', 'Api\uon\out\OutApiUonController@GetCash')->name('get_cash');
     Route::get('get_nutritions', 'Api\uon\out\OutApiUonController@GetNutritions')->name('get_nutritions');
+    Route::get('get_offices', 'Api\uon\out\OutApiUonController@GetOffices')->name('get_offices');
+    Route::get('get_labels', 'Api\uon\out\OutApiUonController@GetLabels')->name('get_labels');
 });
 // Роутинг для входящих хуков из базы UON
 Route::group(['prefix' => 'api/uon/in'], function () {

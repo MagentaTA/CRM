@@ -27,11 +27,14 @@
                         <a href="<?=route('get_companies')?>">Импорт Компаний</a><br />
                         <a href="<?=route('get_operators')?>">Импорт Туроператоров</a><br />
                         <a href="<?=route('get_avia')?>">Импорт Авиакомпаний</a><br />
+                        <a href="<?=route('get_partners')?>">Импорт Партнёров</a><br />
                         <a href="<?=route('get_services')?>">Импорт Услуг</a><br />
                         <a href="<?=route('add_tour_type')?>">Добавить типы услуг</a><br />
                         <a href="<?=route('get_statuses')?>">Импорт статусов заявок</a><br />
                         <a href="<?=route('get_cash')?>">Импорт касс</a><br />
                         <a href="<?=route('get_nutritions')?>">Импорт типов питания</a><br />
+                        <a href="<?=route('get_offices')?>">Импорт Офисов</a><br />
+                        <a href="<?=route('get_labels')?>">Импорт Меток</a><br />
                         <a href="<?=route('add_role')?>">Добавить роль пользователя</a><br />
                     </div>
 

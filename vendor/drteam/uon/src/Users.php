@@ -32,13 +32,26 @@ class Users extends Client
     }
 
     /**
+     * Get list of user's labels
+     *
+     * @link    https://api.u-on.ru/{key}/user-label.{_format}
+     * @param   array $parameters
+     * @return  array|false
+     */
+    public function getLabel($parameters = array())
+    {
+        $endpoint = '/user-label';
+        return $this->doRequest('get', $endpoint, $parameters);
+    }
+
+    /**
      * Get single user by phone number
      *
      * @link    https://api.u-on.ru/{key}/user/phone/{phone}.{_format}
      * @param   string $phone
      * @return  array|false
      */
-    public function phone($phone)
+    public function getPhone($phone)
     {
         $endpoint = '/user/phone/' . $phone;
         return $this->doRequest('get', $endpoint);
@@ -52,7 +65,7 @@ class Users extends Client
      * @param   string $date_to
      * @return  array|false
      */
-    public function updated($date_from, $date_to)
+    public function getUpdated($date_from, $date_to)
     {
         $endpoint = '/user/updated/' . $date_from . '/' . $date_to;
         return $this->doRequest('get', $endpoint);

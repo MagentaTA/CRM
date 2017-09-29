@@ -42,7 +42,6 @@ class BidsController extends Controller {
         $catalog_model = new \App\Catalog();
         $helper = new \App\Helper;
         $bid = DB::table($table_name)
-                ->leftJoin($table_users, $table_users . '.u_id', '=', $table_name . '.r_client_id')
                 ->leftJoin($table_sourses, $table_name . '.r_source_id', '=', $table_sourses . '.uon_id')
                 ->where('r_id', '=', $request->id)
                 ->first();
@@ -52,6 +51,7 @@ class BidsController extends Controller {
         
         $companies = $catalog_model->getCompanies();
         $operators = $catalog_model->getOperators();
+        $offices = $catalog_model->getOffices();
         $types = $catalog_model->getTourType();
         $managers = $catalog_model->getManagers();
         $sourses = $catalog_model->getSourses();
@@ -60,6 +60,7 @@ class BidsController extends Controller {
         $flights = $helper->getBidFlights($request->id);
         $payments = $helper->getBidPayments($request->id);
         $reminders = $helper->getRemindersData($request->id);
+        $user = $helper->getBidUserData($request->id);
 
         return view('layouts.bid.bid_edit', array(
             'bid' => $bid,
@@ -73,7 +74,9 @@ class BidsController extends Controller {
             'services' => $services,
             'flights' => $flights,
             'payments' => $payments,
-            'reminders' => $reminders
+            'reminders' => $reminders,
+            'offices' => $offices,
+            'user' => $user
         ));
     }
 

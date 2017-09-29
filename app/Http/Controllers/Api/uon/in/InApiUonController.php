@@ -144,11 +144,19 @@ class InApiUonController extends Controller {
                 ->update(
                 [
                     'r_status_id' => isset($r_new_status) ? $r_new_status : 0,
-                    'r_status' => isset($get_text) ? $get_text : ''
+                    'r_status' => 'Транзит статус'
                 ]
         );
         if ($result_query > 0) {
-            return '<font color=' . $this->ok_color . '>Обновлён статус заявки: ' . $r_id . ' на ' . $get_text . '(' . $r_new_status . ')</font>';
+            $result_query = DB::table($table_name)
+                    ->where('r_id', $r_id)
+                    ->update(
+                    [
+                        'r_status_id' => isset($r_new_status) ? $r_new_status : 0,
+                        'r_status' => isset($get_text) ? $get_text : ''
+                    ]
+            );
+            return var_dump($result_query) . '<font color=' . $this->ok_color . '>Обновлён статус заявки: ' . $r_id . ' на ' . $get_text . '(' . $r_new_status . ')</font>';
         } else {
             $lost = new \App\Lost();
             $result = $lost->LostBid($r_id);
@@ -276,31 +284,31 @@ class InApiUonController extends Controller {
                     $table->integer('r_id')->default(0);
                 });
             }
-                $payment_data = $responce->message;
-                $result_insert = DB::table($table_name)->insert(
-                        [
-                            'id' => $payment_data->id,
-                            'date_create' => isset($payment_data->date_create) ? $payment_data->date_create : '',
-                            'date_plan' => isset($payment_data->date_plan) ? $payment_data->date_plan : '',
-                            'reason' => isset($payment_data->reason) ? $payment_data->reason : '',
-                            'cash_id' => isset($payment_data->cash_id) ? $payment_data->cash_id : 0,
-                            'number' => isset($payment_data->number) ? $payment_data->number : 0,
-                            'type_id' => isset($payment_data->type_id) ? $payment_data->type_id : 0,
-                            'cio_id' => isset($payment_data->cio_id) ? $payment_data->cio_id : 0,
-                            'in_plan' => isset($payment_data->in_plan) ? $payment_data->in_plan : 0,
-                            'is_bonus_pay' => isset($payment_data->is_bonus_pay) ? $payment_data->is_bonus_pay : 0,
-                            'is_deposit' => isset($payment_data->is_deposit) ? $payment_data->is_deposit : 0,
-                            'from1c' => isset($payment_data->from1c) ? $payment_data->from1c : 0,
-                            'office_id' => isset($payment_data->office_id) ? $payment_data->office_id : 0,
-                            'client_id' => isset($payment_data->client_id) ? $payment_data->client_id : 0,
-                            'price' => isset($payment_data->price) ? $payment_data->price : 0,
-                            'rate' => isset($payment_data->rate) ? $payment_data->rate : 0,
-                            'currency_id' => isset($payment_data->currency_id) ? $payment_data->currency_id : 0,
-                            'currency' => isset($payment_data->currency) ? $payment_data->currency : '',
-                            'currency_code' => isset($payment_data->currency_code) ? $payment_data->currency_code : '',
-                            'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
-                        ]
-                );
+            $payment_data = $responce->message;
+            $result_insert = DB::table($table_name)->insert(
+                    [
+                        'id' => $payment_data->id,
+                        'date_create' => isset($payment_data->date_create) ? $payment_data->date_create : '',
+                        'date_plan' => isset($payment_data->date_plan) ? $payment_data->date_plan : '',
+                        'reason' => isset($payment_data->reason) ? $payment_data->reason : '',
+                        'cash_id' => isset($payment_data->cash_id) ? $payment_data->cash_id : 0,
+                        'number' => isset($payment_data->number) ? $payment_data->number : 0,
+                        'type_id' => isset($payment_data->type_id) ? $payment_data->type_id : 0,
+                        'cio_id' => isset($payment_data->cio_id) ? $payment_data->cio_id : 0,
+                        'in_plan' => isset($payment_data->in_plan) ? $payment_data->in_plan : 0,
+                        'is_bonus_pay' => isset($payment_data->is_bonus_pay) ? $payment_data->is_bonus_pay : 0,
+                        'is_deposit' => isset($payment_data->is_deposit) ? $payment_data->is_deposit : 0,
+                        'from1c' => isset($payment_data->from1c) ? $payment_data->from1c : 0,
+                        'office_id' => isset($payment_data->office_id) ? $payment_data->office_id : 0,
+                        'client_id' => isset($payment_data->client_id) ? $payment_data->client_id : 0,
+                        'price' => isset($payment_data->price) ? $payment_data->price : 0,
+                        'rate' => isset($payment_data->rate) ? $payment_data->rate : 0,
+                        'currency_id' => isset($payment_data->currency_id) ? $payment_data->currency_id : 0,
+                        'currency' => isset($payment_data->currency) ? $payment_data->currency : '',
+                        'currency_code' => isset($payment_data->currency_code) ? $payment_data->currency_code : '',
+                        'r_id' => isset($payment_data->r_id) ? $payment_data->r_id : 0
+                    ]
+            );
         } else {
             return '<font color = ' . $this->error_color . '>Ошибка доступа к базе UON</font>';
         }
@@ -323,21 +331,21 @@ class InApiUonController extends Controller {
                 $table->integer('r_id');
                 $table->integer('user_id')->default(0);
                 $table->integer('type_id')->default(0);
-                $table->float('price_old',8,2)->default(0.00);
-                $table->float('price_new',8,2)->default(0.00);
+                $table->float('price_old', 8, 2)->default(0.00);
+                $table->float('price_new', 8, 2)->default(0.00);
                 $table->text('datetime');
             });
         }
-            DB::table($table_name)->insert(
-                    [
-                        'r_id' => $request->get('r_id'),
-                        'user_id' => $request->get('user_id'),
-                        'type_id' => $request->get('type_id'),
-                        'price_old' => $request->get('price_old'),
-                        'price_new' => $request->get('price_new'),
-                        'datetime' => $request->get('datetime')
-                    ]
-            );
+        DB::table($table_name)->insert(
+                [
+                    'r_id' => $request->get('r_id'),
+                    'user_id' => $request->get('user_id'),
+                    'type_id' => $request->get('type_id'),
+                    'price_old' => $request->get('price_old'),
+                    'price_new' => $request->get('price_new'),
+                    'datetime' => $request->get('datetime')
+                ]
+        );
         return $request->get('r_id');
     }
 

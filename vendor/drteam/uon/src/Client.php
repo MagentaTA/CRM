@@ -1,16 +1,12 @@
-<?php
-
-namespace UON;
-
+<?php namespace UON;
 /**
  * @author Paul Rock <paul@drteam.rocks>
  * @link http://drteam.rocks
  * @license MIT
  */
-use App;
 
-class Client {
-
+class Client
+{
     /**
      * Initial state of some variables
      */
@@ -39,12 +35,11 @@ class Client {
      * Client constructor.
      * @param null|string $token - User defined token
      */
-    public function __construct($token = null) {
+    public function __construct($token = null)
+    {
         // If token is not empty
-        if (!empty($token))
-            $this->token = $token;
-        else
-            $this->token = config('api.UON_API_TOKEN');
+        if (!empty($token)) $this->token = $token;
+        else $this->token = 'du4A1ZlNnyLIr90Af17E';
 
         // Store the client object
         $this->_client = new \GuzzleHttp\Client();
@@ -58,16 +53,13 @@ class Client {
      * @param   array $params Parameters
      * @return  array|false Array with data or error, or False when something went fully wrong
      */
-    public function doRequest($type, $endpoint, $params = array()) {
+    public function doRequest($type, $endpoint, $params = array())
+    {
         // Create the base URL
         $base = ($this->useSSL) ? "https" : "http";
 
         // Generate the URL for request
         $url = $base . "://" . $this->host . ":" . $this->port . $this->path . $this->token . $endpoint . '.' . $this->format;
-        $heads = get_headers($url);
-        if (is_array($heads) and strpos($heads[0], '404') !== false) {
-            return FALSE;
-        }
 
         switch ($type) {
             case 'get':
@@ -86,6 +78,7 @@ class Client {
         }
 
         return array('status' => false, 'message' => json_decode($result->getBody()));
+
     }
 
 }

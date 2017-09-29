@@ -22,7 +22,10 @@ return [
     'crm_bid_service' => 'crm_bid2service', //таблица взаимосвязей заявок и услуг
     'crm_companies' => 'crm_companies', //таблица оформляющих компаний
     'crm_operators' => 'crm_operators', //таблица туроператоров
+    'crm_partners' => 'crm_partners', //таблица прочих партнёров
     'crm_avia' => 'crm_avia', //таблица авиакомпаний
+    'crm_offices' => 'crm_offices', //таблица офисов компании
+    'crm_labels' => 'crm_labels', //таблица меток для заявок
     'crm_services' => 'crm_services', //таблица услуг
     'crm_tour_types' => 'crm_tour_types' //таблица типов услуг
 ];
