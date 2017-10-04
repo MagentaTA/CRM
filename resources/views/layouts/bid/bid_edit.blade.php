@@ -3,8 +3,17 @@
 @section('content')
 <?php //var_dump($bid); ?>
 <?php $date_norm = new App\myDate(); ?>
-<div class="panel panel-default row">
-    <div class="panel-heading">Редактирование заявки</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-6">
+                <a role="button" class="btn btn-primary" href="{{ URL::previous() }}">НАЗАД</a>
+            </div>
+            <div class="col-md-6">
+                Редактирование Заявки             
+            </div>
+        </div>
+    </div>
     <div class="panel-body">
         @if (session('status'))
         <div class="alert alert-success">

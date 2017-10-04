@@ -19,6 +19,7 @@
         <script src="{{ elixir('js/all.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.js"></script>     
     </head>
+    @include('flash::message')
     <body>
         <div id="app">
             <nav class="navbar navbar-default navbar-static-top">
@@ -59,6 +60,7 @@
                                     <li><a href="{{ route('managers_list') }}" >Сотрудники</a></li>
                                 </ul>
                             </li>
+                            <li><a href="{{ route('cc') }}" >Call-Center</a></li>
                             @role('developer')
                             <li><a href="{{ route('admin') }}">Админ</a></li>
                             @endrole

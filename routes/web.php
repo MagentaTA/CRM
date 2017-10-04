@@ -57,6 +57,7 @@ Route::group(['prefix' => 'api/uon/in'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => ['role:developer']], function () {
     Route::get('/', 'Admin\AdminController@index')->name('admin');
     Route::get('/add_role', 'Admin\AdminController@add_role')->name('add_role');
+    Route::get('/insert_questions', 'Admin\AdminController@add_cc_birthdays_q')->name('insert_questions');
 });
 // Роутинг для Тестовых
 Route::group(['prefix' => 'test', 'middleware' => ['role:developer']], function () {
@@ -90,6 +91,11 @@ Route::group(['prefix' => 'catalog'], function () {
 });
 Route::group(['prefix' => 'services'], function () {
     Route::get('service_edit/{id}', 'ServicesController@ServiceEdit')->name('service_edit');
+});
+Route::group(['prefix' => 'call-center'], function () {
+    Route::get('index', 'CCController@Index')->name('cc');
+    Route::get('birthday_call/{id}/{opros_id}/{user_id}', 'CCController@Birthday_call')->name('birthday_call');
+    Route::get('birthday_call/add_pool_data', 'CCController@Birthday_pool_data')->name('birthday_pool_data');
 });
 
 

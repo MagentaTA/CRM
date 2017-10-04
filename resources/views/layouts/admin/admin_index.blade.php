@@ -35,6 +35,7 @@
                         <a href="<?=route('get_nutritions')?>">Импорт типов питания</a><br />
                         <a href="<?=route('get_offices')?>">Импорт Офисов</a><br />
                         <a href="<?=route('get_labels')?>">Импорт Меток</a><br />
+                        <a href="<?=route('insert_questions')?>">Обновить базу вопросов для CC</a><br />
                         <a href="<?=route('add_role')?>">Добавить роль пользователя</a><br />
                     </div>
 

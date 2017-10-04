@@ -27,5 +27,8 @@ return [
     'crm_offices' => 'crm_offices', //таблица офисов компании
     'crm_labels' => 'crm_labels', //таблица меток для заявок
     'crm_services' => 'crm_services', //таблица услуг
-    'crm_tour_types' => 'crm_tour_types' //таблица типов услуг
+    'crm_tour_types' => 'crm_tour_types', //таблица типов услуг
+    'crm_cc_questions' => 'crm_cc_questions', //таблица вопросов для Call Center
+    'crm_cc_answers' => 'crm_cc_answers', //таблица ответов для Call Center
+    'crm_cc_pool_data' => 'crm_cc_pool_data' //Результаты обзвонов
 ];
