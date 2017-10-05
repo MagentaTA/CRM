@@ -64,14 +64,15 @@ class AdminController extends Controller {
         $questions_table = config('crm_tables.crm_cc_questions');
         $answers_table = config('crm_tables.crm_cc_answers');
         $pool_data_table = config('crm_tables.crm_cc_pool_data');
+        $status_pool_table = config('crm_tables.crm_cc_pool_status');
         Schema::dropIfExists($pool_data_table);
         Schema::create($pool_data_table, function($table) {
             $table->bigIncrements('p_auto_id');
             $table->text('pool_id');
             $table->integer('user_id')->default(0);
             $table->integer('q_id')->default(0);
-            $table->text('answer');
-            $table->text('status');
+            $table->text('answer')->nullable();
+            $table->text('status')->nullable();
             $table->dateTime('date_pool');
         });
         Schema::dropIfExists($questions_table);
@@ -88,6 +89,12 @@ class AdminController extends Controller {
             $table->integer('q_next_id');
             $table->text('type');
         });
+        Schema::dropIfExists($status_pool_table);
+        Schema::create($status_pool_table, function($table) {
+            $table->text('id');
+            $table->text('status');
+        });
+        
         DB::table($questions_table)->insert(
                 [
                     'q_id' => 1,

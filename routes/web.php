@@ -96,6 +96,8 @@ Route::group(['prefix' => 'call-center'], function () {
     Route::get('index', 'CCController@Index')->name('cc');
     Route::get('birthday_call/{id}/{opros_id}/{user_id}', 'CCController@Birthday_call')->name('birthday_call');
     Route::get('birthday_call/add_pool_data', 'CCController@Birthday_pool_data')->name('birthday_pool_data');
+    Route::get('birthday_call/add_pool_data_delete', 'CCController@Birthday_pool_data_delete')->name('birthday_pool_data_delete');
+    Route::get('birthday_call/birthday_pool_status', 'CCController@Birthday_pool_status')->name('birthday_pool_status');
 });
 
 

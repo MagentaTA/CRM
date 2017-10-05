@@ -117,7 +117,7 @@ class OutApiUonController extends Controller {
     public function AllRequests() {
         //$date_from = date('Y-m-d', strtotime(now() . '- 5 day'));
         //$date_to = date('Y-m-d', strtotime(now()));
-        $date_from = '2017-07-01';
+        $date_from = '2017-01-01';
         $date_to = '2017-09-31';
         $table_name = config('crm_tables.uon_bids');
         $services_table = config('crm_tables.uon_bid_services');
