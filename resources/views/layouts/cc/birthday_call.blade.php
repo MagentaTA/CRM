@@ -3,6 +3,7 @@
 <!-- Модальное окно -->
 <?php
 $norm_date = new App\myDate();
+use Carbon\Carbon;
 ?>
 <!-- Модальное окно -->
 <div class="modal fade" id="bid_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -58,7 +59,7 @@ $norm_date = new App\myDate();
                         if (mb_strlen($user_data->u_email) == 0) {
                             echo '<span class="oi oi-chat" title="E-Mail" aria-hidden="true" style="color:red;"></span><br />';
                         } else {
-                            echo '<span class="oi oi-chat" title="E-Mail" aria-hidden="true"></span>' . $user_data->u_email . '<br />';
+                            echo '<span class="oi oi-chat" title="E-Mail" aria-hidden="true"></span> ' . $user_data->u_email . '<br />';
                         }
                         $b_date = $user_data->u_birthday;
                         $b_date = $norm_date->getBirthdayDate($b_date);
@@ -73,14 +74,20 @@ $norm_date = new App\myDate();
                         ?>
                         {{ Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control selectpicker manager_data', 'data-live-search' => 'true']) }}
                         <a role="button" class="btn btn-success send_for_manager" style="margin-top:0.5rem;" data-toggle="modal" data-target="#bid_modal">Запрос менеджеру</a>
+                        <?php 
+                            $text_remind = '';
+                            $text_remind .= Form::date('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toDateString());
+                            $text_remind .= Form::time('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toTimeString());
+                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('do', array('0' => 'Позвонить','1' => 'Письмо','2' => 'Встреча','3' => 'Другое'), 0, ['class' => 'form-control']).'</form>';
+                            $text_remind .= '<textarea class="text_for_manager" style="margin-top:0.5rem;"></textarea>'
+                        ?>
                         <script>
                             $('a.send_for_manager').bind('click', function () {
                                 var manager = $('.manager_data option:selected').text();
                                 var manager_id = $('.manager_data option:selected').val();
                                 $('.modal-body').html('');
-                                $('.modal-body').html('<h1>Отправить задание менеджеру</h1>\n\
-                                                Текст сообщения: <textarea></textarea>');
-                                $('.modal-title').html('Отправка задания менеджеру '+manager+manager_id);
+                                $('.modal-body').html('<?=$text_remind?>');
+                                $('.modal-title').html('Отправка задания менеджеру '+manager+ ' (ID '+manager_id+')');
                             });
                         </script>
                         </div>

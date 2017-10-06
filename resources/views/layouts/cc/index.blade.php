@@ -30,7 +30,6 @@ $bids = new \App\Helper();
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Именинники</div>
-
                 <div class="panel-body">
                     <div class="list-group">
                         @foreach ($Birthdays as $Birthday)

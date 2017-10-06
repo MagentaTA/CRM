@@ -17,16 +17,16 @@ class OutApiUonController extends Controller {
     }
 
     public function AllClients() {
-        $date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
+        $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_users_table');
         $_users = new \UON\Users();
         $responce = json_encode($_users->getUpdated($date_from, $date_to));
         //$responce = json_encode($_users->all());
         $responce = \GuzzleHttp\json_decode($responce);
-        var_dump($responce);
+        //var_dump($responce);
         // Удаляем таблицу и создаём новую с индексами
-        /* Schema::dropIfExists($table_name);
+         Schema::dropIfExists($table_name);
           Schema::create($table_name, function($table) {
           $table->bigIncrements('u_id');
           $table->text('u_surname');
@@ -111,7 +111,7 @@ class OutApiUonController extends Controller {
           ]
           );
           }
-          //return redirect()->route('admin'); */
+          return redirect()->route('admin'); 
     }
 
     public function AllRequests() {

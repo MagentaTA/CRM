@@ -1,13 +1,13 @@
-<?php
+<?php namespace UON;
 
-namespace UON;
+
 
 /**
  * Class Misc
  * @package UON
  */
-class Misc extends Client {
-
+class Misc extends Client
+{
     /**
      * Add flights into voucher
      *
@@ -15,7 +15,8 @@ class Misc extends Client {
      * @param   array $parameters - List of parameters
      * @return  array|false
      */
-    public function createAvia($parameters) {
+    public function createAvia($parameters)
+    {
         $endpoint = '/avia/create';
         return $this->doRequest('post', $endpoint, $parameters);
     }
@@ -27,7 +28,8 @@ class Misc extends Client {
      * @param   array $parameters - List of parameters
      * @return  array|false
      */
-    public function createCall($parameters) {
+    public function createCall($parameters)
+    {
         $endpoint = '/call_history/create';
         return $this->doRequest('post', $endpoint, $parameters);
     }
@@ -39,7 +41,8 @@ class Misc extends Client {
      * @param   array $parameters - List of parameters
      * @return  array|false
      */
-    public function createMail($parameters) {
+    public function createMail($parameters)
+    {
         $endpoint = '/mail/create';
         return $this->doRequest('post', $endpoint, $parameters);
     }
@@ -63,7 +66,8 @@ class Misc extends Client {
      * @param   null|array $parameters - List of parameters
      * @return  array|false
      */
-    public function getCurrency($parameters = null) {
+    public function getCurrency($parameters = null)
+    {
         $endpoint = '/currency';
         return $this->doRequest('get', $endpoint, $parameters);
     }
@@ -74,7 +78,8 @@ class Misc extends Client {
      * @link    https://api.u-on.ru/{key}/manager.{_format}
      * @return  array|false
      */
-    public function getManagers() {
+    public function getManagers()
+    {
         $endpoint = '/manager';
         return $this->doRequest('get', $endpoint);
     }
@@ -82,7 +87,7 @@ class Misc extends Client {
     public function getOffices() {
         $endpoint = '/company-office';
         return $this->doRequest('get', $endpoint);
-    }
+}
 
     public function getLabels() {
         $endpoint = '/user-label';

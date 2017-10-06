@@ -144,6 +144,20 @@ class Requests extends Client
     }
 
     /**
+     * Update request by request id
+     *
+     * @link    https://api.u-on.ru/{key}/request/update/{id}.{_format}
+     * @param   int $id - Unique ID of request's
+     * @param   array $parameters - List of parameters [r_cl_id]
+     * @return  array|false
+     */
+    public function update($id, $parameters)
+    {
+        $endpoint = '/request/update/' . $id;
+        return $this->doRequest('post', $endpoint, $parameters);
+    }
+
+    /**
      * Delete attached file from request
      *
      * @link    https://api.u-on.ru/{key}/request-file/delete/{id}.{_format}

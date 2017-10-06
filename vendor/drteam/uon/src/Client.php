@@ -40,8 +40,6 @@ class Client
         // If token is not empty
         if (!empty($token)) $this->token = $token;
         else $this->token = 'du4A1ZlNnyLIr90Af17E';
-        // Ключ второй компании 4z9lLpPG35d4M8UEd9pu
-        // Ключ Макинтур du4A1ZlNnyLIr90Af17E
 
         // Store the client object
         $this->_client = new \GuzzleHttp\Client();
