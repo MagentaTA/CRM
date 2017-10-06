@@ -20,8 +20,8 @@ use Carbon\Carbon;
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                <button type="button" class="btn btn-default close_dialog" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary confirm_dialog">Сохранить изменения</button>
             </div>
         </div>
     </div>
@@ -76,10 +76,13 @@ use Carbon\Carbon;
                         <a role="button" class="btn btn-success send_for_manager" style="margin-top:0.5rem;" data-toggle="modal" data-target="#bid_modal">Запрос менеджеру</a>
                         <?php 
                             $text_remind = '';
+                            $text_remind .= Form::open(array('url' => route('add_reminder'), 'method' => 'post', 'id' => 'send_reminder'));
                             $text_remind .= Form::date('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toDateString());
-                            $text_remind .= Form::time('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toTimeString());
-                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('do', array('0' => 'Позвонить','1' => 'Письмо','2' => 'Встреча','3' => 'Другое'), 0, ['class' => 'form-control']).'</form>';
-                            $text_remind .= '<textarea class="text_for_manager" style="margin-top:0.5rem;"></textarea>'
+                            $text_remind .= Form::time('time_remind', \Carbon\Carbon::now('Europe/Kiev')->toTimeString());
+                            $text_remind .= Form::hidden('pool_id', $id);
+                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control manager_data', 'data-live-search' => 'true']).'</div>';
+                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('do', array('0' => 'Позвонить','1' => 'Письмо','2' => 'Встреча','3' => 'Другое'), 0, ['class' => 'form-control type_remind']).'</form>';
+                            $text_remind .= '<textarea name="remind_text" class="text_for_manager" style="margin-top:0.5rem;"></textarea>';
                         ?>
                         <script>
                             $('a.send_for_manager').bind('click', function () {
@@ -88,6 +91,11 @@ use Carbon\Carbon;
                                 $('.modal-body').html('');
                                 $('.modal-body').html('<?=$text_remind?>');
                                 $('.modal-title').html('Отправка задания менеджеру '+manager+ ' (ID '+manager_id+')');
+                                $('button.close_dialog').html('Отмена');
+                                $('button.confirm_dialog').html('Отправить');
+                                $('button.confirm_dialog').attr('type','submit');
+                                $('button.confirm_dialog').attr('form','send_reminder');
+                                $('.modal-content').append('<?=Form::close()?>');
                             });
                         </script>
                         </div>

@@ -33,7 +33,7 @@ class CCController extends Controller {
                 ->whereMonth('u_birthday', '=', date('m'))
                 ->whereDay('u_birthday', '=', date('d'))
                 ->groupBy('u_id')
-                ->orderBy($Status_table.'.status', 'asc')
+                ->orderBy($Status_table . '.status', 'asc')
                 ->orderBy('u_phone_mobile', 'desc')
                 ->orderBy('u_phone', 'desc')
                 ->get();
@@ -121,6 +121,10 @@ class CCController extends Controller {
         }
 //return 'Результаты опроса записаны';
         return (var_dump($data->all()));
+    }
+
+    public function Add_reminder(Request $data) {
+        return back()->withInput();
     }
 
 }
