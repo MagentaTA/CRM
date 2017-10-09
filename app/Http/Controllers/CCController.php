@@ -48,6 +48,7 @@ class CCController extends Controller {
         $questions = $helper->get_Q_by_O($data->opros_id);
         $user_data = $helper->getUserData($data->user_id);
         $managers = $catalog_model->getManagers();
+        $bids = $helper->getBidDataByUser($data->user_id);
         $pool_id = $data->opros_id;
         $id = $data->id;
 
@@ -56,7 +57,8 @@ class CCController extends Controller {
             'user_data' => $user_data,
             'managers' => $managers,
             'pool_id' => $pool_id,
-            'id' => $id
+            'id' => $id,
+            'bids' => $bids
         ));
     }
 
@@ -124,7 +126,15 @@ class CCController extends Controller {
     }
 
     public function Add_reminder(Request $data) {
-        return back()->withInput();
+        $chat = new \UON\Chat();
+        return $chat->create(
+                        [
+                            'user_id_from' => 2,
+                            'user_id_to' => 18519,
+                            'text' => $data->remind_text
+                        ]
+        );
+        //return back()->withInput();
     }
 
 }

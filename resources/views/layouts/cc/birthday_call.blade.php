@@ -3,6 +3,7 @@
 <!-- Модальное окно -->
 <?php
 $norm_date = new App\myDate();
+
 use Carbon\Carbon;
 ?>
 <!-- Модальное окно -->
@@ -38,12 +39,12 @@ use Carbon\Carbon;
                 <div class="panel-body">
                     <?php $answers_class = new App\Helper; ?>
                     <h2>Данные об имениннике</h2>
-                        <div class="col-md-6">
+                    <div class="col-md-6">
                         <span class="oi oi-person" title="ФИО Клиента" aria-hidden="true"></span> <a class="client_edit" style="cursor:pointer;" data-toggle="modal" data-target="#bid_modal">{{$user_data->u_surname}} {{$user_data->u_name}} {{$user_data->u_sname}}</a><br />
                         <script>
                             $('a.client_edit').bind('click', function () {
                                 $('.modal-body').html('');
-                                $('.modal-body').load('{{ route('client_edit',['u_id' => $user_data->u_id]) }} .panel-body');
+                                        $('.modal-body').load('{{ route('client_edit',['u_id' => $user_data->u_id]) }} .panel-body');
                                 $('.modal-title').html('Турист №<?= $user_data->u_id ?>');
                             });
                         </script>
@@ -66,39 +67,60 @@ use Carbon\Carbon;
                         $age = date('Y') - date('Y', strtotime($b_date));
                         ?>
                         <span class="oi oi-calendar" title="Дата рождения" aria-hidden="true"></span> {{$b_date}} (<b>{{$age}}</b>)
-                        </div>
-                        <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
                         <h3>Менеджер</h3>
                         <?php
                         $managers = GuzzleHttp\json_decode($managers, TRUE);
                         ?>
                         {{ Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control selectpicker manager_data', 'data-live-search' => 'true']) }}
                         <a role="button" class="btn btn-success send_for_manager" style="margin-top:0.5rem;" data-toggle="modal" data-target="#bid_modal">Запрос менеджеру</a>
-                        <?php 
-                            $text_remind = '';
-                            $text_remind .= Form::open(array('url' => route('add_reminder'), 'method' => 'post', 'id' => 'send_reminder'));
-                            $text_remind .= Form::date('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toDateString());
-                            $text_remind .= Form::time('time_remind', \Carbon\Carbon::now('Europe/Kiev')->toTimeString());
-                            $text_remind .= Form::hidden('pool_id', $id);
-                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control manager_data', 'data-live-search' => 'true']).'</div>';
-                            $text_remind .= '<div style="margin-top:0.5rem">'.Form::select('do', array('0' => 'Позвонить','1' => 'Письмо','2' => 'Встреча','3' => 'Другое'), 0, ['class' => 'form-control type_remind']).'</form>';
-                            $text_remind .= '<textarea name="remind_text" class="text_for_manager" style="margin-top:0.5rem;"></textarea>';
+                        <?php
+                        $text_remind = '';
+                        $text_remind .= Form::open(array('url' => route('add_reminder'), 'method' => 'post', 'id' => 'send_reminder'));
+                        $text_remind .= Form::date('date_remind', \Carbon\Carbon::now('Europe/Kiev')->toDateString());
+                        $text_remind .= Form::time('time_remind', \Carbon\Carbon::now('Europe/Kiev')->toTimeString());
+                        $text_remind .= Form::hidden('pool_id', $id);
+                        $text_remind .= Form::hidden('client_id', $user_data->u_id);
+                        $text_remind .= Form::hidden('from_id', 2);
+                        $text_remind .= '<div style="margin-top:0.5rem">' . Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control manager_data', 'data-live-search' => 'true']) . '</div>';
+                        $text_remind .= '<div style="margin-top:0.5rem">' . Form::select('do', array('0' => 'Позвонить', '1' => 'Письмо', '2' => 'Встреча', '3' => 'Другое'), 0, ['class' => 'form-control type_remind']) . '</form>';
+                        $text_remind .= '<textarea name="remind_text" class="text_for_manager" style="margin-top:0.5rem;"></textarea>';
                         ?>
                         <script>
                             $('a.send_for_manager').bind('click', function () {
                                 var manager = $('.manager_data option:selected').text();
                                 var manager_id = $('.manager_data option:selected').val();
                                 $('.modal-body').html('');
-                                $('.modal-body').html('<?=$text_remind?>');
-                                $('.modal-title').html('Отправка задания менеджеру '+manager+ ' (ID '+manager_id+')');
+                                $('.modal-body').html('<?= $text_remind ?>');
+                                $('.modal-title').html('Отправка задания менеджеру ' + manager + ' (ID ' + manager_id + ')');
                                 $('button.close_dialog').html('Отмена');
                                 $('button.confirm_dialog').html('Отправить');
-                                $('button.confirm_dialog').attr('type','submit');
-                                $('button.confirm_dialog').attr('form','send_reminder');
-                                $('.modal-content').append('<?=Form::close()?>');
+                                $('button.confirm_dialog').attr('type', 'submit');
+                                $('button.confirm_dialog').attr('form', 'send_reminder');
+                                $('.modal-content').append('<?= Form::close() ?>');
                             });
                         </script>
-                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-6" style="margin-top: 0.5rem;">
+                        <h3>Заявки</h3>
+                    <?php
+                    foreach ($bids as $bid) {
+                        //var_dump($bid).'<br />';
+                        $last_bid_date = $norm_date->getNormalDateTime($bid->r_dat);
+                        ?>
+                        <a class="btn btn-primary bid_edit_{{$bid->r_id}}" role="button" data-toggle="modal" data-target="#bid_modal">{{$last_bid_date}}</a>
+                        <script>
+                            $('.bid_edit_<?= $bid->r_id ?>').bind('click', function () {
+                                $('.modal-body').html('');
+                                        $('.modal-body').load('{{ route('bid_edit',['r_id' => $bid->r_id]) }} .panel-body');
+                                $('.modal-title').html('Заявка №<?= $bid->r_id ?>');
+                            });
+                        </script>
+                        <?php
+                    }
+                    ?>
+                    </div>
                     <h2>Опрос</h2>
                     <?php $count = 0; ?>
                     @Foreach($questions as $question)
