@@ -127,14 +127,65 @@ class CCController extends Controller {
 
     public function Add_reminder(Request $data) {
         $chat = new \UON\Chat();
-        return $chat->create(
-                        [
-                            'user_id_from' => 2,
-                            'user_id_to' => 18519,
-                            'text' => $data->remind_text
-                        ]
+        $helper = new \App\Helper();
+//Адрес сервера
+        $SmtpServer = "mail.makintour.com";
+//Адрес порта
+        $SmtpPort = "26";
+//Логин авторизации на сервера SMTP
+        $SmtpUser = "call-center@makintour.com";
+//Пароль авторизации на сервера SMTP
+        $SmtpPass = "center2017";
+        $client_data = $helper->getUserData($data->client_id);
+        $manager_data = $helper->getManagerData($data->manager);
+        $manager_email = $manager_data->u_email;
+        //return var_dump($client_data);
+        $text_remind = '';
+        $text_remind .= '<h1>Задача</h1>';
+        $text_remind .= '<b>Тип события:</b> ' . $data->do . '<h2></h2>';
+        $text_remind .= '<b>Дата события:</b> ' . $data->date_remind . '<h2></h2>';
+        $text_remind .= '<b>Комментарий:</b> ' . $data->remind_text . '<h2></h2>';
+        $text_remind .= '<h1>Данные о туристе</h1>';
+        $text_remind .= '<b>ФИО</b>: <a href="http://my.makintour.com/client_edit.php?client_id='.$client_data->u_id.'">' . $client_data->u_surname . ' ' . $client_data->u_name . ' ' . $client_data->u_sname . '</a><h2></h2>';
+        $text_remind .= '<b>Телефоны: </b>' . $client_data->u_phone . ', ' . $client_data->u_phone_mobile . '<h2></h2>';
+        $text_remind .= '<b>E-Mail: </b>' . $client_data->u_email . '<h2></h2>';
+        //return $data->all();
+        //return $text_remind;
+        //return var_dump($manager_data);
+        $chat->create(
+                [
+                    'user_id_from' => $data->from_id,
+                    'user_id_to' => $data->manager,
+                    'text' => $text_remind
+                ]
         );
-        //return back()->withInput();
+        $to = $manager_email;
+        $from = 'call-center@makintour.com';
+        $subject = 'Новая задача от Кол-Центра';
+        $body = $text_remind;
+
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        try {
+            $mail->isSMTP(); // tell to use smtp
+            $mail->CharSet = "utf-8"; // set charset to utf8
+            $mail->SMTPAuth = true;  // use smpt auth
+            $mail->SMTPSecure = "tls"; // or ssl
+            $mail->Host = "mail.makintour.com";
+            $mail->Port = 26; // most likely something different for you. This is the mailtrap.io port i use for testing. 
+            $mail->Username = "call-center@makintour.com";
+            $mail->Password = "center2017";
+            $mail->setFrom("call-center@makintour.com", "Call Center");
+            $mail->Subject = $subject;
+            $mail->MsgHTML($body);
+            $mail->addAddress($to, $manager_data->u_surname . ' ' . $manager_data->u_name);
+            $mail->send();
+        } catch (phpmailerException $e) {
+            dd($e);
+        } catch (Exception $e) {
+            dd($e);
+        }
+        //die('success');
+        return back()->withInput();
     }
 
 }

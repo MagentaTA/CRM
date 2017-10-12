@@ -1,6 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Модальное окно -->
+<div class="modal fade" id="bid_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:90rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default close_dialog" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary confirm_dialog">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -23,7 +45,8 @@
                             <li><a href="#tabs-7">История общения</a></li>
                             <li><a href="#tabs-8">История Звонков</a></li>
                         </ul>                        
-                        {{ Form::open(array('url' => route('client_create'), 'method' => 'post')) }}
+                        {{ Form::open(array('url' => route('client_change',['id' => $user->u_id]), 'method' => 'get', 'name' => 'client_change')) }}
+                        {{ Form::hidden('u_id', $user->u_id, array('id' => 'u_id')) }}
                         <div class="table_list" id="tabs-1">
                             <table>
                                 <tr>
@@ -157,11 +180,20 @@
                                 @if($bids)
                                 @foreach ($bids as $bid)
                                 <tr>
-                                    <td>{{ $bid->r_id }}</td>
-                                    <td>{{ $bid->r_dat }}</td>
-                                    <td>{{ $bid->r_date_begin }}</td>
-                                    <td>{{ $bid->r_date_end }}</td>
-                                    <td>{{ $bid->r_status }}</td>
+                                    <td>
+                                        <a class="btn btn-primary bid_edit_{{$bid->r_id}}" role="button" data-toggle="modal" data-target="#bid_modal">{{ $bid->r_dat }}</a>
+                                        <script>
+                                            $('.bid_edit_<?= $bid->r_id ?>').bind('click', function () {
+                                                $('.modal-body').html('');
+                                                $('.modal-body').load('{{ route('bid_edit',['r_id' => $bid->r_id]) }} .panel-body', function () {
+                                                    $('.selectpicker').each(function () {
+                                                        $(this).selectpicker('refresh');
+                                                    })
+                                                });
+                                                $('.modal-title').html('Заявка №<?= $bid->r_id ?>');
+                                            });
+                                        </script>
+                                    </td>
                                 </tr>
                                 @endforeach
                                 @endif
@@ -171,16 +203,6 @@
                     </div>
 
                     {{ Form::close() }}
-                    <script>
-                        $(function () {
-                            $('#client_tabs').tabs();
-                            $('[name="birthday"]').datepicker({
-                                changeMonth: true,
-                                changeYear: true,
-                                dateFormat: 'dd.mm.yy'
-                            });
-                        });
-                    </script>
                 </div>
             </div>
         </div>

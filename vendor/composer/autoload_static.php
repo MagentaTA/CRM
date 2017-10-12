@@ -80,6 +80,7 @@ class ComposerStaticInit9c94c54b3b4c9eb67f080b45e286e9f9
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'PhpParser\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
@@ -257,6 +258,10 @@ class ComposerStaticInit9c94c54b3b4c9eb67f080b45e286e9f9
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Monolog\\' => 
         array (
@@ -2249,6 +2254,11 @@ class ComposerStaticInit9c94c54b3b4c9eb67f080b45e286e9f9
         'Mpociot\\CaptainHook\\Jobs\\TriggerWebhooksJob' => __DIR__ . '/..' . '/mpociot/captainhook/src/Mpociot/CaptainHook/Jobs/TriggerWebhooksJob.php',
         'Mpociot\\CaptainHook\\Webhook' => __DIR__ . '/..' . '/mpociot/captainhook/src/Mpociot/CaptainHook/Webhook.php',
         'Mpociot\\CaptainHook\\WebhookLog' => __DIR__ . '/..' . '/mpociot/captainhook/src/Mpociot/CaptainHook/WebhookLog.php',
+        'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
+        'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
+        'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
+        'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
+        'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/AssertionFailedError.php',

@@ -71,4 +71,36 @@ class ClientController extends Controller {
         }
     }
 
+    public function ClientChangeData(Request $data) {
+        $client_id = $data->get('u_id');
+        $table_name = config('crm_tables.uon_users_table');
+        $b_date = date_create($data->birthday);
+        $b_date = date_format($b_date, 'Y-m-d');
+        $result_query = DB::table($table_name)
+                ->where('u_id', $client_id)
+                ->update(
+                [
+                    'u_surname' => isset($data->surname) ? $data->surname : '',
+                    'u_name' => isset($data->name) ? $data->name : '',
+                    'u_sname' => isset($data->sname) ? $data->sname : '',
+                    'u_surname_en' => isset($data->surname_en) ? $data->surname_en : '',
+                    'u_name_en' => isset($data->name_en) ? $data->name_en : '',
+                    'u_email' => isset($data->email) ? $data->email : '',
+                    'u_fax' => isset($data->fax) ? $data->fax : '',
+                    'u_phone' => isset($data->phone) ? $data->phone : '',
+                    'u_phone_mobile' => isset($data->phone_mobile) ? $data->phone_mobile : '',
+                    'u_passport_number' => isset($data->passport_number) ? $data->passport_number : '',
+                    'u_birthday' => isset($b_date) ? $b_date : NULL,
+                    'u_social_vk' => isset($data->social_vk) ? $data->social_vk : '',
+                    'u_social_fb' => isset($data->social_fb) ? $data->social_fb : '',
+                    'u_social_ok' => isset($data->social_ok) ? $data->social_ok : '',
+                    'address' => isset($data->address) ? $data->address : '',
+                    'address_juridical' => isset($data->address_juridical) ? $data->address_juridical : '',
+                    'u_date_update' => now()
+                ]
+        );
+        //return FALSE;
+        return var_dump($data->all());
+    }
+
 }

@@ -84,6 +84,13 @@ class Helper extends Model {
                 ->first();
         return $Users;
     }
+    public function getManagerData($m_id) {
+        $User_table = config('crm_tables.uon_managers');
+        $Users = DB::table($User_table)
+                ->where('u_id', '=', $m_id)
+                ->first();
+        return $Users;
+    }
 
     public function get_Q_by_O($opros_id) {
         $questions_table = config('crm_tables.crm_cc_questions');

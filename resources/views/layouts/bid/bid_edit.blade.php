@@ -74,7 +74,7 @@
             <?php
             $managers = GuzzleHttp\json_decode($managers, TRUE);
             ?>
-            {{ Form::select('manager', $managers, $bid->r_manager_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            {{ Form::select('manager', $managers, $bid->r_manager_id, ['class' => 'form-control', 'data-live-search' => 'true']) }}
         </div>
         <div class="col-md-4">
             {{ Form::label('source','Источник: ') }}

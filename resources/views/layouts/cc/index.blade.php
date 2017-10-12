@@ -20,7 +20,7 @@ $bids = new \App\Helper();
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                <button type="button" class="btn btn-primary confirm_dialog">Сохранить изменения</button>
             </div>
         </div>
     </div>
@@ -47,9 +47,18 @@ $bids = new \App\Helper();
                                                 <a class="user_edit_{{$Birthday->u_id}}" data-toggle="modal" data-target="#bid_modal" style="cursor: pointer;">{{$Birthday->u_surname}} {{$Birthday->u_name}} {{$Birthday->u_sname}}</a>
                                                 <script>
                                                     $('.user_edit_<?= $Birthday->u_id ?>').bind('click', function () {
-                                                        $('.modal-body').html('');
-                                                                $('.modal-body').load('{{ route('client_edit',['u_id' => $Birthday->u_id]) }} .panel-body');
-                                                        $('.modal-title').html('Турист №<?= $Birthday->u_id ?>');
+                                                    $('.modal-body').html('');
+                                                    $('.modal-body').load('{{ route('client_edit',['u_id' => $Birthday->u_id]) }} .panel-body', function(){
+                                                    $('#client_tabs').tabs();
+                                                    $('input[name="birthday"]').datetimepicker({
+                                                    locale: 'ru',
+                                                            format: 'DD.MM.YYYY'
+                                                    });
+                                                    $('.confirm_dialog').bind('click', function(){
+                                                    $('form[name="client_change"]').submit();
+                                                    })
+                                                    });
+                                                    $('.modal-title').html('Турист №<?= $Birthday->u_id ?>');
                                                     });
                                                 </script>
                                             </div>
@@ -74,9 +83,13 @@ $bids = new \App\Helper();
                                                     <a class="btn btn-primary bid_edit_{{$bid->r_id}}" role="button" data-toggle="modal" data-target="#bid_modal">{{$last_bid_date}}</a>
                                                     <script>
                                                         $('.bid_edit_<?= $bid->r_id ?>').bind('click', function () {
-                                                            $('.modal-body').html('');
-                                                                    $('.modal-body').load('{{ route('bid_edit',['r_id' => $bid->r_id]) }} .panel-body');
-                                                            $('.modal-title').html('Заявка №<?= $bid->r_id ?>');
+                                                        $('.modal-body').html('');
+                                                        $('.modal-body').load('{{ route('bid_edit',['r_id' => $bid->r_id]) }} .panel-body', function(){
+                                                        $('.selectpicker').each(function(){
+                                                        $(this).selectpicker('refresh');
+                                                        })
+                                                        });
+                                                        $('.modal-title').html('Заявка №<?= $bid->r_id ?>');
                                                         });
                                                     </script>
                                                     <?php

@@ -71,6 +71,7 @@ Route::group(['prefix' => 'client'], function () {
     Route::get('client_add', 'ClientController@ClientAdd')->name('client_add');
     Route::post('client_create', 'ClientController@ClientCreate')->name('client_create');
     Route::get('client_edit/{id}', 'ClientController@ClientEdit')->name('client_edit');
+    Route::get('client_change/{id}', 'ClientController@ClientChangeData')->name('client_change');
 });
 Route::group(['prefix' => 'leads'], function () {
     Route::get('leads_list', 'LeadsController@LeadsList')->name('leads_list');

@@ -1,6 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- Модальное окно -->
+<div class="modal fade" id="bid_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:90rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default close_dialog" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary confirm_dialog">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-heading">Список клиентов
         <span class="seacrh_panel">
@@ -38,7 +59,24 @@
                     echo $b_date;
                     ?>
                 </td>
-                <td><a href="{{ route('client_edit',['id' => $user->u_id]) }}"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a></td>
+                <td><a class="user_edit_{{$user->u_id}}" data-toggle="modal" data-target="#bid_modal" style="cursor: pointer;"><span class="oi oi-pencil" title="Редактировать" aria-hidden="true"></a>
+                    <script>
+                        $('.user_edit_<?= $user->u_id ?>').bind('click', function () {
+                            $('.modal-body').html('');
+                            $('.modal-body').load('{{ route('client_edit',['u_id' => $user->u_id]) }} .panel-body', function () {
+                                $('#client_tabs').tabs();
+                                $('input[name="birthday"]').datetimepicker({
+                                    locale: 'ru',
+                                    format: 'DD.MM.YYYY'
+                                });
+                                $('.confirm_dialog').bind('click', function () {
+                                    $('form[name="client_change"]').submit();
+                                })
+                            });
+                            $('.modal-title').html('Турист №<?= $user->u_id ?>');
+                        });
+                    </script>
+
             </tr>
             @endforeach
         </table>
