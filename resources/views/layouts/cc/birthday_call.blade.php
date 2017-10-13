@@ -95,7 +95,7 @@ use Carbon\Carbon;
                         $text_remind .= Form::hidden('from_id', 11307);
                         $text_remind .= '<br />';
                         $text_remind .= Form::label('manager', 'Кому напоминание:');
-                        $text_remind .= '<div style="margin-top:0.5rem">' . Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control manager_data_modal', 'data-live-search' => 'true']) . '</div>';
+                        $text_remind .= '<div style="margin-top:0.5rem">' . Form::select('manager', $managers, $user_data->manager_id, ['class' => 'form-control manager_data_modal selectpicker', 'data-live-search' => 'true']) . '</div>';
                         $text_remind .= Form::label('do', 'Что сделать:');
                         $text_remind .= '<div style="margin-top:0.5rem">' . Form::select('do', array('Позвонить' => 'Позвонить', 'Письмо' => 'Письмо', 'Встреча' => 'Встреча', 'Другое' => 'Другое'), 'Позвонить', ['class' => 'form-control type_remind']) . '</form>';
                         $text_remind .= Form::label('remind_text', 'Дополнительная информация:');
@@ -111,9 +111,13 @@ use Carbon\Carbon;
                             $('.manager_data_modal').val(manager_id);
                             $('.manager_data_modal [value="' + manager_id + '"]').attr('selected', 'selected');
                             $('input[name="date_remind"]').datetimepicker({
-                            locale: 'ru'
+                            locale: 'ru',
+                                    sideBySide: true
                             });
-                            $('.modal-title').html('Отправка задания менеджеру ' + manager + ' (ID ' + manager_id + ')');
+                            $('.selectpicker').each(function () {
+                            $(this).selectpicker('refresh');
+                            })
+                                    $('.modal-title').html('Отправка задания менеджеру ' + manager + ' (ID ' + manager_id + ')');
                             $('button.close_dialog').html('Отмена');
                             $('button.confirm_dialog').html('Отправить');
                             $('button.confirm_dialog').attr('type', 'submit');

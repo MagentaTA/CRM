@@ -3,6 +3,7 @@
 <?php
 $norm_date = new App\myDate();
 $bids = new \App\Helper();
+//var_dump($PPO);
 ?>
 <!-- Модальное окно -->
 <div class="modal fade" id="bid_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -26,6 +27,72 @@ $bids = new \App\Helper();
     </div>
 </div>
 <div class="container">
+    <?php // ППО ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">ППО</div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        @foreach ($PPO as $this_PPO)
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <a class="user_edit_{{$this_PPO->r_client_id}}" data-toggle="modal" data-target="#bid_modal" style="cursor: pointer;">{{$this_PPO->u_surname}} {{$this_PPO->u_name}} {{$this_PPO->u_sname}}</a>
+                                    <script>
+                                        $('.user_edit_<?= $this_PPO->r_client_id ?>').bind('click', function () {
+                                        $('.modal-body').html('');
+                                        $('.modal-body').load('{{ route('client_edit',['u_id' => $this_PPO->r_client_id]) }} .panel-body', function(){
+                                        $('#client_tabs').tabs();
+                                        $('input[name="birthday"]').datetimepicker({
+                                        locale: 'ru',
+                                                format: 'DD.MM.YYYY'
+                                        });
+                                        $('.confirm_dialog').bind('click', function(){
+                                        $('form[name="client_change"]').submit();
+                                        })
+                                        });
+                                        $('.modal-title').html('Турист №<?= $this_PPO->r_client_id ?>');
+                                        });
+                                    </script>
+                                </div>
+                                <div class="col-md-2">
+                                    <?php $bid_date = $norm_date->getBirthdayDate($this_PPO->r_date_end); ?>
+                                    <a class="btn btn-primary bid_edit_{{$this_PPO->r_id}}" role="button" data-toggle="modal" data-target="#bid_modal">{{$bid_date}}</a>
+                                    <script>
+                                        $('.bid_edit_<?= $this_PPO->r_id ?>').bind('click', function () {
+                                        $('.modal-body').html('');
+                                        $('.modal-body').load('{{ route('bid_edit',['r_id' => $this_PPO->r_id]) }} .panel-body', function(){
+                                        $('.selectpicker').each(function(){
+                                        $(this).selectpicker('refresh');
+                                        })
+                                        });
+                                        $('.modal-title').html('Заявка №<?= $this_PPO->r_id ?>');
+                                        });
+                                    </script>
+                                </div>
+                                <div class="col-md-2">
+                                    {{$this_PPO->u_phone}} {{$this_PPO->u_phone_mobile}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{$this_PPO->r_manager_surname}} {{$this_PPO->r_manager_name}} {{$this_PPO->r_manager_sname}}
+                                </div>
+                                <div class="col-md-2">
+                                    {{$this_PPO->r_status}}
+                                </div>
+                                <div class="col-md-1">
+                                    <?php $Ppo_call_id = $this_PPO->r_id . '_' . date('dmY'); ?>
+                                    <a href="{{route('ppo_call',['id' => $Ppo_call_id, 'opros_id' => 2, 'user_id' => $this_PPO->r_client_id])}}"><span class="oi oi-phone" title="Начать прозвон" aria-hidden="true" style="cursor: pointer;"></span></a>
+                                </div>
+                            </div>
+                        </div>                        
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php // Именинники ?>    
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
@@ -111,4 +178,8 @@ $bids = new \App\Helper();
                         </div>
                     </div>
                 </div>
-                @endsection
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

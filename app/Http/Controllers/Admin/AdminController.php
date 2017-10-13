@@ -39,7 +39,7 @@ class AdminController extends Controller {
         $owner->display_name = 'Разработчик CRM'; // optional
         $owner->description = 'Все функции и дополнительные права'; // optional
         $owner->save();
-
+        
         $admin = new Role();
         $admin->name = 'admin';
         $admin->display_name = 'Администратор CRM'; // optional
@@ -52,11 +52,22 @@ class AdminController extends Controller {
         $user->description = 'Права пользователя CRM'; // optional
         $user->update();
         $user->save();
+        
+        $cc = new Role();
+        $cc->name = 'cc';
+        $cc->display_name = 'Операторы Call-Center'; // optional
+        $cc->description = 'Права оператора Call-Center'; // optional
+        $cc->update();
+        $cc->save();
 
+        
         $admin_user = User::where('email', '=', 'vader85@inbox.ru')->first();
         $admin_user->detachRole('developer');
         $admin_user->attachRole('developer');
+        $admin_user->detachRole('cc');
+        $admin_user->attachRole('cc');
 
+        
         return view('layouts.admin.admin_index');
     }
 

@@ -63,7 +63,9 @@
                                     <li><a href="{{ route('managers_list') }}" >Сотрудники</a></li>
                                 </ul>
                             </li>
+                            @role('cc')
                             <li><a href="{{ route('cc') }}" >Call-Center</a></li>
+                            @endrole
                             @role('developer')
                             <li><a href="{{ route('admin') }}">Админ</a></li>
                             @endrole

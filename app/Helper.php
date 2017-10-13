@@ -84,6 +84,7 @@ class Helper extends Model {
                 ->first();
         return $Users;
     }
+
     public function getManagerData($m_id) {
         $User_table = config('crm_tables.uon_managers');
         $Users = DB::table($User_table)
@@ -114,6 +115,28 @@ class Helper extends Model {
                 ->where('q_id', '=', $q_id)
                 ->first();
         return $Q_data;
+    }
+
+    public function get_status_bid_color($status_id) {
+        $status_table = config('crm_tables.uon_statuses');
+        $status_data = DB::table($status_table)
+                ->where('stat_id', '=', $status_id)
+                ->first();
+        return $status_data;
+    }
+
+    public function getBidData($r_id) {
+        $Bid_table = config('crm_tables.uon_bids');
+        $Bid_data = DB::table($Bid_table)
+                ->where('r_id', '=', $r_id)
+                ->first();
+        return $Bid_data;
+    }
+    public function getOffices() {
+        $Offices_table = config('crm_tables.crm_offices');
+        $Offices_data = DB::table($Offices_table)
+                ->get();
+        return $Offices_data;
     }
 
 }
