@@ -97,8 +97,42 @@ class CCController extends Controller {
 //return 'Результаты опроса записаны';
         return (var_dump($data->all()));
     }
+    public function Ppo_pool_data(Request $data) {
+        $Birthday_table = config('crm_tables.crm_cc_pool_data');
+        $answer = $data->get('a_data');
+        if (count($data->get('comment')) > 0) {
+            $answer = $data->get('comment');
+        }
+        DB::table($Birthday_table)->insert(
+                [
+                    'pool_id' => $data->get('pool_id'),
+                    'r_id' => $data->get('r_id'),
+                    'q_id' => $data->get('q_id'),
+                    'answer' => $answer,
+                    'status' => $data->get('status'),
+                    'date_pool' => date(now())
+                ]
+        );
+//return 'Результаты опроса записаны';
+        return (var_dump($data->all()));
+    }
 
     public function Birthday_pool_data_delete(Request $data) {
+        $Birthday_table = config('crm_tables.crm_cc_pool_data');
+        $row = DB::table($Birthday_table)
+                ->where('pool_id', '=', $data->get('pool_id'))
+                ->first();
+        if ($row === null) {
+            return (var_dump($data->all()));
+        } else {
+            DB::table($Birthday_table)
+                    ->where('pool_id', '=', $data->get('pool_id'))
+                    ->delete();
+        }
+//return 'Результаты опроса записаны';
+        return (var_dump($data->all()));
+    }
+    public function Ppo_call_data_delete(Request $data) {
         $Birthday_table = config('crm_tables.crm_cc_pool_data');
         $row = DB::table($Birthday_table)
                 ->where('pool_id', '=', $data->get('pool_id'))
@@ -116,6 +150,7 @@ class CCController extends Controller {
 
     public function Birthday_pool_status(Request $data) {
         $Status_table = config('crm_tables.crm_cc_pool_status');
+        $date_for_call = null !== $data->get('date_for_call') ? $data->get('date_for_call') : '';
         $row = DB::table($Status_table)
                 ->where('id', '=', $data->get('pool_id'))
                 ->first();
@@ -125,6 +160,7 @@ class CCController extends Controller {
                             [
                                 'id' => $data->get('pool_id'),
                                 'status' => $data->get('status'),
+                                'date_for_call' => $date_for_call
                             ]
             );
         } else {
@@ -134,6 +170,7 @@ class CCController extends Controller {
                             [
                                 'id' => $data->get('pool_id'),
                                 'status' => $data->get('status'),
+                                'date_for_call' => $date_for_call
                             ]
             );
         }

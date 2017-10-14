@@ -173,7 +173,7 @@ use Carbon\Carbon;
                             <?php } ?>
                             @Endforeach
                         </div>
-                        <?php $count++ ?>
+                        <?php $count = $count+10; ?>
                         @Endforeach
                         <br /><a role="button" class="btn btn-primary send_results">Сохранить</a>
                         <script>
@@ -203,15 +203,15 @@ use Carbon\Carbon;
                                             url: '<?= route('birthday_pool_data') ?>',
                                             data: {pool_id: id, user_id: user_id, q_id: q_id, a_data: a_data, status: status},
                                             success: function (data) {
-                                            if (q_id === '1' && a_data === 'Нет')
+                                            if (q_id === '10' && a_data === 'Нет')
                                             {
                                             status = '1_not_call';
                                             }
-                                            if (q_id === '2' && a_data === 'Да')
+                                            if (q_id === '20' && a_data === 'Да')
                                             {
                                             status = '3_ok';
                                             }
-                                            if (q_id === '2' && a_data === 'Нет')
+                                            if (q_id === '20' && a_data === 'Нет')
                                             {
                                             status = '2_not_congrat';
                                             }
