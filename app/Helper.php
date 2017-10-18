@@ -22,6 +22,17 @@ class Helper extends Model {
                 ->get();
         return $flights;
     }
+    public function getFlyForPool($bid_id) {
+        $table = config('crm_tables.uon_bid_flights');
+        $supplier_table = config('crm_tables.crm_partners');
+        $flights = DB::table($table)
+                ->select('name')
+                ->leftJoin($supplier_table, $supplier_table.'.id', '=', $table.'.supplier_id')
+                ->where('r_id', '=', $bid_id)
+                ->groupBy('name')
+                ->get();
+        return $flights;
+    }
 
     public function getBidPayments($bid_id) {
         $table = config('crm_tables.uon_bid_payments');

@@ -136,7 +136,7 @@ use Carbon\Carbon;
             <?php
             $offices = GuzzleHttp\json_decode($offices, TRUE);
             ?>
-            {{ Form::select('office', $offices, $bid->r_office_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true']) }}
+            {{ Form::select('office', $offices, $bid->r_office_id, ['class' => 'form-control selectpicker', 'data-live-search' => 'true', 'disabled' => 'disabled']) }}
         </div>
         <div class="col-md-2">
             {{ Form::label('bron','Номер брони: ')}}
@@ -182,11 +182,11 @@ use Carbon\Carbon;
         </div>
         <div class="col-md-6">
             {{ Form::label('calc_price','Цена для клиента: ')}}
-            {{ Form::text('calc_price', $bid->r_calc_price, ['class' => 'form-control']) }}
+            {{ Form::text('calc_price', $bid->r_calc_price, ['class' => 'form-control', 'disabled' => 'disabled']) }}
         </div>
         <div class="col-md-6">
             {{ Form::label('calc_price','Цена для нас: ')}}
-            {{ Form::text('calc_price', $bid->r_calc_price_netto, ['class' => 'form-control']) }}
+            {{ Form::text('calc_price', $bid->r_calc_price_netto, ['class' => 'form-control', 'disabled' => 'disabled']) }}
         </div>
         <div class="col-md-12 bg-primary" style="height: 3rem; font-size: 2rem; margin-top: 1rem;">
             Туристы                        
@@ -229,7 +229,15 @@ use Carbon\Carbon;
         <div class="col-md-1">
             Действия:
         </div>
+        <?php
+        $hotel_name = '';
+        ?>
         @foreach ($services as $service)
+        <?php
+        if ($service->service_type_id == 1) {
+            $hotel_name = $service->hotel;
+        }
+        ?>
         @if ($service->service_type_id <> 6)
         <?php
         //var_dump($service);
@@ -390,17 +398,17 @@ use Carbon\Carbon;
                                   @endif
 
                                   </table> */ ?>
-                                <div id="tabs-2">
-                                    <ul class="list-group-item-info">
-                                        @foreach ($reminders as $reminder)
-                                        <li class="list-group-item">
-                                            {{$reminder->text}}
-                                            <br />
-                                            {{$reminder->datetime}}
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                                <?php /*                                <div id="tabs-2">
+                                  <ul class="list-group-item-info">
+                                  @foreach ($reminders as $reminder)
+                                  <li class="list-group-item">
+                                  {{$reminder->text}}
+                                  <br />
+                                  {{$reminder->datetime}}
+                                  </li>
+                                  @endforeach
+                                  </ul>
+                                  </div> */ ?>
 
                                 {{ Form::close() }}
                                 <script>
@@ -413,7 +421,7 @@ use Carbon\Carbon;
                                         });
                                     });
                                 </script>
-                                <?php // Опросник  ?>
+                                <?php // Опросник   ?>
                                 <h2>Опрос</h2>
                                 <?php $count = 0; ?>
                                 @Foreach($questions as $question)
@@ -427,25 +435,114 @@ use Carbon\Carbon;
                                         ?>
                                         <div class="list-group-item answer_div" q_id="{{$question->q_id}}" level="<?= $question->q_id ?>">
                                         <?php } ?>
-                                        <h3>{{$question->question_text}}?</h3>
-                                        @Foreach ($answers as $answer)
-                                        <?php
-                                        if ($answer->type == 'input') {
+                                        <?php if ($question->q_type == 'select') { ?>
+                                            <h3>{{$question->question_text}}?</h3>
+                                            <select name="<?= $question->q_id ?>" q_id='<?= $question->q_id ?>'>
+                                                @Foreach ($answers as $answer)
+                                                <option>{{$answer->answer_text}}</option>
+                                                @Endforeach
+                                            </select>
+                                            <br /><a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                        <?php } elseif ($question->q_type == 'select_0_10') { ?>
+                                            <h3>{{$question->question_text}}?</h3>
+                                            <select name="<?= $question->q_id ?>" q_id='<?= $question->q_id ?>'>
+                                                @for ($i = 0; $i <= 10; $i++)
+                                                <option>{{$i}}</option>
+                                                @Endfor
+                                            </select>
+                                            @Foreach ($answers as $answer)
+                                            <br /><a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                            @Endforeach
+                                        <?php } elseif ($question->q_type == 'hotel_select') { ?>
+                                            <h3>{{$question->question_text}} {{$hotel_name}} по 10-бальній шкалі?</h3>
+                                            <select name="<?= $question->q_id ?>" q_id='<?= $question->q_id ?>'>
+                                                @for ($i = 0; $i <= 10; $i++)
+                                                <option>{{$i}}</option>
+                                                @Endfor
+                                            </select>
+                                            @Foreach ($answers as $answer)
+                                            <br /><a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                            @Endforeach
+                                        <?php } elseif ($question->q_type == 'operator_select') { ?>
+                                            <?php
+                                            //$service->partner_name
+                                            $count = 0;
+                                            foreach ($services as $this_service) {
+                                                if (null !== $this_service->partner_name && mb_strlen($this_service->partner_name) > 0) {
+                                                    $partners_array[] = $this_service->partner_name;
+                                                }
+                                            }
+                                            $partners_array = array_unique($partners_array);
+                                            foreach ($partners_array as $partner) {
+                                                if (mb_strlen($partner) > 0) {
+                                                    ?>
+                                                    <h3>{{$question->question_text}} <b>{{$partner}}</b> по 10-бальній шкалі?</h3>
+                                                    <select name="<?= $question->q_id + $count ?>" q_id='<?= $question->q_id + $count ?>' service="{{$partner}}">
+                                                        @for ($i = 0; $i <= 10; $i++)
+                                                        <option>{{$i}}</option>
+                                                        @Endfor
+                                                    </select><br />
+                                                    <input class="partner_comment" service="{{$partner}}" /><br />
+                                                    <?php
+                                                    $count++;
+                                                }
+                                            }
                                             ?>
-                                            <input <?= $answer->answer_text ?> />
-                                        <?php } else { ?>
-                                            <a role="button" class="btn btn-warning answer" href="#" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">{{$answer->answer_text}}</a>
+                                            @Foreach ($answers as $answer)
+                                            <br /><a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                            @Endforeach
+                                        <?php } elseif ($question->q_type == 'avia_select') { ?>
+                                            <?php
+                                            $flys = $answers_class->getFlyForPool($bid->r_id);
+                                            ?>
+                                            <?php
+                                            foreach ($flys as $this_fly) {
+                                                $count = 0;
+                                                ?>
+                                                <h3>{{$question->question_text}} <b>{{$this_fly->name}}</b> по 10-бальній шкалі?</h3>
+                                                <select name="<?= $question->q_id + $count ?>" q_id='<?= $question->q_id + $count ?>' fly="{{$this_fly->name}}">
+                                                    @for ($i = 0; $i <= 10; $i++)
+                                                    <option>{{$i}}</option>
+                                                    @Endfor
+                                                </select><br />
+                                                <input class="avia_comment" avia="{{$this_fly->name}}" /><br />
+                                                <?php
+                                                $count++;
+                                            }
+                                            ?>
+                                            @Foreach ($answers as $answer)
+                                            <br /><a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                            @Endforeach
+                                        <?php } elseif ($question->q_type == 'input') { ?>
+                                            <h3>{{$question->question_text}}?</h3>
+                                            @Foreach ($answers as $answer)
+                                            <?php
+                                            if ($answer->type == 'input') {
+                                                ?>
+                                                <input <?= $answer->answer_text ?> /><br />
+                                                <a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">Далее</a>
+                                            <?php } else { ?>
+                                                <a role="button" class="btn btn-warning answer" href="#send_button" q_id="{{$question->q_id}}" a_id="{{$answer->a_id}}" q_next_id="{{$answer->q_next_id}}">{{$answer->answer_text}}</a>
+                                            <?php } ?>
+                                            @Endforeach
                                         <?php } ?>
-                                        @Endforeach
                                     </div>
                                     <?php $count = $count + 10; ?>
                                     @Endforeach
-                                    <br /><a role="button" class="btn btn-primary send_results">Сохранить</a>
+                                    <br /><a id="send_button" role="button" class="btn btn-primary send_results">Сохранить</a>
 
                                 </div>
                                 </div>
                                 <script>
                                     $(document).ready(function () {
+                                        if ($('input[name="email"]').val() === '')
+                                        {
+                                            $('input[name="email"]').addClass('has-error');
+                                        }
+                                        if ($('input[name="tel_no"]').val() === '')
+                                        {
+                                            $('input[name="tel_no"]').addClass('has-error');
+                                        }
                                         $('a.answer').bind('click', function () {
                                             $(this).siblings('a.answer').removeClass('btn-info');
                                             $(this).siblings('a.answer').addClass('btn-warning');
@@ -468,6 +565,10 @@ use Carbon\Carbon;
                                             }
                                         })
                                         $('input[name="date_for_call"]').datetimepicker({
+                                            locale: 'ru',
+                                            sideBySide: true
+                                        });
+                                        $('input[name="date_for_travel"]').datetimepicker({
                                             locale: 'ru',
                                             sideBySide: true
                                         });

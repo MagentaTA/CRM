@@ -92,6 +92,7 @@ class AdminController extends Controller {
             $table->integer('q_id');
             $table->text('question_text');
             $table->integer('opros_id');
+            $table->text('q_type');
         });
         Schema::dropIfExists($answers_table);
         Schema::create($answers_table, function($table) {
@@ -112,7 +113,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 10,
                     'question_text' => 'Дозвонились',
-                    'opros_id' => 1
+                    'opros_id' => 1,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -138,7 +140,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 20,
                     'question_text' => 'Поздравили',
-                    'opros_id' => 1
+                    'opros_id' => 1,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -163,7 +166,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 30,
                     'question_text' => 'Оставить комментарий',
-                    'opros_id' => 1
+                    'opros_id' => 1,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -180,7 +184,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 40,
                     'question_text' => 'Дозвонились',
-                    'opros_id' => 2
+                    'opros_id' => 2,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -205,7 +210,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 60,
                     'question_text' => 'Оставить комментарий',
-                    'opros_id' => 2
+                    'opros_id' => 2,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -222,7 +228,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 50,
                     'question_text' => 'Турист готов говорить',
-                    'opros_id' => 2
+                    'opros_id' => 2,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -230,7 +237,7 @@ class AdminController extends Controller {
                     'a_id' => 9,
                     'answer_text' => 'Да',
                     'q_id' => 50,
-                    'q_next_id' => 70,
+                    'q_next_id' => 69,
                     'type' => 'button'
                 ]
         );
@@ -247,7 +254,8 @@ class AdminController extends Controller {
                 [
                     'q_id' => 80,
                     'question_text' => 'Дата звонка',
-                    'opros_id' => 2
+                    'opros_id' => 2,
+                    'q_type' => 'input'
                 ]
         );
         DB::table($answers_table)->insert(
@@ -256,6 +264,334 @@ class AdminController extends Controller {
                     'answer_text' => 'type="text" name="date_for_call"',
                     'q_id' => 80,
                     'q_next_id' => 0,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 69,
+                    'question_text' => 'Чому ви обрали саме нашу компанію',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 19,
+                    'answer_text' => 'type="text" name="why_our_company"',
+                    'q_id' => 69,
+                    'q_next_id' => 70,
+                    'type' => 'input'
+                ]
+        );
+
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 70,
+                    'question_text' => 'Що важливо для вас при виборі компанії',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 12,
+                    'answer_text' => 'type="text" name="important_comment"',
+                    'q_id' => 70,
+                    'q_next_id' => 90,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 90,
+                    'question_text' => 'Сподобалось у нас в офісі? Чи було зручно оформлятись через інтернет',
+                    'opros_id' => 2,
+                    'q_type' => 'select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 13,
+                    'answer_text' => 'Так',
+                    'q_id' => 90,
+                    'q_next_id' => 100,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 14,
+                    'answer_text' => 'Ні',
+                    'q_id' => 90,
+                    'q_next_id' => 100,
+                    'type' => 'option'
+                ]
+        );
+        
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 100,
+                    'question_text' => 'Запропонував менеджер додаткові послуги',
+                    'opros_id' => 2,
+                    'q_type' => 'select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 15,
+                    'answer_text' => 'Так',
+                    'q_id' => 100,
+                    'q_next_id' => 110,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 16,
+                    'answer_text' => 'Ні',
+                    'q_id' => 100,
+                    'q_next_id' => 110,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 110,
+                    'question_text' => 'Оцініть вашого персонального менеджера по 10-бальній шкалі',
+                    'opros_id' => 2,
+                    'q_type' => 'select_0_10'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 17,
+                    'answer_text' => 'type="hidden" name="manager_rating"',
+                    'q_id' => 110,
+                    'q_next_id' => 120,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 120,
+                    'question_text' => 'Що повинен був зробити ваш менеджер, щоб ви поставили йому 10-ку',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 18,
+                    'answer_text' => 'type="text" name="manager_do"',
+                    'q_id' => 120,
+                    'q_next_id' => 130,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 130,
+                    'question_text' => 'Чи відповідав готель опису, який надав вам ваш менеджер',
+                    'opros_id' => 2,
+                    'q_type' => 'select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 20,
+                    'answer_text' => 'Так',
+                    'q_id' => 130,
+                    'q_next_id' => 140,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 21,
+                    'answer_text' => 'Ні',
+                    'q_id' => 130,
+                    'q_next_id' => 140,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 140,
+                    'question_text' => 'Оцініть готель',
+                    'opros_id' => 2,
+                    'q_type' => 'hotel_select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 22,
+                    'answer_text' => '',
+                    'q_id' => 140,
+                    'q_next_id' => 150,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 150,
+                    'question_text' => 'Що ви можете прокоментувати про готель',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 23,
+                    'answer_text' => 'type="text" name="hotel_comment"',
+                    'q_id' => 150,
+                    'q_next_id' => 160,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 160,
+                    'question_text' => 'Оцініть роботу авиакомпании ',
+                    'opros_id' => 2,
+                    'q_type' => 'avia_select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 24,
+                    'answer_text' => '',
+                    'q_id' => 160,
+                    'q_next_id' => 170,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 170,
+                    'question_text' => 'Оцініть роботу приймаючої сторони',
+                    'opros_id' => 2,
+                    'q_type' => 'operator_select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 25,
+                    'answer_text' => '',
+                    'q_id' => 170,
+                    'q_next_id' => 180,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 180,
+                    'question_text' => 'Поділіться своїми враженнями від поїздки, що сподобалось найбільше',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 26,
+                    'answer_text' => '',
+                    'q_id' => 180,
+                    'q_next_id' => 190,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 190,
+                    'question_text' => 'Чи зв\'язувався з вами менеджер після поїздки',
+                    'opros_id' => 2,
+                    'q_type' => 'select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 27,
+                    'answer_text' => 'Так',
+                    'q_id' => 190,
+                    'q_next_id' => 200,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 28,
+                    'answer_text' => 'Ні',
+                    'q_id' => 190,
+                    'q_next_id' => 200,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 200,
+                    'question_text' => 'Чи рекомендували нашу компанію друзям',
+                    'opros_id' => 2,
+                    'q_type' => 'select'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 28,
+                    'answer_text' => 'Так',
+                    'q_id' => 200,
+                    'q_next_id' => 210,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 29,
+                    'answer_text' => 'Ні',
+                    'q_id' => 200,
+                    'q_next_id' => 210,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 30,
+                    'answer_text' => 'Не прокоментувала',
+                    'q_id' => 200,
+                    'q_next_id' => 210,
+                    'type' => 'option'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 210,
+                    'question_text' => 'Що ми можемо зробити для того, щоб ви нас рекомендували',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 31,
+                    'answer_text' => '',
+                    'q_id' => 210,
+                    'q_next_id' => 220,
+                    'type' => 'input'
+                ]
+        );
+        DB::table($questions_table)->insert(
+                [
+                    'q_id' => 220,
+                    'question_text' => 'На які дати ви плануєте ваш наступний відпочинок',
+                    'opros_id' => 2,
+                    'q_type' => 'input'
+                ]
+        );
+        DB::table($answers_table)->insert(
+                [
+                    'a_id' => 32,
+                    'answer_text' => 'name="date_for_travel"',
+                    'q_id' => 220,
+                    'q_next_id' => 230,
                     'type' => 'input'
                 ]
         );
