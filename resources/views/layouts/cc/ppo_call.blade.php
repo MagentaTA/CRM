@@ -469,20 +469,23 @@ use Carbon\Carbon;
                                             $count = 0;
                                             foreach ($services as $this_service) {
                                                 if (null !== $this_service->partner_name && mb_strlen($this_service->partner_name) > 0) {
-                                                    $partners_array[] = $this_service->partner_name;
+                                                    $partners_array[] = $this_service->partner_name.'--'.$this_service->service_type_id;
+                                                    //var_dump($this_service);
                                                 }
                                             }
                                             $partners_array = array_unique($partners_array);
                                             foreach ($partners_array as $partner) {
                                                 if (mb_strlen($partner) > 0) {
+                                                    $partner_data = explode('--', $partner);
+                                                    $service_type = $answers_class->getServiceName($partner_data[1]);
                                                     ?>
-                                                    <h3>{{$question->question_text}} <b>{{$partner}}</b> по 10-бальній шкалі?</h3>
+                                                    <h3>{{$question->question_text}} <b>{{$partner_data[0]}} ({{$service_type->name}})</b> по 10-бальній шкалі?</h3>
                                                     <select name="<?= $question->q_id + $count ?>" q_id='<?= $question->q_id + $count ?>' service="{{$partner}}">
                                                         @for ($i = 0; $i <= 10; $i++)
                                                         <option>{{$i}}</option>
                                                         @Endfor
                                                     </select><br />
-                                                    <input class="partner_comment" service="{{$partner}}" /><br />
+                                                    <input class="partner_comment" service="{{$partner_data[0]}}" /><br />
                                                     <?php
                                                     $count++;
                                                 }

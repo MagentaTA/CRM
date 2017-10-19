@@ -58,6 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:developer']], function
     Route::get('/', 'Admin\AdminController@index')->name('admin');
     Route::get('/add_role', 'Admin\AdminController@add_role')->name('add_role');
     Route::get('/insert_questions', 'Admin\AdminController@add_cc_birthdays_q')->name('insert_questions');
+    Route::get('parse_bids', 'Admin\AdminController@ParseBids')->name('ParseBids');
+    Route::get('ParseBidsByDate', 'Admin\AdminController@ParseBidsByDate')->name('ParseBidsByDate');
 });
 // Роутинг для Тестовых
 Route::group(['prefix' => 'test', 'middleware' => ['role:developer']], function () {

@@ -16,7 +16,7 @@ class AdminController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -28,11 +28,80 @@ class AdminController extends Controller {
         return view('layouts.admin.admin_index');
     }
 
+    public function ParseBids() {
+        $table_name = config('crm_tables.uon_bids');
+        $services_table = config('crm_tables.uon_bid_services');
+        $table_flights = config('crm_tables.uon_bid_flights');
+        $table_hotels = config('crm_tables.uon_hotels');
+        Schema::dropIfExists($services_table);
+        Schema::dropIfExists($table_name);
+        Schema::dropIfExists($table_flights);
+        Schema::dropIfExists(config('crm_tables.uon_bid_reminders'));
+        Schema::dropIfExists(config('crm_tables.uon_bid_payments'));
+        Schema::dropIfExists(config('crm_tables.price_change_history'));
+        Schema::dropIfExists(config('crm_tables.crm_bid_service'));
+        Schema::dropIfExists(config('crm_tables.crm_bid_tourist'));
+        $table_dates = config('crm_tables.dates_parsing');
+        Schema::dropIfExists($table_dates);
+        Schema::create($table_dates, function($table) {
+            $table->text('start_date');
+            $table->text('end_date');
+            $table->text('to_date');
+        });
+        DB::table($table_dates)->insert(
+                [
+                    'start_date' => '2017-01-01',
+                    'end_date' => '2017-10-19',
+                    'to_date' => '2017-10-19'
+                ]
+        );
+        return view('layouts.admin.next_date', array(
+            'start_date' => '2017-09-01',
+            'to_date' => '2017-10-19'
+        ));
+    }
+
+    public function ParseBidsByDate() {
+        $table_dates = config('crm_tables.dates_parsing');
+        $dates = DB::table($table_dates)
+                ->first();
+        Schema::dropIfExists($table_dates);
+        Schema::create($table_dates, function($table) {
+            $table->text('start_date');
+            $table->text('end_date');
+            $table->text('to_date');
+        });
+        $d = new \DateTime($dates->start_date);
+        $d->modify("+1 day");
+        $start_date = $d->format("Y-m-d");
+        DB::table($table_dates)->insert(
+                [
+                    'start_date' => $start_date,
+                    'end_date' => $dates->end_date,
+                    'to_date' => $dates->to_date
+                ]
+        );
+        if ($dates->start_date <> $dates->to_date) {
+            return view('layouts.admin.next_date', array(
+                'start_date' => $dates->start_date,
+                'to_date' => $dates->to_date
+            ));
+        } else {
+            return view('layouts.admin.admin_index');
+        }
+    }
+
     public function add_role() {
 
         Schema::disableForeignKeyConstraints();
         DB::table('roles')->truncate();
+        DB::table('permissions')->truncate();
         Schema::enableForeignKeyConstraints();
+        $viewMenu = new \App\Permission();
+        $viewMenu->name = 'view-menu';
+        $viewMenu->display_name = 'Позволяет видеть главное меню'; // optional
+        $viewMenu->description = 'Права на просмотр главного меню. Выдаётся всем зарегистрированным пользователям'; // optional
+        $viewMenu->save();
 
         $owner = new Role();
         $owner->name = 'developer';
@@ -60,12 +129,19 @@ class AdminController extends Controller {
         $cc->update();
         $cc->save();
 
-
         $admin_user = User::where('email', '=', 'vader85@inbox.ru')->first();
         $admin_user->detachRole('developer');
         $admin_user->attachRole('developer');
         $admin_user->detachRole('cc');
         $admin_user->attachRole('cc');
+        $owner->detachPermission($viewMenu);
+        $owner->attachPermission($viewMenu);
+        $admin->detachPermission($viewMenu);
+        $admin->attachPermission($viewMenu);
+        $user->detachPermission($viewMenu);
+        $user->attachPermission($viewMenu);
+        $cc->detachPermission($viewMenu);
+        $cc->attachPermission($viewMenu);
 
 
         return view('layouts.admin.admin_index');
@@ -328,7 +404,7 @@ class AdminController extends Controller {
                     'type' => 'option'
                 ]
         );
-        
+
         DB::table($questions_table)->insert(
                 [
                     'q_id' => 100,

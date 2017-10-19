@@ -1,6 +1,7 @@
+php_flag display_errors on
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
-        Options -MultiViews
+      Options -MultiViews 
     </IfModule>
 
     RewriteEngine On

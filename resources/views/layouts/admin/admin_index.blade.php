@@ -17,7 +17,7 @@
 
                     <div class="links">
                         <a href="<?=route('all_clients')?>">Импорт Туристов</a><br />
-                        <a href="<?=route('all_requests')?>">Импорт Заявок</a><br />
+                        <a href="<?=route('ParseBids')?>">Импорт Заявок</a><br />
                         <a href="<?=route('all_leads_requests')?>">Импорт Обращений</a><br />
                         <a href="<?=route('get_countries')?>">Импорт Стран</a><br />
                         <a href="<?=route('get_citys')?>">Импорт Городов</a><br />

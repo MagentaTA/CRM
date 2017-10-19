@@ -18,7 +18,9 @@ class Lost extends Model {
         $client_id = $id;
         $change_data = \GuzzleHttp\json_encode($_users->get($client_id));
         $change_data = \GuzzleHttp\json_decode($change_data);
-        if (is_object($change_data)) {
+        if (!empty($change_data->message)) {
+            if (!empty($change_data->message->user[0]))
+            {
             $user = $change_data->message->user[0];
             $result_query = DB::table($table_name)->insert(
                     [
@@ -64,6 +66,7 @@ class Lost extends Model {
             } else {
                 return '<font color=' . $this->error_color . '>Клиента небыло и нет ID: ' . $id . '</font>';
             }
+        }
         } else {
             return '<font color=' . $this->error_color . '>Ошибка обращения к API UON по клиенту ID: ' . $id . '</font>';
         }

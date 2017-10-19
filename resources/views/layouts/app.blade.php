@@ -47,6 +47,7 @@
                         <!-- Left Side Of Navbar -->
                         <ul class="nav navbar-nav">
                             &nbsp;
+                            @permission('view-menu')
                             <li><a href="{{ route('client_list') }}">Клиенты</a></li>
                             <li><a href="{{ route('leads_list') }}">Обращения</a></li>
                             <li><a href="{{ route('bids_list') }}">Заявки</a></li>
@@ -69,6 +70,7 @@
                             @role('developer')
                             <li><a href="{{ route('admin') }}">Админ</a></li>
                             @endrole
+                            @endpermission
 
                         </ul>
 

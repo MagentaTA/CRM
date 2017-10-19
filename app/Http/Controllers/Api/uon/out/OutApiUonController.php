@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api\uon\out;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\Request;
 
 class OutApiUonController extends Controller {
 
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     public function index() {
@@ -17,6 +18,7 @@ class OutApiUonController extends Controller {
     }
 
     public function AllClients() {
+        set_time_limit(0);
         $date_from = date('Y-m-d', strtotime(now() . '- 30 day'));
         $date_to = date('Y-m-d', strtotime(now()));
         $table_name = config('crm_tables.uon_users_table');
@@ -114,11 +116,13 @@ class OutApiUonController extends Controller {
         return redirect()->route('admin');
     }
 
-    public function AllRequests() {
+    public function AllRequests(Request $dates) {
+        //return $dates->start_date;
         //$date_from = date('Y-m-d', strtotime(now() . '- 1 day'));
         //$date_to = date('Y-m-d', strtotime(now()));
-        $date_from = '2017-09-01';
-        $date_to = '2017-10-13';
+        $date_from = $dates->start_date;
+        $date_to = $dates->end_date;
+        //$count_diapazon = $dates->count_diapazon;
         $table_name = config('crm_tables.uon_bids');
         $services_table = config('crm_tables.uon_bid_services');
         $table_flights = config('crm_tables.uon_bid_flights');
@@ -144,27 +148,31 @@ class OutApiUonController extends Controller {
 
 
 
-        Schema::dropIfExists($services_table);
+        /*Schema::dropIfExists($services_table);
         Schema::dropIfExists($table_name);
         Schema::dropIfExists($table_flights);
         Schema::dropIfExists(config('crm_tables.uon_bid_reminders'));
         Schema::dropIfExists(config('crm_tables.uon_bid_payments'));
         Schema::dropIfExists(config('crm_tables.price_change_history'));
         Schema::dropIfExists(config('crm_tables.crm_bid_service'));
-        Schema::dropIfExists(config('crm_tables.crm_bid_tourist'));
+        Schema::dropIfExists(config('crm_tables.crm_bid_tourist'));*/
+        if (!Schema::hasTable(config('crm_tables.crm_bid_tourist'))){
         Schema::create(config('crm_tables.crm_bid_tourist'), function($table) {
             $table->integer('zayavka_id');
             $table->integer('tourist_id');
             $table->integer('user_id')->default(NULL)->nullable();
             $table->dateTime('u_date_update')->default(NULL)->nullable();
         });
+        }
+        if (!Schema::hasTable(config('crm_tables.crm_bid_service'))){
         Schema::create(config('crm_tables.crm_bid_service'), function($table) {
             $table->integer('zayavka_id');
             $table->integer('service_id');
             $table->integer('user_id')->default(NULL)->nullable();
             $table->dateTime('u_date_update')->default(NULL)->nullable();
         });
-
+        }
+        if (!Schema::hasTable($table_name)){
         Schema::create($table_name, function($table) {
             $table->bigIncrements('r_id');
             $table->integer('r_id_system')->default(0);
@@ -214,6 +222,7 @@ class OutApiUonController extends Controller {
             $table->integer('r_travel_type_id')->default(0);
             $table->text('r_travel_type');
         });
+        }
         $request_data = new \UON\Requests();
         foreach ($responce->message->requests as $request) {
             if (count($request->services) > 0) {
@@ -248,56 +257,56 @@ class OutApiUonController extends Controller {
             DB::table($table_name)->insert(
                     [
                         'r_id' => $request->id,
-                        'r_id_system' => isset($request->id_system) ? $request->id_system : 0,
-                        'r_id_internal' => isset($request->id_internal) ? $request->id_internal : '',
-                        'r_reservation_number' => isset($request->reservation_number) ? $request->reservation_number : '',
-                        'r_supplier_id' => isset($request->supplier_id) ? $request->supplier_id : 0,
-                        'r_supplier_name' => isset($request->supplier_name) ? $request->supplier_name : '',
-                        'r_supplier_inn' => isset($request->supplier_inn) ? $request->supplier_inn : '',
-                        'r_dat' => isset($request->dat) ? $request->dat : NULL,
-                        'r_dat_lead' => isset($request->dat_lead) ? $request->dat_lead : NULL,
-                        'r_manager_id' => isset($request->manager_id) ? $request->manager_id : 0,
-                        'r_manager_surname' => isset($request->manager_surname) ? $request->manager_surname : '',
-                        'r_manager_sname' => isset($request->manager_sname) ? $request->manager_sname : '',
-                        'r_manager_name' => isset($request->manager_name) ? $request->manager_name : '',
-                        'r_client_id' => isset($request->client_id) ? $request->client_id : 0,
-                        'r_office_id' => isset($request->office_id) ? $request->office_id : 0,
-                        'r_client_surname' => isset($request->client_surname) ? $request->client_surname : '',
-                        'r_client_name' => isset($request->client_name) ? $request->client_name : '',
-                        'r_client_sname' => isset($request->client_sname) ? $request->client_sname : '',
-                        'r_client_phone' => isset($request->client_phone) ? $request->client_phone : '',
-                        'r_client_phone_mobile' => isset($request->client_phone_mobile) ? $request->client_phone_mobile : '',
-                        'r_client_email' => isset($request->client_email) ? $request->client_email : '',
-                        'r_client_company' => isset($request->client_company) ? $request->client_company : '',
-                        'r_client_inn' => isset($request->client_inn) ? $request->client_inn : '',
-                        'r_date_begin' => isset($request->date_begin) ? $request->date_begin : NULL,
-                        'r_date_end' => isset($request->date_end) ? $request->date_end : NULL,
-                        'r_source_id' => isset($request->source_id) ? $request->source_id : 0,
-                        'r_status_id' => isset($request->status_id) ? $request->status_id : 0,
-                        'r_status' => isset($request->status) ? $request->status : '',
-                        'r_calc_price_netto' => isset($request->calc_price_netto) ? $request->calc_price_netto : 0,
-                        'r_calc_price' => isset($request->calc_price) ? $request->calc_price : 0,
-                        'r_calc_partner_currency_id' => isset($request->r_calc_partner_currency_id) ? $request->r_calc_partner_currency_id : 0,
-                        'r_calc_client_currency_id' => isset($request->r_calc_client_currency_id) ? $request->r_calc_client_currency_id : 0,
-                        'r_calc_increase' => isset($request->calc_increase) ? $request->calc_increase : 0,
-                        'r_calc_decrease' => isset($request->calc_decrease) ? $request->calc_decrease : 0,
-                        'r_calc_client' => isset($request->calc_client) ? $request->calc_client : 0,
-                        'r_calc_partner' => isset($request->calc_partner) ? $request->calc_partner : 0,
-                        'r_dat_updated' => isset($request->dat_updated) ? $request->dat_updated : NULL,
-                        'r_created_at' => isset($request->created_at) ? $request->created_at : NULL,
-                        'r_created_by_manager' => isset($request->created_by_manager) ? $request->created_by_manager : 0,
-                        'r_notes' => isset($request->notes) ? $request->notes : '',
-                        'r_bonus_limit' => isset($request->bonus_limit) ? $request->bonus_limit : 0,
-                        'r_company_name' => isset($request->company_name) ? $request->company_name : '',
-                        'r_company_fullname' => isset($request->company_fullname) ? $request->company_fullname : '',
-                        'r_company_name_rus' => isset($request->company_name_rus) ? $request->company_name_rus : '',
-                        'r_company_inn' => isset($request->company_inn) ? $request->company_inn : '',
-                        'r_travel_type_id' => isset($request->travel_type_id) ? $request->travel_type_id : 0,
-                        'r_travel_type' => isset($request->travel_type) ? $request->travel_type : ''
+                        'r_id_system' => false!==(property_exists($request,'id_system')) ? $request->id_system : 0,
+                        'r_id_internal' => false!==(property_exists($request,'id_internal')) ? $request->id_internal : '',
+                        'r_reservation_number' => false!==(property_exists($request,'reservation_number')) ? $request->reservation_number : '',
+                        'r_supplier_id' => false!==(property_exists($request,'supplier_id')) ? $request->supplier_id : 0,
+                        'r_supplier_name' => false!==(property_exists($request,'supplier_name')) ? $request->supplier_name : '',
+                        'r_supplier_inn' => false!==(property_exists($request,'supplier_inn')) ? $request->supplier_inn : '',
+                        'r_dat' => false!==(property_exists($request,'dat')) ? $request->dat : NULL,
+                        'r_dat_lead' => false!==(property_exists($request,'dat_lead')) ? $request->dat_lead : NULL,
+                        'r_manager_id' => false!==(property_exists($request,'manager_id')) ? $request->manager_id : 0,
+                        'r_manager_surname' => false!==(property_exists($request,'manager_surname')) ? $request->manager_surname : '',
+                        'r_manager_sname' => false!==(property_exists($request,'manager_sname')) ? $request->manager_sname : '',
+                        'r_manager_name' => false!==(property_exists($request,'manager_name')) ? $request->manager_name : '',
+                        'r_client_id' => false!==(property_exists($request,'client_id')) ? $request->client_id : 0,
+                        'r_office_id' => false!==(property_exists($request,'office_id')) ? $request->office_id : 0,
+                        'r_client_surname' => false!==(property_exists($request,'client_surname')) ? $request->client_surname : '',
+                        'r_client_name' => false!==(property_exists($request,'client_name')) ? $request->client_name : '',
+                        'r_client_sname' => false!==(property_exists($request,'client_sname')) ? $request->client_sname : '',
+                        'r_client_phone' => false!==(property_exists($request,'client_phone')) ? $request->client_phone : '',
+                        'r_client_phone_mobile' => false!==(property_exists($request,'client_phone_mobile')) ? $request->client_phone_mobile : '',
+                        'r_client_email' => false!==(property_exists($request,'client_email')) ? $request->client_email : '',
+                        'r_client_company' => false!==(property_exists($request,'client_company')) ? $request->client_company : '',
+                        'r_client_inn' => false!==(property_exists($request,'client_inn')) ? $request->client_inn : '',
+                        'r_date_begin' => false!==(property_exists($request,'date_begin')) ? $request->date_begin : NULL,
+                        'r_date_end' => false!==(property_exists($request,'date_end')) ? $request->date_end : NULL,
+                        'r_source_id' => false!==(property_exists($request,'source_id')) ? $request->source_id : 0,
+                        'r_status_id' => false!==(property_exists($request,'status_id')) ? $request->status_id : 0,
+                        'r_status' => false!==(property_exists($request,'status')) ? $request->status : '',
+                        'r_calc_price_netto' => false!==(property_exists($request,'calc_price_netto')) ? $request->calc_price_netto : 0,
+                        'r_calc_price' => false!==(property_exists($request,'calc_price')) ? $request->calc_price : 0,
+                        'r_calc_partner_currency_id' => false!==(property_exists($request,'r_calc_partner_currency_id')) ? $request->r_calc_partner_currency_id : 0,
+                        'r_calc_client_currency_id' => false!==(property_exists($request,'r_calc_client_currency_id')) ? $request->r_calc_client_currency_id : 0,
+                        'r_calc_increase' => false!==(property_exists($request,'calc_increase')) ? $request->calc_increase : 0,
+                        'r_calc_decrease' => false!==(property_exists($request,'calc_decrease')) ? $request->calc_decrease : 0,
+                        'r_calc_client' => false!==(property_exists($request,'calc_client')) ? $request->calc_client : 0,
+                        'r_calc_partner' => false!==(property_exists($request,'calc_partner')) ? $request->calc_partner : 0,
+                        'r_dat_updated' => false!==(property_exists($request,'dat_updated')) ? $request->dat_updated : NULL,
+                        'r_created_at' => false!==(property_exists($request,'created_at')) ? $request->created_at : NULL,
+                        'r_created_by_manager' => false!==(property_exists($request,'created_by_manager')) ? $request->created_by_manager : 0,
+                        'r_notes' => null!==($request->notes) ? $request->notes : '',
+                        'r_bonus_limit' => false!==(property_exists($request,'bonus_limit')) ? $request->bonus_limit : 0,
+                        'r_company_name' => false!==(property_exists($request,'company_name')) ? $request->company_name : '',
+                        'r_company_fullname' => false!==(property_exists($request,'company_fullname')) ? $request->company_fullname : '',
+                        'r_company_name_rus' => false!==(property_exists($request,'company_name_rus')) ? $request->company_name_rus : '',
+                        'r_company_inn' => false!==(property_exists($request,'company_inn')) ? $request->company_inn : '',
+                        'r_travel_type_id' => false!==(property_exists($request,'travel_type_id')) ? $request->travel_type_id : 0,
+                        'r_travel_type' => false!==(property_exists($request,'travel_type')) ? $request->travel_type : ''
                     ]
             );
         }
-        return redirect()->route('admin');
+        return '';
     }
 
     public function AllLeadsRequests() {

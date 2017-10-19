@@ -31,5 +31,6 @@ return [
     'crm_cc_questions' => 'crm_cc_questions', //таблица вопросов для Call Center
     'crm_cc_answers' => 'crm_cc_answers', //таблица ответов для Call Center
     'crm_cc_pool_data' => 'crm_cc_pool_data', //Результаты обзвонов
-    'crm_cc_pool_status' => 'crm_cc_pool_status' //Статусы обзвонов
+    'crm_cc_pool_status' => 'crm_cc_pool_status', //Статусы обзвонов
+    'dates_parsing' => 'dates_parsing' //Даты парсинга
 ];

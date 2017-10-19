@@ -49,6 +49,13 @@ class Helper extends Model {
                 ->first();
         return $cash;
     }
+    public function getServiceName($id) {
+        $table = config('crm_tables.crm_services');
+        $service = DB::table($table)
+                ->where('id', '=', $id)
+                ->first();
+        return $service;
+    }
 
     public function getRemindersData($id) {
         $table = config('crm_tables.uon_bid_reminders');
